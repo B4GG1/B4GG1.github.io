@@ -4,13 +4,25 @@ const currentYear = new Date().getFullYear();
 
 <footer class="site-footer">
   <div class="shell footer-content">
-    <p>© {currentYear} Bartosz Girzecki</p>
+    <div>
+      <p class="footer-name">Bartosz Girzecki</p>
+      <p class="footer-note">
+        Technical portfolio built around quality, engineering and design.
+      </p>
+    </div>
 
-    <div class="footer-links">
-      <a href="https://github.com/B4GG1">GitHub</a>
-      <a href="https://www.linkedin.com/" aria-label="LinkedIn profile">
-        LinkedIn
+    <div class="footer-meta">
+      <span>© {currentYear}</span>
+
+      <a
+        href="https://github.com/B4GG1"
+        target="_blank"
+        rel="noreferrer"
+      >
+        GitHub ↗
       </a>
+
+      <a href="/contact">Contact</a>
     </div>
   </div>
 </footer>
