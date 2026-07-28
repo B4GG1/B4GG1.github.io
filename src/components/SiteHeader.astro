@@ -1,0 +1,48 @@
+---
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+
+const navigation = [
+  { href: '/experience', label: 'Experience' },
+  { href: '/skills', label: 'Skills' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/certifications', label: 'Certifications' },
+  { href: '/contact', label: 'Contact' },
+];
+
+const normalizedPath =
+  currentPath !== '/' ? currentPath.replace(/\/$/, '') : '/';
+---
+
+<header class="site-header">
+  <div class="shell header-content">
+    <a class="site-name" href="/" aria-label="Go to homepage">
+      Bartosz Girzecki
+    </a>
+
+    <nav aria-label="Primary navigation">
+      <ul class="navigation">
+        {
+          navigation.map(({ href, label }) => {
+            const isActive = normalizedPath === href;
+
+            return (
+              <li>
+                <a
+                  class="navigation-link"
+                  href={href}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

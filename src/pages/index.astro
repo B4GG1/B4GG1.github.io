@@ -1,17 +1,20 @@
 ---
-
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="Home"
+  description="Technical portfolio of Bartosz Girzecki."
+>
+  <section class="page-intro">
+    <p class="eyebrow">Technical portfolio</p>
+
+    <h1>Bartosz Girzecki</h1>
+
+    <p class="lead">
+      QA specialist with several years of professional experience,
+      developing a broader technical portfolio across test automation,
+      web and backend development, and game design and development.
+    </p>
+  </section>
+</BaseLayout>
