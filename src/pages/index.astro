@@ -1,326 +1,329 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const paths = [
+const sections = [
   {
-    number: '01',
     href: '/experience',
     title: 'Experience',
-    description: 'My professional background and responsibilities.',
+    description: 'Professional background, responsibilities and practical experience.',
   },
   {
-    number: '02',
     href: '/skills',
     title: 'Skills',
-    description: 'Technical capabilities and areas of development.',
+    description: 'Technical capabilities, tools and areas of continued development.',
   },
   {
-    number: '03',
     href: '/projects',
     title: 'Projects',
-    description: 'Public work demonstrating practical engineering skills.',
+    description: 'Public projects demonstrating automation and software engineering skills.',
   },
   {
-    number: '04',
     href: '/certifications',
     title: 'Certifications',
-    description: 'Credentials, completed programs and selected training.',
+    description: 'Professional credentials, completed programs and selected training.',
   },
   {
-    number: '05',
     href: '/contact',
     title: 'Contact',
-    description: 'Professional profiles, contact details and CV files.',
+    description: 'Contact details, professional profiles and downloadable CV files.',
   },
 ];
 ---
 
 <BaseLayout
   title="Home"
-  description="Technical portfolio of Bartosz Girzecki, a QA specialist expanding into test automation, backend development and game design."
+  description="Technical portfolio of Bartosz Girzecki, presenting professional experience, technical projects and areas of continued development."
 >
-  <section class="home-hero">
-    <div class="hero-copy">
-      <p class="eyebrow hero-eyebrow">
-        <span class="status-dot" aria-hidden="true"></span>
-        QA specialist / technical portfolio
-      </p>
+  <section class="home-intro" aria-labelledby="home-title">
+    <div class="intro-top">
+      <div class="portrait-frame">
+        <div class="portrait-placeholder">
+          <span>Professional photo</span>
+        </div>
+      </div>
 
-      <h1>
-        Quality as a foundation.
-        <span>Building beyond testing.</span>
-      </h1>
-
-      <p class="lead">
-        QA specialist with several years of professional experience in
-        game development, currently expanding into test automation and
-        web and backend engineering. My long-term creative direction is
-        centered on game design, supported by hands-on game development.
-      </p>
-
-      <div class="hero-actions">
-        <a class="button button-primary" href="/projects">
-          View projects
-          <span aria-hidden="true">→</span>
-        </a>
-
-        <a class="button button-secondary" href="/experience">
-          Explore experience
-        </a>
+      <div class="intro-heading">
+        <h1 id="home-title">
+          Hi, I'm <span>Bartosz Girzecki.</span>
+        </h1>
       </div>
     </div>
 
-    <aside class="direction-panel" aria-label="Current professional direction">
-      <div class="panel-heading">
-        <p>Current direction</p>
-        <span aria-hidden="true">●</span>
-      </div>
-
-      <dl class="direction-list">
-        <div>
-          <dt>Foundation</dt>
-          <dd>Software quality and game QA</dd>
-        </div>
-
-        <div>
-          <dt>Current focus</dt>
-          <dd>Python test automation</dd>
-        </div>
-
-        <div>
-          <dt>Expanding into</dt>
-          <dd>Web and backend development</dd>
-        </div>
-
-        <div>
-          <dt>Creative direction</dt>
-          <dd>Game design and development</dd>
-        </div>
-      </dl>
-
-      <div class="panel-signal" aria-hidden="true">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </aside>
+    <div class="intro-description">
+      <p>
+        <strong>Welcome to my portfolio.</strong> I have nearly six years
+        of professional quality assurance experience gained in the game
+        development industry. That background shaped the way I approach
+        software, communication and product quality. I am currently
+        expanding into Python test automation and web and backend
+        engineering. My primary long-term creative direction is game
+        design, supported by practical game development experience.
+      </p>
+    </div>
   </section>
 
-  <section class="site-guide" aria-labelledby="site-guide-title">
-    <div class="guide-intro">
-      <p class="eyebrow">Explore the portfolio</p>
+  <a
+    class="scroll-cue"
+    href="#portfolio-navigation"
+    data-scroll-cue
+    aria-label="Explore my portfolio"
+  >
+    <span>Explore my portfolio</span>
+    <span class="scroll-cue-arrow" aria-hidden="true">↓</span>
+  </a>
 
-      <h2 id="site-guide-title">
-        Choose the area most relevant to you.
+  <section
+    id="portfolio-navigation"
+    class="portfolio-navigation"
+    aria-labelledby="navigation-title"
+  >
+    <div class="navigation-heading">
+      <h2 id="navigation-title">
+        Find the information most relevant to you.
       </h2>
 
       <p>
-        The site is divided into focused sections, allowing you to move
-        directly to my background, capabilities or practical work.
+        Use the sections below to explore my professional background,
+        technical capabilities and current work.
       </p>
     </div>
 
-    <div class="guide-grid">
+    <nav class="section-list" aria-label="Portfolio sections">
       {
-        paths.map(({ number, href, title, description }) => (
-          <a class="guide-card" href={href}>
-            <span class="guide-number">{number}</span>
-
-            <span class="guide-content">
+        sections.map(({ href, title, description }) => (
+          <a class="section-link" href={href}>
+            <span class="section-content">
               <strong>{title}</strong>
               <span>{description}</span>
             </span>
-
-            <span class="guide-arrow" aria-hidden="true">↗</span>
           </a>
         ))
       }
-    </div>
+    </nav>
   </section>
 </BaseLayout>
 
+<script>
+  const scrollCue = document.querySelector('[data-scroll-cue]');
+  const navigationHeading = document.querySelector(
+    '.navigation-heading'
+  );
+
+  const updateScrollCue = () => {
+    if (
+      !(scrollCue instanceof HTMLAnchorElement) ||
+      !(navigationHeading instanceof HTMLElement)
+    ) {
+      return;
+    }
+
+    const headingPosition =
+      navigationHeading.getBoundingClientRect().top;
+
+    const shouldHide =
+      headingPosition <= window.innerHeight * 0.88;
+
+    scrollCue.classList.toggle('is-hidden', shouldHide);
+    scrollCue.tabIndex = shouldHide ? -1 : 0;
+    scrollCue.setAttribute('aria-hidden', String(shouldHide));
+  };
+
+  updateScrollCue();
+
+  window.addEventListener('scroll', updateScrollCue, {
+    passive: true,
+  });
+
+  window.addEventListener('resize', updateScrollCue);
+</script>
+
 <style>
-  .home-hero {
-    min-height: min(720px, calc(100vh - 10rem));
+  :global(.page-content) {
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .home-intro {
+    padding-top: clamp(0.5rem, 2vw, 1.5rem);
+  }
+
+  .intro-top {
     display: grid;
-    grid-template-columns: minmax(0, 1.55fr) minmax(290px, 0.65fr);
+    grid-template-columns: minmax(220px, 290px) minmax(0, 1fr);
     align-items: center;
-    gap: clamp(3rem, 7vw, 7rem);
+    gap: clamp(2.5rem, 6vw, 6rem);
   }
 
-  .hero-copy {
+  .portrait-frame {
     position: relative;
-    z-index: 1;
-  }
-
-  .hero-eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-  }
-
-  .status-dot {
-    width: 0.55rem;
-    height: 0.55rem;
-    border-radius: 999px;
-    background: var(--color-blue-bright);
+    width: min(100%, 275px);
+    aspect-ratio: 1;
+    padding: 0.4rem;
+    border: 1px solid rgba(125, 211, 252, 0.34);
+    border-radius: 50%;
+    background:
+      linear-gradient(
+        145deg,
+        rgba(96, 165, 250, 0.7),
+        rgba(29, 78, 216, 0.08) 45%,
+        rgba(125, 211, 252, 0.45)
+      );
     box-shadow:
-      0 0 0 0.25rem rgba(125, 211, 252, 0.08),
-      0 0 1.2rem rgba(96, 165, 250, 0.7);
+      0 0 0 0.5rem rgba(59, 130, 246, 0.035),
+      0 2rem 6rem rgba(0, 0, 0, 0.38),
+      0 0 4rem rgba(37, 99, 235, 0.13);
   }
 
-  h1 {
-    max-width: 930px;
-    font-size: clamp(3.8rem, 8.4vw, 7.4rem);
+  .portrait-frame::after {
+    position: absolute;
+    inset: -1.25rem;
+    z-index: -1;
+    content: "";
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.12);
+    filter: blur(2.5rem);
   }
 
-  h1 span {
-    display: block;
+  .portrait-placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 50%;
+    background:
+      radial-gradient(
+        circle at 50% 32%,
+        rgba(96, 165, 250, 0.2),
+        transparent 30%
+      ),
+      linear-gradient(
+        145deg,
+        var(--color-surface-strong),
+        var(--color-bg-soft)
+      );
+  }
+
+  .portrait-placeholder span {
+    max-width: 8rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .intro-heading {
+    min-width: 0;
+  }
+
+  .intro-heading h1 {
+    font-size: clamp(2.9rem, 5.4vw, 5.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.06em;
+    white-space: nowrap;
+  }
+
+  .intro-heading h1 span {
     color: transparent;
     background:
       linear-gradient(
         105deg,
-        #ffffff 0%,
-        var(--color-blue-bright) 42%,
-        var(--color-blue) 100%
+        var(--color-blue-bright),
+        var(--color-blue)
       );
     -webkit-background-clip: text;
     background-clip: text;
   }
 
-  .hero-actions {
-    margin-top: 2.25rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem;
+  .intro-description {
+    max-width: 920px;
+    margin: clamp(2.75rem, 5vw, 4.5rem) auto 0;
+    text-align: center;
   }
 
-  .direction-panel {
-    position: relative;
-    overflow: hidden;
-    padding: 1.35rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-large);
-    background:
-      linear-gradient(
-        155deg,
-        rgba(18, 27, 40, 0.92),
-        rgba(9, 14, 22, 0.84)
-      );
-    box-shadow: var(--shadow-card);
-  }
-
-  .direction-panel::before {
-    position: absolute;
-    top: -8rem;
-    right: -8rem;
-    width: 16rem;
-    height: 16rem;
-    content: "";
-    border-radius: 50%;
-    background: rgba(37, 99, 235, 0.18);
-    filter: blur(3rem);
-  }
-
-  .panel-heading {
-    position: relative;
-    padding-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--color-border);
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .panel-heading p {
+  .intro-description p {
     margin: 0;
     color: var(--color-text-secondary);
+    font-size: clamp(1.05rem, 1.7vw, 1.2rem);
+    line-height: 1.8;
   }
 
-  .panel-heading span {
-    color: var(--color-blue-bright);
-    text-shadow: 0 0 1rem var(--color-blue-light);
-  }
-
-  .direction-list {
-    position: relative;
-    margin: 0;
-  }
-
-  .direction-list div {
-    padding-block: 1rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .direction-list dt {
-    margin-bottom: 0.35rem;
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .direction-list dd {
-    margin: 0;
+  .intro-description strong {
     color: var(--color-text);
-    font-size: 0.96rem;
-    line-height: 1.5;
+    font-weight: 600;
   }
 
-  .panel-signal {
-    height: 3rem;
-    margin-top: 1.2rem;
-    display: flex;
-    align-items: flex-end;
-    gap: 0.35rem;
-  }
-
-  .panel-signal span {
-    width: 100%;
-    border-radius: 0.2rem;
+  .scroll-cue {
+    position: fixed;
+    bottom: max(1.5rem, env(safe-area-inset-bottom));
+    left: 50%;
+    z-index: 40;
+    min-height: 3.25rem;
+    padding: 0.85rem 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 999px;
+    color: var(--color-text);
     background:
       linear-gradient(
-        to top,
-        rgba(37, 99, 235, 0.38),
-        rgba(125, 211, 252, 0.82)
+        135deg,
+        rgba(18, 27, 40, 0.94),
+        rgba(8, 12, 19, 0.9)
       );
+    box-shadow:
+      0 1rem 3rem rgba(0, 0, 0, 0.38),
+      0 0 2rem rgba(37, 99, 235, 0.13);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    opacity: 1;
+    transform: translateX(-50%);
+    transition:
+      opacity var(--transition-standard),
+      border-color var(--transition-fast),
+      background-color var(--transition-fast),
+      transform var(--transition-standard);
   }
 
-  .panel-signal span:nth-child(1) {
-    height: 35%;
+  .scroll-cue:hover,
+  .scroll-cue:focus-visible {
+    border-color: var(--color-blue-bright);
+    background: var(--color-surface-strong);
   }
 
-  .panel-signal span:nth-child(2) {
-    height: 58%;
+  .scroll-cue.is-hidden {
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 0.75rem);
   }
 
-  .panel-signal span:nth-child(3) {
-    height: 46%;
+  .scroll-cue-arrow {
+    color: var(--color-blue-bright);
+    font-size: 1rem;
+    animation: scroll-cue-bounce 1.6s ease-in-out infinite;
   }
 
-  .panel-signal span:nth-child(4) {
-    height: 78%;
+  .portfolio-navigation {
+    margin-top: clamp(12rem, 22vw, 18rem);
+    scroll-margin-top: 7rem;
   }
 
-  .panel-signal span:nth-child(5) {
-    height: 100%;
+  .navigation-heading {
+    max-width: 760px;
   }
 
-  .site-guide {
-    padding-top: clamp(6rem, 12vw, 11rem);
+  .navigation-heading h2 {
+    max-width: 740px;
   }
 
-  .guide-intro {
-    max-width: 710px;
-  }
-
-  .guide-intro > p:last-child {
+  .navigation-heading > p {
     max-width: 620px;
     margin: 1.5rem 0 0;
     color: var(--color-text-secondary);
@@ -328,95 +331,139 @@ const paths = [
     line-height: 1.7;
   }
 
-  .guide-grid {
-    margin-top: 3rem;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .section-list {
+    margin-top: clamp(3rem, 6vw, 5rem);
     border-top: 1px solid var(--color-border);
   }
 
-  .guide-card {
-    min-height: 10rem;
-    padding: 1.5rem;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: start;
-    gap: 1.25rem;
+  .section-link {
+    position: relative;
+    min-height: 8.75rem;
+    padding: 1.6rem 1rem;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
     border-bottom: 1px solid var(--color-border);
     color: inherit;
     text-decoration: none;
+    transform: scale(1);
+    transform-origin: center;
     transition:
       border-color var(--transition-fast),
-      background-color var(--transition-standard);
+      background-color var(--transition-standard),
+      transform var(--transition-standard);
+    will-change: transform;
   }
 
-  .guide-card:nth-child(odd) {
-    border-right: 1px solid var(--color-border);
-  }
-
-  .guide-card:hover,
-  .guide-card:focus-visible {
-    border-color: var(--color-border-strong);
+  .section-link::before {
+    position: absolute;
+    inset: 0;
+    content: "";
     background:
       linear-gradient(
-        135deg,
-        rgba(59, 130, 246, 0.08),
-        rgba(14, 20, 30, 0.5)
+        90deg,
+        rgba(59, 130, 246, 0.1),
+        rgba(59, 130, 246, 0.025) 55%,
+        transparent
       );
-  }
-
-  .guide-number {
-    color: var(--color-blue-light);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-  }
-
-  .guide-content {
-    display: grid;
-    gap: 0.65rem;
-  }
-
-  .guide-content strong {
-    font-size: 1.15rem;
-    font-weight: 600;
-  }
-
-  .guide-content span {
-    max-width: 340px;
-    color: var(--color-text-muted);
-    font-size: 0.9rem;
-    line-height: 1.55;
-  }
-
-  .guide-arrow {
-    color: var(--color-text-muted);
+    opacity: 0;
+    transform: translateX(-2rem);
     transition:
-      color var(--transition-fast),
+      opacity var(--transition-standard),
       transform var(--transition-standard);
   }
 
-  .guide-card:hover .guide-arrow {
-    color: var(--color-blue-bright);
-    transform: translate(0.2rem, -0.2rem);
+  .section-link:hover,
+  .section-link:focus-visible {
+    z-index: 2;
+    border-color: var(--color-border-strong);
+    transform: scale(1.018);
+  }
+
+  .section-link:hover::before,
+  .section-link:focus-visible::before {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .section-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(170px, 0.38fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(2rem, 4vw, 4rem);
+  }
+
+  .section-content strong {
+    width: fit-content;
+    color: var(--color-text);
+    background:
+      linear-gradient(
+        105deg,
+        #ffffff 0%,
+        #dbeafe 42%,
+        var(--color-blue-light) 100%
+      );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: var(--color-text);
+    font-size: clamp(1.4rem, 3vw, 2.25rem);
+    font-weight: 570;
+    letter-spacing: -0.04em;
+    transition:
+      color var(--transition-standard),
+      -webkit-text-fill-color var(--transition-standard);
+  }
+
+  .section-link:hover .section-content strong,
+  .section-link:focus-visible .section-content strong {
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .section-content > span {
+    max-width: none;
+    justify-self: end;
+    color: var(--color-text-muted);
+    font-size: clamp(0.88rem, 1.05vw, 1rem);
+    line-height: 1.65;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  @keyframes scroll-cue-bounce {
+    0%,
+    100% {
+      transform: translateY(-0.12rem);
+    }
+
+    50% {
+      transform: translateY(0.22rem);
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .hero-copy,
-    .direction-panel,
-    .site-guide {
+    .intro-top,
+    .intro-description,
+    .portfolio-navigation {
       opacity: 0;
-      animation: reveal-up 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation:
+        home-reveal 700ms
+        cubic-bezier(0.22, 1, 0.36, 1)
+        forwards;
     }
 
-    .direction-panel {
-      animation-delay: 120ms;
+    .intro-description {
+      animation-delay: 100ms;
     }
 
-    .site-guide {
+    .portfolio-navigation {
       animation-delay: 220ms;
     }
 
-    @keyframes reveal-up {
+    @keyframes home-reveal {
       from {
         opacity: 0;
         transform: translateY(1.25rem);
@@ -430,48 +477,63 @@ const paths = [
   }
 
   @media (max-width: 900px) {
-    .home-hero {
-      min-height: auto;
-      grid-template-columns: 1fr;
+    .intro-top {
+      grid-template-columns: minmax(180px, 230px) minmax(0, 1fr);
+      gap: 2.5rem;
     }
 
-    .direction-panel {
-      max-width: 620px;
+    .intro-heading h1 {
+      font-size: clamp(2.5rem, 5.2vw, 3.8rem);
+    }
+
+    .section-content {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .section-content > span {
+      justify-self: start;
+      text-align: left;
+      white-space: normal;
     }
   }
 
   @media (max-width: 700px) {
-    h1 {
-      font-size: clamp(3.25rem, 16vw, 5rem);
-    }
-
-    .guide-grid {
+    .intro-top {
       grid-template-columns: 1fr;
+      align-items: start;
     }
 
-    .guide-card:nth-child(odd) {
-      border-right: 0;
+    .portrait-frame {
+      width: min(62vw, 240px);
+    }
+
+    .intro-heading h1 {
+      font-size: clamp(3.25rem, 15vw, 5rem);
+      white-space: normal;
+    }
+
+    .section-link {
+      min-height: auto;
+      padding-block: 1.5rem;
     }
   }
 
   @media (max-width: 480px) {
-    .hero-actions {
-      align-items: stretch;
-      flex-direction: column;
+    .scroll-cue {
+      bottom: max(1rem, env(safe-area-inset-bottom));
+      width: min(calc(100% - 2rem), 18rem);
+      justify-content: center;
     }
 
-    .button {
-      width: 100%;
+    .section-link {
+      padding-inline: 0;
     }
+  }
 
-    .guide-card {
-      min-height: auto;
-      padding-inline: 0.75rem;
-      grid-template-columns: auto 1fr;
-    }
-
-    .guide-arrow {
-      display: none;
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-cue-arrow {
+      animation: none;
     }
   }
 </style>
