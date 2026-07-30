@@ -1,17 +1,1079 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const experience = [
+  {
+    period: '03.2024 — 04.2026',
+    role: 'QA Specialist',
+    company: 'Anshar Studios',
+    logo: 'AS',
+    summary:
+      'Software quality assurance across PC and current-generation console projects, covering functional, regression and certification-focused testing.',
+    responsibilities: [
+      'Tested software on PC, PlayStation 5 and Xbox Series X/S.',
+      'Documented defects in Jira and prepared detailed test reports.',
+      'Created project documentation, test scenarios and QA materials using Confluence and TestRail.',
+      'Collaborated closely with developers, producers and game designers.',
+    ],
+    tags: [
+      'PC',
+      'PlayStation 5',
+      'Xbox Series X/S',
+      'Jira',
+      'TestRail',
+      'Confluence',
+    ],
+  },
+  {
+    period: '09.2023 — 03.2024',
+    role: 'Programming & Game Development Tutor',
+    company: 'Kodland',
+    logo: 'K',
+    summary:
+      'Remote technical education focused on introducing children and teenagers to programming and game creation.',
+    responsibilities: [
+      'Delivered online lessons using Scratch, Python and Roblox Studio.',
+      'Evaluated student progress and adapted teaching methods to individual needs.',
+      'Reviewed learning materials and supported the development of teaching methods.',
+    ],
+    tags: [
+      'Python',
+      'Scratch',
+      'Roblox Studio',
+      'Remote teaching',
+    ],
+  },
+  {
+    period: '11.2021 — 02.2024',
+    role: 'QA Engineer',
+    company: 'Carbon Studio / Iron VR',
+    logo: 'CS',
+    summary:
+      'Quality assurance and validation of virtual reality applications across multiple consumer VR platforms.',
+    responsibilities: [
+      'Tested VR applications using documentation and defined test scenarios.',
+      'Worked with platforms including Meta Quest, PlayStation VR2 and HTC Vive.',
+      'Reported and documented defects using Jira and Redmine.',
+      'Collaborated with developers, producers and game designers.',
+    ],
+    tags: [
+      'VR',
+      'Meta Quest',
+      'PlayStation VR2',
+      'HTC Vive',
+      'Jira',
+      'Redmine',
+    ],
+  },
+  {
+    period: '09.2020 — 10.2021',
+    role: 'Functional QA Tester',
+    company: 'Keywords Studios',
+    logo: 'KS',
+    summary:
+      'Functional quality assurance for AAA titles released across PC, PlayStation and Xbox platforms.',
+    responsibilities: [
+      'Verified game quality against supplied documentation and requirements.',
+      'Documented functional defects using Jira.',
+      'Executed structured test plans and test cases using TestRail.',
+    ],
+    tags: [
+      'AAA games',
+      'PC',
+      'PlayStation',
+      'Xbox',
+      'Jira',
+      'TestRail',
+    ],
+  },
+];
 ---
 
 <BaseLayout
   title="Experience"
-  description="Professional experience of Bartosz Girzecki."
+  description="Professional experience of Bartosz Girzecki across software quality assurance, game development and technical education."
 >
-  <section class="page-intro">
+  <section
+    class="experience-hero"
+    aria-labelledby="experience-title"
+  >
     <p class="eyebrow">Professional background</p>
-    <h1>Experience</h1>
-    <p class="lead">
-      Professional experience and responsibilities will be developed
-      during the next stage.
+
+    <h1 id="experience-title">Experience</h1>
+
+    <p class="experience-lead">
+      Nearly six years of professional experience across software
+      quality assurance, multi-platform game development, virtual
+      reality and technical education.
     </p>
   </section>
+
+  <a
+    class="timeline-cue"
+    href="#timeline-end"
+    data-timeline-cue
+    aria-label="Start from the beginning of my professional timeline"
+  >
+    <span class="timeline-cue-label">
+      Start from the beginning
+    </span>
+
+    <span
+      class="timeline-cue-arrow"
+      aria-hidden="true"
+    >
+      ↓
+    </span>
+  </a>
+
+  <section
+    class="timeline"
+    data-timeline
+    aria-label="Professional experience timeline"
+  >
+    <div
+      class="timeline-line"
+      data-timeline-line
+      aria-hidden="true"
+    ></div>
+
+    {
+      experience.map((item, index) => (
+        <article
+          class:list={[
+            'timeline-item',
+            index % 2 === 0
+              ? 'timeline-left'
+              : 'timeline-right',
+          ]}
+          data-timeline-item
+          data-last-item={
+            index === experience.length - 1
+              ? 'true'
+              : undefined
+          }
+        >
+          <div
+            class="timeline-node"
+            aria-hidden="true"
+          >
+            <span></span>
+          </div>
+
+          <div
+            class="company-logo"
+            aria-label={`${item.company} logo placeholder`}
+          >
+            {item.logo}
+          </div>
+
+          <div class="experience-card">
+            <p class="employment-period">
+              {item.period}
+            </p>
+
+            <div class="card-heading">
+              <h2>{item.role}</h2>
+
+              <p class="company-name">
+                {item.company}
+              </p>
+            </div>
+
+            <p class="role-summary">
+              {item.summary}
+            </p>
+
+            <ul class="responsibility-list">
+              {
+                item.responsibilities.map(
+                  (responsibility) => (
+                    <li>{responsibility}</li>
+                  )
+                )
+              }
+            </ul>
+
+            <ul
+              class="tag-list"
+              aria-label={`Technologies and areas used at ${item.company}`}
+            >
+              {
+                item.tags.map((tag) => (
+                  <li>{tag}</li>
+                ))
+              }
+            </ul>
+          </div>
+        </article>
+      ))
+    }
+  </section>
+
+  <div
+    id="timeline-end"
+    class="timeline-end"
+    aria-hidden="true"
+  ></div>
 </BaseLayout>
+
+<script>
+  const timelineItems = document.querySelectorAll(
+    '[data-timeline-item]'
+  );
+
+  if ('IntersectionObserver' in window) {
+    const itemObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+
+          entry.target.classList.add('is-visible');
+          itemObserver.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.14,
+        rootMargin: '0px 0px -6% 0px',
+      }
+    );
+
+    timelineItems.forEach((item) => {
+      itemObserver.observe(item);
+    });
+  } else {
+    timelineItems.forEach((item) => {
+      item.classList.add('is-visible');
+    });
+  }
+
+  const timelineCue = document.querySelector(
+    '[data-timeline-cue]'
+  );
+
+  const timeline = document.querySelector(
+    '[data-timeline]'
+  );
+
+  const timelineLine = document.querySelector(
+    '[data-timeline-line]'
+  );
+
+  const lastCardHeading = document.querySelector(
+    '[data-last-item="true"] .card-heading'
+  );
+
+  const oneSideLayout = window.matchMedia(
+    '(max-width: 1000px)'
+  );
+
+  const compactCue = window.matchMedia(
+    '(max-width: 1000px)'
+  );
+
+  const positionTimelineCue = () => {
+    if (
+      !(timelineCue instanceof HTMLAnchorElement) ||
+      !(timeline instanceof HTMLElement) ||
+      !(timelineLine instanceof HTMLElement)
+    ) {
+      return;
+    }
+
+    const lineRect =
+      timelineLine.getBoundingClientRect();
+
+    const lineCenter =
+      lineRect.left + lineRect.width / 2;
+
+    timelineCue.style.left = `${lineCenter}px`;
+
+    if (compactCue.matches) {
+      timelineCue.style.top = '50%';
+      return;
+    }
+
+    const timelineDocumentTop =
+      timeline.getBoundingClientRect().top +
+      window.scrollY;
+
+    const preferredPosition =
+      timelineDocumentTop - 24;
+
+    const minimumPosition = 112;
+    const maximumPosition =
+      window.innerHeight - 64;
+
+    const fixedPosition = Math.min(
+      Math.max(
+        preferredPosition,
+        minimumPosition
+      ),
+      maximumPosition
+    );
+
+    timelineCue.style.top = `${fixedPosition}px`;
+  };
+
+  const updateTimelineCueVisibility = () => {
+    if (
+      !(timelineCue instanceof HTMLAnchorElement) ||
+      !(lastCardHeading instanceof HTMLElement)
+    ) {
+      return;
+    }
+
+    const lastHeadingPosition =
+      lastCardHeading.getBoundingClientRect();
+
+    const shouldHide =
+      lastHeadingPosition.bottom <=
+      window.innerHeight - 24;
+
+    timelineCue.classList.toggle(
+      'is-hidden',
+      shouldHide
+    );
+
+    timelineCue.tabIndex = shouldHide ? -1 : 0;
+
+    timelineCue.setAttribute(
+      'aria-hidden',
+      String(shouldHide)
+    );
+  };
+
+  positionTimelineCue();
+  updateTimelineCueVisibility();
+
+  window.addEventListener(
+    'scroll',
+    updateTimelineCueVisibility,
+    {
+      passive: true,
+    }
+  );
+
+  window.addEventListener(
+    'resize',
+    () => {
+      positionTimelineCue();
+      updateTimelineCueVisibility();
+    }
+  );
+
+  oneSideLayout.addEventListener(
+    'change',
+    positionTimelineCue
+  );
+
+  compactCue.addEventListener(
+    'change',
+    positionTimelineCue
+  );
+</script>
+
+<style>
+  :global(.page-content) {
+    padding-top: clamp(3.5rem, 7vw, 6.5rem);
+  }
+
+  .experience-hero {
+    max-width: 900px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .experience-hero h1 {
+    font-size: clamp(4rem, 10vw, 8rem);
+  }
+
+  .experience-lead {
+    max-width: 740px;
+    margin: 2rem auto 0;
+    color: var(--color-text-secondary);
+    font-size: clamp(1.08rem, 2vw, 1.32rem);
+    line-height: 1.75;
+  }
+
+  .timeline-cue {
+    position: fixed;
+    z-index: 45;
+    width: max-content;
+    max-width: 10rem;
+    min-height: 2.8rem;
+    padding: 0.65rem 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 999px;
+    color: var(--color-text);
+    background:
+      linear-gradient(
+        135deg,
+        rgba(18, 27, 40, 0.96),
+        rgba(8, 12, 19, 0.92)
+      );
+    box-shadow:
+      0 1rem 3rem rgba(0, 0, 0, 0.42),
+      0 0 2rem rgba(37, 99, 235, 0.14);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    line-height: 1.3;
+    letter-spacing: 0.025em;
+    text-align: center;
+    text-decoration: none;
+    opacity: 1;
+    transform: translate(-50%, -50%);
+    transition:
+      opacity var(--transition-standard),
+      border-color var(--transition-fast),
+      background-color var(--transition-fast),
+      transform var(--transition-standard);
+  }
+
+  .timeline-cue:hover,
+  .timeline-cue:focus-visible {
+    border-color: var(--color-blue-bright);
+    background: var(--color-surface-strong);
+    transform:
+      translate(-50%, -50%)
+      scale(1.045);
+  }
+
+  .timeline-cue.is-hidden {
+    pointer-events: none;
+    opacity: 0;
+    transform:
+      translate(-50%, calc(-50% + 0.7rem))
+      scale(0.96);
+  }
+
+  .timeline-cue-arrow {
+    flex: 0 0 auto;
+    color: var(--color-blue-bright);
+    font-size: 0.95rem;
+    animation:
+      timeline-cue-bounce
+      1.6s
+      ease-in-out
+      infinite;
+  }
+
+  .timeline {
+    --timeline-gap: clamp(6.25rem, 7vw, 7.25rem);
+
+    position: relative;
+    width: min(1500px, calc(100vw - 2rem));
+    max-width: none;
+    margin:
+      clamp(7rem, 14vw, 12rem)
+      0
+      0
+      50%;
+    padding-bottom: clamp(3rem, 8vw, 7rem);
+    transform: translateX(-50%);
+  }
+
+  .timeline-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background:
+      linear-gradient(
+        to bottom,
+        transparent,
+        var(--color-blue-light) 4rem,
+        rgba(96, 165, 250, 0.38)
+          calc(100% - 4rem),
+        transparent
+      );
+    transform: translateX(-50%);
+  }
+
+  .timeline-item {
+    position: relative;
+    width:
+      calc(50% - var(--timeline-gap));
+    margin-bottom:
+      clamp(1.5rem, 2.5vw, 2.25rem);
+    opacity: 0;
+    transition:
+      opacity 700ms
+        cubic-bezier(0.22, 1, 0.36, 1),
+      transform 700ms
+        cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .timeline-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .timeline-left {
+    margin-right: auto;
+    transform: translate(-2rem, 2rem);
+  }
+
+  .timeline-right {
+    margin-left: auto;
+    transform: translate(2rem, 2rem);
+  }
+
+  .timeline-item.is-visible {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+
+  .timeline-node {
+    position: absolute;
+    top: 3.2rem;
+    width: var(--timeline-gap);
+    height: 1px;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(96, 165, 250, 0.15),
+        rgba(96, 165, 250, 0.75)
+      );
+  }
+
+  .timeline-left .timeline-node {
+    right:
+      calc(-1 * var(--timeline-gap));
+  }
+
+  .timeline-right .timeline-node {
+    left:
+      calc(-1 * var(--timeline-gap));
+    transform: scaleX(-1);
+  }
+
+  .timeline-node span {
+    position: absolute;
+    top: 50%;
+    right: -0.38rem;
+    width: 0.78rem;
+    height: 0.78rem;
+    border: 2px solid var(--color-blue-light);
+    border-radius: 50%;
+    background: var(--color-bg);
+    box-shadow:
+      0 0 0 0.35rem rgba(59, 130, 246, 0.1),
+      0 0 1.5rem rgba(96, 165, 250, 0.48);
+    transform: translateY(-50%);
+    transition:
+      background-color var(--transition-standard),
+      box-shadow var(--transition-standard),
+      transform var(--transition-standard);
+  }
+
+  .company-logo {
+    position: absolute;
+    top: -3rem;
+    z-index: 4;
+    width: 7rem;
+    height: 7rem;
+    display: grid;
+    place-items: center;
+    border: 2px solid
+      rgba(125, 211, 252, 0.42);
+    border-radius: 50%;
+    color: var(--color-blue-bright);
+    background:
+      radial-gradient(
+        circle at 35% 30%,
+        rgba(96, 165, 250, 0.24),
+        transparent 45%
+      ),
+      linear-gradient(
+        145deg,
+        var(--color-surface-strong),
+        var(--color-bg-soft)
+      );
+    box-shadow:
+      0 0 0 0.45rem
+        rgba(59, 130, 246, 0.055),
+      0 1rem 2.5rem rgba(0, 0, 0, 0.4),
+      0 0 2.5rem rgba(37, 99, 235, 0.16);
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    transition:
+      border-color var(--transition-standard),
+      box-shadow var(--transition-standard),
+      transform var(--transition-standard);
+  }
+
+  .timeline-left .company-logo {
+    left: -3rem;
+  }
+
+  .timeline-right .company-logo {
+    right: -3rem;
+  }
+
+  .experience-card {
+    position: relative;
+    padding:
+      clamp(3.75rem, 4.5vw, 4.25rem)
+      clamp(1.6rem, 3vw, 2.25rem)
+      clamp(1.6rem, 3vw, 2.25rem);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background:
+      linear-gradient(
+        145deg,
+        rgba(18, 27, 40, 0.9),
+        rgba(9, 14, 22, 0.82)
+      );
+    box-shadow: var(--shadow-card);
+    transition:
+      border-color var(--transition-standard),
+      box-shadow var(--transition-standard),
+      transform var(--transition-standard);
+  }
+
+  .experience-card::before {
+    position: absolute;
+    top: -8rem;
+    width: 15rem;
+    height: 15rem;
+    content: "";
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.13);
+    filter: blur(3rem);
+    opacity: 0;
+    transition: opacity var(--transition-standard);
+  }
+
+  .timeline-left .experience-card::before {
+    left: -8rem;
+  }
+
+  .timeline-right .experience-card::before {
+    right: -8rem;
+  }
+
+  .timeline-left:hover .experience-card,
+  .timeline-left:focus-within .experience-card {
+    border-color: var(--color-border-strong);
+    box-shadow:
+      0 30px 90px rgba(0, 0, 0, 0.38),
+      0 0 3rem rgba(37, 99, 235, 0.1);
+    transform:
+      translateX(0.65rem)
+      scale(1.012);
+  }
+
+  .timeline-right:hover .experience-card,
+  .timeline-right:focus-within .experience-card {
+    border-color: var(--color-border-strong);
+    box-shadow:
+      0 30px 90px rgba(0, 0, 0, 0.38),
+      0 0 3rem rgba(37, 99, 235, 0.1);
+    transform:
+      translateX(-0.65rem)
+      scale(1.012);
+  }
+
+  .timeline-item:hover .experience-card::before,
+  .timeline-item:focus-within
+    .experience-card::before {
+    opacity: 1;
+  }
+
+  .timeline-item:hover .company-logo,
+  .timeline-item:focus-within .company-logo {
+    border-color: var(--color-blue-bright);
+    box-shadow:
+      0 0 0 0.55rem
+        rgba(59, 130, 246, 0.08),
+      0 1.25rem 3rem
+        rgba(0, 0, 0, 0.45),
+      0 0 3rem
+        rgba(96, 165, 250, 0.3);
+    transform: scale(1.07);
+  }
+
+  .timeline-item:hover .timeline-node span,
+  .timeline-item:focus-within
+    .timeline-node span {
+    background: var(--color-blue-light);
+    box-shadow:
+      0 0 0 0.45rem
+        rgba(59, 130, 246, 0.13),
+      0 0 2.2rem
+        rgba(96, 165, 250, 0.75);
+    transform:
+      translateY(-50%)
+      scale(1.18);
+  }
+
+  .employment-period {
+    position: absolute;
+    top: 1.3rem;
+    z-index: 2;
+    margin: 0;
+    color: var(--color-blue-bright);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 550;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .timeline-left .employment-period {
+    right: 1.5rem;
+    left: auto;
+    text-align: right;
+  }
+
+  .timeline-right .employment-period {
+    right: auto;
+    left: 1.5rem;
+    text-align: left;
+  }
+
+  .card-heading {
+    position: relative;
+    z-index: 1;
+    margin-top: 0.5rem;
+  }
+
+  .timeline-right .card-heading {
+    text-align: right;
+  }
+
+  .card-heading h2 {
+    font-size:
+      clamp(1.75rem, 3.1vw, 2.6rem);
+    line-height: 1.05;
+  }
+
+  .company-name {
+    margin: 0.65rem 0 0;
+    color: var(--color-blue-light);
+    font-size: 1.05rem;
+    font-weight: 570;
+  }
+
+  .role-summary {
+    position: relative;
+    z-index: 1;
+    margin: 1.4rem 0 0;
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .responsibility-list {
+    position: relative;
+    z-index: 1;
+    margin: 1.4rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+    gap: 0.75rem 1.35rem;
+    list-style: none;
+  }
+
+  .responsibility-list li {
+    position: relative;
+    padding-left: 1.2rem;
+    color: var(--color-text-secondary);
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  .responsibility-list li::before {
+    position: absolute;
+    top: 0.68em;
+    left: 0;
+    width: 0.36rem;
+    height: 0.36rem;
+    content: "";
+    border-radius: 50%;
+    background: var(--color-blue-light);
+    box-shadow:
+      0 0 0.8rem
+        rgba(96, 165, 250, 0.55);
+  }
+
+  .tag-list {
+    position: relative;
+    z-index: 1;
+    margin: 1.6rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+  }
+
+  .timeline-right .tag-list {
+    justify-content: flex-end;
+  }
+
+  .tag-list li {
+    padding: 0.45rem 0.65rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    color: var(--color-text-muted);
+    background: rgba(7, 9, 13, 0.35);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    line-height: 1;
+  }
+
+  .timeline-end {
+    height: 1px;
+    scroll-margin-top: 7rem;
+  }
+
+  @keyframes timeline-cue-bounce {
+    0%,
+    100% {
+      transform: translateY(-0.12rem);
+    }
+
+    50% {
+      transform: translateY(0.22rem);
+    }
+  }
+
+  @media (max-width: 1240px) {
+    .timeline {
+      --timeline-gap: 6rem;
+    }
+
+    .responsibility-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 1000px) {
+    .timeline-cue {
+      width: 2.55rem;
+      min-width: 2.55rem;
+      max-width: 2.55rem;
+      height: 2.55rem;
+      min-height: 2.55rem;
+      padding: 0;
+      gap: 0;
+      border-radius: 50%;
+    }
+
+    .timeline-cue-label {
+      display: none;
+    }
+
+    .timeline-cue-arrow {
+      font-size: 1.15rem;
+    }
+
+    .timeline {
+      --mobile-axis-offset: 1.15rem;
+      --mobile-card-offset: 5.25rem;
+
+      width: 100%;
+      margin:
+        clamp(6rem, 12vw, 9rem)
+        0
+        0;
+      padding-left: 0;
+      transform: none;
+    }
+
+    .timeline-line {
+      left: var(--mobile-axis-offset);
+      transform: none;
+    }
+
+    .timeline-item,
+    .timeline-left,
+    .timeline-right {
+      width:
+        calc(100% - var(--mobile-card-offset));
+      margin-right: 0;
+      margin-left: var(--mobile-card-offset);
+      margin-bottom:
+        clamp(4.5rem, 9vw, 6.5rem);
+      transform: translate(1.25rem, 2rem);
+    }
+
+    .timeline-item.is-visible {
+      transform: translate(0, 0);
+    }
+
+    .timeline-node,
+    .timeline-left .timeline-node,
+    .timeline-right .timeline-node {
+      top: 3.2rem;
+      right: auto;
+      left:
+        calc(
+          -1 *
+          (
+            var(--mobile-card-offset) -
+            var(--mobile-axis-offset)
+          )
+        );
+      width:
+        calc(
+          var(--mobile-card-offset) -
+          var(--mobile-axis-offset)
+        );
+      transform: none;
+    }
+
+    .timeline-left .company-logo,
+    .timeline-right .company-logo {
+      top: -2.5rem;
+      right: -1.15rem;
+      left: auto;
+      width: 5.5rem;
+      height: 5.5rem;
+      font-size: 0.9rem;
+    }
+
+    .experience-card {
+      padding:
+        3.25rem
+        clamp(1.4rem, 4vw, 2rem)
+        clamp(1.4rem, 4vw, 2rem);
+    }
+
+    .timeline-left .employment-period,
+    .timeline-right .employment-period {
+      top: 1.15rem;
+      right: auto;
+      left: 1.4rem;
+      text-align: left;
+    }
+
+    .timeline-left .card-heading,
+    .timeline-right .card-heading {
+      text-align: left;
+    }
+
+    .timeline-left .tag-list,
+    .timeline-right .tag-list {
+      justify-content: flex-start;
+    }
+
+    .timeline-left:hover .experience-card,
+    .timeline-left:focus-within
+      .experience-card,
+    .timeline-right:hover .experience-card,
+    .timeline-right:focus-within
+      .experience-card {
+      transform:
+        translateX(0.3rem)
+        scale(1.008);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .timeline {
+      --mobile-axis-offset: 0.55rem;
+      --mobile-card-offset: 3.25rem;
+    }
+
+    .timeline-item,
+    .timeline-left,
+    .timeline-right {
+      margin-bottom:
+        clamp(7rem, 20vw, 9rem);
+    }
+
+    .timeline-cue {
+      width: 2.55rem;
+      min-width: 2.55rem;
+      max-width: 2.55rem;
+      height: 2.55rem;
+      min-height: 2.55rem;
+      padding: 0;
+      gap: 0;
+      border-radius: 50%;
+    }
+
+    .timeline-cue-label {
+      display: none;
+    }
+
+    .timeline-cue-arrow {
+      font-size: 1.15rem;
+    }
+
+    .timeline-left .company-logo,
+    .timeline-right .company-logo {
+      top: -2rem;
+      right: -0.7rem;
+      width: 4.75rem;
+      height: 4.75rem;
+      font-size: 0.8rem;
+    }
+
+    .experience-card {
+      padding:
+        3.1rem
+        1.15rem
+        1.25rem;
+      border-radius: var(--radius-medium);
+    }
+
+    .card-heading h2 {
+      font-size:
+        clamp(1.55rem, 8vw, 2.1rem);
+    }
+
+    .employment-period {
+      max-width: calc(100% - 6rem);
+      padding-right: 0;
+      font-size: 0.65rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .timeline {
+      --mobile-card-offset: 2.8rem;
+    }
+
+    .role-summary {
+      font-size: 0.94rem;
+    }
+
+    .responsibility-list li {
+      font-size: 0.84rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .timeline-cue-arrow {
+      animation: none;
+    }
+
+    .timeline-item {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .experience-card,
+    .company-logo,
+    .timeline-node span {
+      transition: none;
+    }
+  }
+</style>
