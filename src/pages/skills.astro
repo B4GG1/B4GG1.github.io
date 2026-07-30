@@ -1,17 +1,595 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const skillColumns = [
+  {
+    number: '01',
+    title: 'Quality Engineering',
+    level: 'Professional experience',
+    description:
+      'Nearly six years of commercial software quality experience across PC, consoles and virtual reality projects.',
+    groups: [
+      {
+        title: 'Testing practices',
+        skills: [
+          'Functional Testing',
+          'Regression Testing',
+          'Exploratory Testing',
+          'Smoke & Sanity Testing',
+          'Test Case Design',
+          'Defect Verification',
+        ],
+      },
+      {
+        title: 'Platforms & delivery',
+        skills: [
+          'PC Testing',
+          'PlayStation Testing',
+          'Xbox Testing',
+          'VR Testing',
+          'Certification-focused Testing',
+          'Test Documentation',
+          'Cross-functional QA',
+        ],
+      },
+    ],
+  },
+  {
+    number: '02',
+    title: 'Automation & API',
+    level: 'Active development',
+    description:
+      'The current expansion of my QA background through Python-based automation, API validation and continuous integration.',
+    groups: [
+      {
+        title: 'Test automation',
+        skills: [
+          'Python',
+          'pytest',
+          'Playwright',
+          'Selenium',
+          'Fixtures',
+          'Test Architecture',
+          'Reporting & Artifacts',
+        ],
+      },
+      {
+        title: 'API & CI',
+        skills: [
+          'API Testing',
+          'Postman',
+          'REST API Validation',
+          'GitHub Actions',
+          'Jenkins Fundamentals',
+          'CI Test Execution',
+        ],
+      },
+    ],
+  },
+  {
+    number: '03',
+    title: 'Software Engineering',
+    level: 'Development foundations',
+    description:
+      'Programming, backend, database and web foundations supporting broader technical projects and system-level understanding.',
+    groups: [
+      {
+        title: 'Programming & backend',
+        skills: [
+          'C++',
+          'Python',
+          'JavaScript',
+          'Object-Oriented Programming',
+          'REST APIs',
+          'Flask',
+          'Django',
+          'Debugging',
+        ],
+      },
+      {
+        title: 'Data & web',
+        skills: [
+          'SQL',
+          'PostgreSQL',
+          'Relational Databases',
+          'JSON',
+          'HTTP Fundamentals',
+          'Client–Server Architecture',
+          'HTML5',
+          'CSS3',
+        ],
+      },
+    ],
+  },
+  {
+    number: '04',
+    title: 'Delivery & Game Development',
+    level: 'Professional use and creative direction',
+    description:
+      'Professional workflow tools combined with a long-term creative direction centred on game design and development.',
+    groups: [
+      {
+        title: 'Tools & workflow',
+        skills: [
+          'Git & GitHub',
+          'Jira',
+          'TestRail',
+          'Confluence',
+          'Redmine',
+          'Visual Studio',
+          'PyCharm',
+          'Branch-based Workflow',
+          'Conventional Commits',
+          'Technical Documentation',
+        ],
+      },
+      {
+        title: 'Game design & development',
+        skills: [
+          'Game Design',
+          'Gameplay Systems',
+          'Quest & Content Design',
+          'Player Experience Analysis',
+          'Design Documentation',
+          'Prototyping',
+          'Gameplay Logic',
+          'C++ Game Development',
+        ],
+      },
+    ],
+  },
+];
 ---
 
 <BaseLayout
   title="Skills"
-  description="Technical skills of Bartosz Girzecki."
+  description="Technical capabilities of Bartosz Girzecki across software quality, test automation, programming, backend development and game design."
 >
-  <section class="page-intro">
+  <section
+    class="skills-hero"
+    aria-labelledby="skills-title"
+  >
     <p class="eyebrow">Technical capabilities</p>
-    <h1>Skills</h1>
-    <p class="lead">
-      Technical skills and areas of expertise will be developed during
-      the next stage.
+
+    <h1 id="skills-title">Skills</h1>
+
+    <p class="skills-lead">
+      Professional software quality experience combined with active
+      development in test automation, software engineering and a
+      long-term creative direction in game design.
     </p>
   </section>
+
+  <section
+    class="skills-grid"
+    aria-label="Technical skill categories"
+  >
+    {
+      skillColumns.map((column, index) => (
+        <article
+          class="skill-column"
+          style={`--reveal-delay: ${100 + index * 140}ms;`}
+        >
+          <header class="column-header">
+            <div class="column-meta">
+              <span class="column-level">
+                {column.level}
+              </span>
+            </div>
+
+            <h2>{column.title}</h2>
+
+            <p class="column-description">
+              {column.description}
+            </p>
+          </header>
+
+          <div class="skill-groups">
+            {
+              column.groups.map((group) => (
+                <section class="skill-group">
+                  <h3>{group.title}</h3>
+
+                  <ul>
+                    {
+                      group.skills.map((skill) => (
+                        <li>{skill}</li>
+                      ))
+                    }
+                  </ul>
+                </section>
+              ))
+            }
+          </div>
+        </article>
+      ))
+    }
+  </section>
 </BaseLayout>
+
+<style>
+  :global(.page-content) {
+    padding-top: clamp(2rem, 4vw, 3.75rem);
+    padding-bottom: clamp(5rem, 10vw, 9rem);
+  }
+
+  .skills-hero {
+    max-width: 1180px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns:
+      minmax(16rem, 0.8fr)
+      minmax(28rem, 1.2fr);
+    grid-template-areas:
+      "eyebrow lead"
+      "title lead";
+    align-items: end;
+    gap: 0.65rem clamp(3rem, 7vw, 7rem);
+    text-align: left;
+  }
+
+  .skills-hero .eyebrow {
+    grid-area: eyebrow;
+    margin: 0;
+    font-size: 0.7rem;
+  }
+
+  .skills-hero h1 {
+    grid-area: title;
+    font-size: clamp(3.25rem, 6vw, 5.75rem);
+  }
+
+  .skills-lead {
+    grid-area: lead;
+    max-width: 680px;
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: clamp(0.98rem, 1.45vw, 1.14rem);
+    line-height: 1.65;
+  }
+
+  .skills-grid {
+    width: min(1480px, calc(100vw - 2rem));
+    margin:
+      clamp(2.75rem, 5vw, 4.5rem)
+      0
+      0
+      50%;
+    display: grid;
+    grid-template-columns:
+      repeat(4, minmax(0, 1fr));
+    align-items: start;
+    gap: clamp(0.85rem, 1.6vw, 1.5rem);
+    transform: translateX(-50%);
+  }
+
+  .skill-column {
+    position: relative;
+    min-width: 0;
+    padding:
+      clamp(1.4rem, 2vw, 1.85rem)
+      clamp(1.2rem, 1.8vw, 1.65rem)
+      clamp(1.6rem, 2.2vw, 2rem);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background:
+      linear-gradient(
+        150deg,
+        rgba(18, 27, 40, 0.92),
+        rgba(9, 14, 22, 0.84)
+      );
+    box-shadow: var(--shadow-card);
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1);
+    animation:
+      reveal-skill-column
+      720ms
+      cubic-bezier(0.22, 1, 0.36, 1)
+      backwards;
+    animation-delay: var(--reveal-delay);
+    transition:
+      border-color var(--transition-standard),
+      box-shadow var(--transition-standard),
+      transform var(--transition-standard);
+  }
+
+  .skill-column::before {
+    position: absolute;
+    top: -9rem;
+    right: -9rem;
+    width: 18rem;
+    height: 18rem;
+    content: "";
+    pointer-events: none;
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.16);
+    filter: blur(3.5rem);
+    opacity: 0.18;
+    transition:
+      opacity var(--transition-standard),
+      transform var(--transition-standard);
+  }
+
+  .skill-column::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    pointer-events: none;
+    background:
+      linear-gradient(
+        120deg,
+        transparent 25%,
+        rgba(125, 211, 252, 0.05) 50%,
+        transparent 75%
+      );
+    opacity: 0;
+    transform: translateX(-60%);
+    transition:
+      opacity var(--transition-standard),
+      transform 750ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .skill-column:hover,
+  .skill-column:focus-within {
+    z-index: 3;
+    border-color: var(--color-border-strong);
+    box-shadow:
+      0 34px 100px rgba(0, 0, 0, 0.42),
+      0 0 3.5rem rgba(37, 99, 235, 0.14);
+    transform:
+      translateY(-0.5rem)
+      scale(1.018);
+  }
+
+  .skill-column:hover::before,
+  .skill-column:focus-within::before {
+    opacity: 0.8;
+    transform: scale(1.18);
+  }
+
+  .skill-column:hover::after,
+  .skill-column:focus-within::after {
+    opacity: 1;
+    transform: translateX(60%);
+  }
+
+  .column-header,
+  .skill-groups {
+    position: relative;
+    z-index: 1;
+  }
+
+  .column-meta {
+    min-height: 0;
+  }
+
+  .column-level {
+    display: block;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.61rem;
+    font-weight: 560;
+    letter-spacing: 0.055em;
+    line-height: 1.45;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .column-header h2 {
+    width: fit-content;
+    margin: 0.85rem 0 0;
+    color: var(--color-text);
+    background:
+      linear-gradient(
+        105deg,
+        #ffffff 0%,
+        #dbeafe 42%,
+        var(--color-blue-light) 100%
+      );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: var(--color-text);
+    font-size: clamp(1.45rem, 2vw, 2rem);
+    font-weight: 590;
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+    transition:
+      color var(--transition-standard),
+      -webkit-text-fill-color var(--transition-standard);
+  }
+
+  .skill-column:hover .column-header h2,
+  .skill-column:focus-within .column-header h2 {
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .column-description {
+    margin: 1rem 0 0;
+    color: var(--color-text-secondary);
+    font-size: clamp(0.8rem, 0.85vw, 0.9rem);
+    line-height: 1.65;
+  }
+
+  .skill-groups {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    display: grid;
+    gap: 1.8rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .skill-group h3 {
+    margin: 0 0 0.85rem;
+    color: var(--color-blue-light);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 570;
+    letter-spacing: 0.075em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .skill-group ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.48rem;
+    list-style: none;
+  }
+
+  .skill-group li {
+    padding: 0.48rem 0.62rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    color: var(--color-text-secondary);
+    background: rgba(7, 9, 13, 0.38);
+    font-size: clamp(0.68rem, 0.72vw, 0.75rem);
+    line-height: 1.18;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background-color var(--transition-fast),
+      transform var(--transition-standard);
+  }
+
+  .skill-column:hover .skill-group li,
+  .skill-column:focus-within .skill-group li {
+    border-color: rgba(96, 165, 250, 0.24);
+    background: rgba(37, 99, 235, 0.055);
+  }
+
+  .skill-group li:hover {
+    color: var(--color-text);
+    border-color: var(--color-blue-light);
+    transform: translateY(-0.12rem);
+  }
+
+  @keyframes reveal-skill-column {
+    from {
+      opacity: 0;
+      transform:
+        translateY(2rem)
+        scale(0.985);
+    }
+
+    to {
+      opacity: 1;
+      transform:
+        translateY(0)
+        scale(1);
+    }
+  }
+
+  @media (max-width: 1100px) {
+    .skills-grid {
+      width: 100%;
+      margin:
+        clamp(5rem, 10vw, 7rem)
+        0
+        0;
+      grid-template-columns: 1fr;
+      gap: clamp(2rem, 5vw, 3rem);
+      transform: none;
+    }
+
+    .skill-column {
+      min-height: auto;
+      padding:
+        clamp(1.6rem, 4vw, 2.2rem);
+    }
+
+    .column-meta {
+      min-height: auto;
+    }
+
+    .column-header h2 {
+      min-height: auto;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+    }
+
+    .column-description {
+      min-height: auto;
+      max-width: 760px;
+      font-size: 0.96rem;
+    }
+
+    .skill-groups {
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+      gap: clamp(1.5rem, 4vw, 3rem);
+    }
+  }
+
+  @media (max-width: 860px) {
+    .skills-hero {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "eyebrow"
+        "title"
+        "lead";
+      gap: 0.8rem;
+      text-align: center;
+    }
+
+    .skills-hero .eyebrow {
+      margin-bottom: 0.25rem;
+    }
+
+    .skills-lead {
+      max-width: 720px;
+      margin: 0.75rem auto 0;
+    }
+
+    .skills-grid {
+      margin-top: 3.5rem;
+    }
+  }
+  @media (max-width: 680px) {
+    .skill-column {
+      border-radius: var(--radius-medium);
+    }
+
+    .column-meta {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .column-level {
+      max-width: none;
+      text-align: left;
+    }
+
+    .skill-groups {
+      grid-template-columns: 1fr;
+    }
+
+    .skill-column:hover,
+    .skill-column:focus-within {
+      transform:
+        translateY(-0.25rem)
+        scale(1.008);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skill-column {
+      opacity: 1;
+      transform: none;
+      animation: none;
+      transition: none;
+    }
+
+    .skill-column::before,
+    .skill-column::after,
+    .column-header h2,
+    .skill-group li {
+      transition: none;
+    }
+  }
+</style>
