@@ -149,8 +149,6 @@ const skillColumns = [
     class="skills-hero"
     aria-labelledby="skills-title"
   >
-    <p class="eyebrow">Technical capabilities</p>
-
     <h1 id="skills-title">Skills</h1>
 
     <p class="skills-lead">
@@ -214,34 +212,46 @@ const skillColumns = [
   }
 
   .skills-hero {
-    max-width: 1180px;
+    width: min(80vw, 88rem);
     margin-inline: auto;
     display: grid;
     grid-template-columns:
-      minmax(16rem, 0.8fr)
-      minmax(28rem, 1.2fr);
-    grid-template-areas:
-      "eyebrow lead"
-      "title lead";
-    align-items: end;
-    gap: 0.65rem clamp(3rem, 7vw, 7rem);
+      minmax(18rem, 4fr)
+      minmax(24rem, 6fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 5rem);
     text-align: left;
   }
 
-  .skills-hero .eyebrow {
-    grid-area: eyebrow;
-    margin: 0;
-    font-size: 0.7rem;
-  }
-
   .skills-hero h1 {
-    grid-area: title;
-    font-size: clamp(3.25rem, 6vw, 5.75rem);
+    width: fit-content;
+    margin: 0;
+    padding:
+      0.06em
+      0.14em
+      0.18em
+      0.03em;
+    display: inline-block;
+    overflow: visible;
+    color: transparent;
+    background:
+      linear-gradient(
+        105deg,
+        #ffffff 0%,
+        #dbeafe 38%,
+        var(--color-blue-light) 74%,
+        var(--color-blue-bright) 100%
+      );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: clamp(3.5rem, 7vw, 6.25rem);
+    line-height: 1.12;
+    white-space: nowrap;
   }
 
   .skills-lead {
-    grid-area: lead;
-    max-width: 680px;
+    max-width: 720px;
     margin: 0;
     color: var(--color-text-secondary);
     font-size: clamp(0.98rem, 1.45vw, 1.14rem);
@@ -249,18 +259,16 @@ const skillColumns = [
   }
 
   .skills-grid {
-    width: min(1480px, calc(100vw - 2rem));
+    width: min(80vw, 88rem);
     margin:
       clamp(2.75rem, 5vw, 4.5rem)
-      0
-      0
-      50%;
+      auto
+      0;
     display: grid;
     grid-template-columns:
       repeat(4, minmax(0, 1fr));
     align-items: start;
     gap: clamp(0.85rem, 1.6vw, 1.5rem);
-    transform: translateX(-50%);
   }
 
   .skill-column {
@@ -485,16 +493,10 @@ const skillColumns = [
     }
   }
 
-  @media (max-width: 1100px) {
+  @media (max-width: 1180px) {
     .skills-grid {
-      width: 100%;
-      margin:
-        clamp(5rem, 10vw, 7rem)
-        0
-        0;
       grid-template-columns: 1fr;
       gap: clamp(2rem, 5vw, 3rem);
-      transform: none;
     }
 
     .skill-column {
@@ -528,28 +530,26 @@ const skillColumns = [
   @media (max-width: 860px) {
     .skills-hero {
       grid-template-columns: 1fr;
-      grid-template-areas:
-        "eyebrow"
-        "title"
-        "lead";
-      gap: 0.8rem;
+      gap: 1.15rem;
       text-align: center;
     }
 
-    .skills-hero .eyebrow {
-      margin-bottom: 0.25rem;
-    }
-
+    .skills-hero h1,
     .skills-lead {
-      max-width: 720px;
-      margin: 0.75rem auto 0;
+      margin-inline: auto;
     }
 
     .skills-grid {
       margin-top: 3.5rem;
     }
   }
+
   @media (max-width: 680px) {
+    .skills-hero,
+    .skills-grid {
+      width: 80vw;
+    }
+
     .skill-column {
       border-radius: var(--radius-medium);
     }
@@ -593,3 +593,4 @@ const skillColumns = [
     }
   }
 </style>
+

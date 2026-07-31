@@ -17,14 +17,39 @@ const normalizedPath =
   currentPath !== '/' ? currentPath.replace(/\/$/, '') : '/';
 ---
 
-<header class="site-header">
-  <div class="shell header-content">
-    <a class="site-name" href="/" aria-label="Go to homepage">
-      <span>Bartosz Girzecki</span>
+<header
+  class="portfolio-header"
+  data-site-header
+>
+  <div class="shell portfolio-header-content">
+    <a
+      class="portfolio-site-name"
+      href="/"
+      aria-label="Go to homepage"
+    >
+      Bartosz Girzecki
     </a>
 
-    <nav class="primary-navigation" aria-label="Primary navigation">
-      <ul class="navigation">
+    <button
+      class="portfolio-menu-toggle"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-controls="portfolio-navigation"
+      aria-expanded="false"
+      data-menu-toggle
+    >
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+
+    <nav
+      id="portfolio-navigation"
+      class="portfolio-navigation"
+      aria-label="Primary navigation"
+      data-site-navigation
+    >
+      <ul class="portfolio-navigation-list">
         {
           navigation.map(({ href, label }) => {
             const isActive = normalizedPath === href;
@@ -32,7 +57,7 @@ const normalizedPath =
             return (
               <li>
                 <a
-                  class="navigation-link"
+                  class="portfolio-navigation-link"
                   href={href}
                   aria-current={isActive ? 'page' : undefined}
                 >
@@ -46,3 +71,359 @@ const normalizedPath =
     </nav>
   </div>
 </header>
+
+<script>
+  const siteHeader = document.querySelector(
+    '[data-site-header]'
+  );
+
+  const menuToggle = document.querySelector(
+    '[data-menu-toggle]'
+  );
+
+  const siteNavigation = document.querySelector(
+    '[data-site-navigation]'
+  );
+
+  const mobileNavigation = window.matchMedia(
+    '(max-width: 760px)'
+  );
+
+  const setMenuState = (isOpen) => {
+    if (
+      !(menuToggle instanceof HTMLButtonElement) ||
+      !(siteNavigation instanceof HTMLElement)
+    ) {
+      return;
+    }
+
+    menuToggle.setAttribute(
+      'aria-expanded',
+      String(isOpen)
+    );
+
+    menuToggle.setAttribute(
+      'aria-label',
+      isOpen
+        ? 'Close navigation menu'
+        : 'Open navigation menu'
+    );
+
+    siteNavigation.classList.toggle(
+      'is-open',
+      isOpen
+    );
+
+    siteNavigation.setAttribute(
+      'aria-hidden',
+      String(mobileNavigation.matches && !isOpen)
+    );
+  };
+
+  const synchronizeNavigation = () => {
+    if (!mobileNavigation.matches) {
+      setMenuState(false);
+
+      if (siteNavigation instanceof HTMLElement) {
+        siteNavigation.setAttribute(
+          'aria-hidden',
+          'false'
+        );
+      }
+
+      return;
+    }
+
+    setMenuState(false);
+  };
+
+  if (
+    menuToggle instanceof HTMLButtonElement &&
+    siteNavigation instanceof HTMLElement
+  ) {
+    menuToggle.addEventListener('click', () => {
+      const isOpen =
+        menuToggle.getAttribute('aria-expanded') ===
+        'true';
+
+      setMenuState(!isOpen);
+    });
+
+    siteNavigation
+      .querySelectorAll('a')
+      .forEach((link) => {
+        link.addEventListener('click', () => {
+          setMenuState(false);
+        });
+      });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') {
+        return;
+      }
+
+      setMenuState(false);
+      menuToggle.focus();
+    });
+
+    document.addEventListener('click', (event) => {
+      if (
+        !(siteHeader instanceof HTMLElement) ||
+        !(event.target instanceof Node) ||
+        siteHeader.contains(event.target)
+      ) {
+        return;
+      }
+
+      setMenuState(false);
+    });
+
+    mobileNavigation.addEventListener(
+      'change',
+      synchronizeNavigation
+    );
+
+    synchronizeNavigation();
+  }
+</script>
+
+<style>
+  .portfolio-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--color-border);
+    background: rgba(7, 9, 13, 0.76);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+  }
+
+  .portfolio-header-content {
+    position: relative;
+    min-height: 5.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.5rem;
+  }
+
+  .portfolio-site-name {
+    color: var(--color-text);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .portfolio-navigation {
+    margin-left: auto;
+  }
+
+  .portfolio-navigation-list {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2.4vw, 2rem);
+    list-style: none;
+  }
+
+  .portfolio-navigation-link {
+    position: relative;
+    padding-block: 0.6rem;
+    display: block;
+    color: var(--color-text-secondary);
+    font-size: 0.92rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+      color var(--transition-fast);
+  }
+
+  .portfolio-navigation-link::after {
+    position: absolute;
+    right: 0;
+    bottom: 0.2rem;
+    left: 0;
+    height: 1px;
+    content: "";
+    background:
+      linear-gradient(
+        90deg,
+        var(--color-blue),
+        var(--color-blue-bright)
+      );
+    transform: scaleX(0);
+    transform-origin: right;
+    transition:
+      transform var(--transition-standard);
+  }
+
+  .portfolio-navigation-link:hover,
+  .portfolio-navigation-link:focus-visible,
+  .portfolio-navigation-link[aria-current="page"] {
+    color: var(--color-text);
+  }
+
+  .portfolio-navigation-link:hover::after,
+  .portfolio-navigation-link:focus-visible::after,
+  .portfolio-navigation-link[aria-current="page"]::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .portfolio-menu-toggle {
+    width: 2.85rem;
+    height: 2.85rem;
+    padding: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.32rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-small);
+    color: var(--color-text);
+    background:
+      linear-gradient(
+        145deg,
+        rgba(18, 27, 40, 0.94),
+        rgba(9, 14, 22, 0.88)
+      );
+    cursor: pointer;
+    transition:
+      border-color var(--transition-fast),
+      box-shadow var(--transition-standard),
+      transform var(--transition-standard);
+  }
+
+  .portfolio-menu-toggle:hover,
+  .portfolio-menu-toggle:focus-visible {
+    border-color: var(--color-border-strong);
+    box-shadow:
+      0 0 2rem rgba(37, 99, 235, 0.16);
+  }
+
+  .portfolio-menu-toggle span {
+    width: 1.15rem;
+    height: 1px;
+    display: block;
+    background: var(--color-text);
+    transform-origin: center;
+    transition:
+      opacity var(--transition-fast),
+      transform var(--transition-standard);
+  }
+
+  .portfolio-menu-toggle[aria-expanded="true"]
+    span:nth-child(1) {
+    transform:
+      translateY(0.42rem)
+      rotate(45deg);
+  }
+
+  .portfolio-menu-toggle[aria-expanded="true"]
+    span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  .portfolio-menu-toggle[aria-expanded="true"]
+    span:nth-child(3) {
+    transform:
+      translateY(-0.42rem)
+      rotate(-45deg);
+  }
+
+  @media (max-width: 760px) {
+    .portfolio-header-content {
+      min-height: 4.75rem;
+      gap: 1rem;
+    }
+
+    .portfolio-menu-toggle {
+      margin-left: auto;
+      display: flex;
+    }
+
+    .portfolio-navigation {
+      position: absolute;
+      top: calc(100% + 0.75rem);
+      right: 0;
+      width: min(22rem, calc(100vw - 2rem));
+      margin-left: 0;
+      padding: 0.75rem;
+      visibility: hidden;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-medium);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(18, 27, 40, 0.98),
+          rgba(7, 9, 13, 0.98)
+        );
+      box-shadow:
+        0 2rem 5rem rgba(0, 0, 0, 0.55),
+        0 0 3rem rgba(37, 99, 235, 0.12);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      opacity: 0;
+      pointer-events: none;
+      transform:
+        translateY(-0.6rem)
+        scale(0.98);
+      transform-origin: top right;
+      transition:
+        visibility var(--transition-standard),
+        opacity var(--transition-standard),
+        transform var(--transition-standard);
+    }
+
+    .portfolio-navigation.is-open {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+      transform:
+        translateY(0)
+        scale(1);
+    }
+
+    .portfolio-navigation-list {
+      align-items: stretch;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .portfolio-navigation-list li {
+      width: 100%;
+    }
+
+    .portfolio-navigation-link {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border-radius: var(--radius-small);
+      font-size: 0.92rem;
+    }
+
+    .portfolio-navigation-link::after {
+      right: 1rem;
+      bottom: 0.55rem;
+      left: 1rem;
+    }
+
+    .portfolio-navigation-link:hover,
+    .portfolio-navigation-link:focus-visible,
+    .portfolio-navigation-link[aria-current="page"] {
+      background: rgba(37, 99, 235, 0.08);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .portfolio-navigation,
+    .portfolio-navigation-link::after,
+    .portfolio-menu-toggle,
+    .portfolio-menu-toggle span {
+      transition: none;
+    }
+  }
+</style>
