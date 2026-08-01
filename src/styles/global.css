@@ -448,6 +448,112 @@ a:focus-visible {
   }
 }
 
+.card-heading h2,
+.column-header h2,
+.project-primary h2,
+.credential-copy h2,
+.program-content h3,
+.course-content h4 {
+  transition:
+    color var(--transition-standard),
+    -webkit-text-fill-color
+      var(--transition-standard);
+}
+
+.role-summary,
+.column-description,
+.project-description,
+.credential-description,
+.program-description,
+.course-provider {
+  transition:
+    color var(--transition-standard);
+}
+
+.timeline-item:hover
+  .card-heading h2,
+.timeline-item:focus-within
+  .card-heading h2,
+.skill-column:hover
+  .column-header h2,
+.skill-column:focus-within
+  .column-header h2,
+.project-entry:hover
+  .project-primary h2,
+.project-entry:focus-within
+  .project-primary h2,
+.featured-credential:hover
+  .credential-copy h2,
+.featured-credential:focus-within
+  .credential-copy h2,
+.program-card:hover
+  .program-content h3,
+.program-card:focus-within
+  .program-content h3,
+.course-card:hover
+  .course-content h4,
+.course-card:focus-within
+  .course-content h4 {
+  color: transparent;
+  background:
+    linear-gradient(
+      105deg,
+      #ffffff 0%,
+      #dbeafe 42%,
+      var(--color-blue-light) 76%,
+      var(--color-blue-bright) 100%
+    );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color:
+    transparent;
+}
+
+.timeline-item:hover
+  .role-summary,
+.timeline-item:focus-within
+  .role-summary,
+.skill-column:hover
+  .column-description,
+.skill-column:focus-within
+  .column-description,
+.project-entry:hover
+  .project-description,
+.project-entry:focus-within
+  .project-description,
+.featured-credential:hover
+  .credential-description,
+.featured-credential:focus-within
+  .credential-description,
+.program-card:hover
+  .program-description,
+.program-card:focus-within
+  .program-description,
+.course-card:hover
+  .course-provider,
+.course-card:focus-within
+  .course-provider {
+  color:
+    var(--color-text);
+}
+.card-heading h2,
+.program-content h3,
+.course-content h4 {
+  color:
+    var(--color-text);
+  background:
+    linear-gradient(
+      105deg,
+      #ffffff 0%,
+      #dbeafe 42%,
+      var(--color-blue-light) 76%,
+      var(--color-blue-bright) 100%
+    );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color:
+    var(--color-text);
+}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
