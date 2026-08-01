@@ -70,8 +70,11 @@ const projects = [
   <section
     class="projects-hero"
     aria-labelledby="projects-title"
+    data-projects-hero
   >
-    <h1 id="projects-title">Projects</h1>
+    <h1 id="projects-title">
+      Projects
+    </h1>
 
     <p class="projects-lead">
       Here you will find a selection of projects I have created and chosen to showcase.
@@ -219,53 +222,89 @@ const projects = [
 </BaseLayout>
 
 <script>
+  const projectsHero =
+    document.querySelector(
+      '[data-projects-hero]'
+    );
+
   const projectCards = Array.from(
-    document.querySelectorAll('[data-project-card]')
+    document.querySelectorAll(
+      '[data-project-card]'
+    )
   ).filter(
-    (project) => project instanceof HTMLElement
+    (project) =>
+      project instanceof HTMLElement
   );
 
-  const projectNavigation = document.querySelector(
-    '[data-project-navigation]'
-  );
+  const projectNavigation =
+    document.querySelector(
+      '[data-project-navigation]'
+    );
 
-  const projectUpButton = document.querySelector(
-    '[data-project-up]'
-  );
+  const projectUpButton =
+    document.querySelector(
+      '[data-project-up]'
+    );
 
-  const projectDownButton = document.querySelector(
-    '[data-project-down]'
-  );
+  const projectDownButton =
+    document.querySelector(
+      '[data-project-down]'
+    );
 
-  const reducedMotion = window.matchMedia(
-    '(prefers-reduced-motion: reduce)'
-  );
+  const reducedMotion =
+    window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    );
 
-  const compactNavigationRatio = 0.7;
+  const compactLayoutRatio = 0.6;
 
   let activeProjectIndex = 0;
   let updatePending = false;
 
-  const updateNavigationMode = () => {
-    if (!(projectNavigation instanceof HTMLElement)) {
-      return;
-    }
-
+  const getCompactThreshold = () => {
     const availableScreenWidth =
       window.screen.availWidth ||
       window.screen.width ||
       window.innerWidth;
 
-    const compactThreshold =
+    return (
       availableScreenWidth *
-      compactNavigationRatio;
+      compactLayoutRatio
+    );
+  };
 
-    const shouldUseCompactNavigation =
-      window.innerWidth <= compactThreshold;
+  const updateProjectsHeroMode =
+    () => {
+      if (
+        !(
+          projectsHero instanceof
+          HTMLElement
+        )
+      ) {
+        return;
+      }
+
+      projectsHero.classList.toggle(
+        'is-stacked',
+        window.innerWidth <=
+          getCompactThreshold()
+      );
+    };
+
+  const updateNavigationMode = () => {
+    if (
+      !(
+        projectNavigation instanceof
+        HTMLElement
+      )
+    ) {
+      return;
+    }
 
     projectNavigation.classList.toggle(
       'is-compact',
-      shouldUseCompactNavigation
+      window.innerWidth <=
+        getCompactThreshold()
     );
   };
 
@@ -273,7 +312,12 @@ const projects = [
     button,
     isAvailable
   ) => {
-    if (!(button instanceof HTMLButtonElement)) {
+    if (
+      !(
+        button instanceof
+        HTMLButtonElement
+      )
+    ) {
       return;
     }
 
@@ -290,111 +334,140 @@ const projects = [
     );
   };
 
-  const scrollToProject = (projectIndex) => {
+  const scrollToProject = (
+    projectIndex
+  ) => {
     const targetProject =
       projectCards[projectIndex];
 
-    if (!(targetProject instanceof HTMLElement)) {
-      return;
-    }
-
-    targetProject.scrollIntoView({
-      behavior: reducedMotion.matches
-        ? 'auto'
-        : 'smooth',
-      block: 'center',
-    });
-  };
-
-  const updateProjectNavigation = () => {
     if (
-      !(projectNavigation instanceof HTMLElement) ||
-      projectCards.length === 0
+      !(
+        targetProject instanceof
+        HTMLElement
+      )
     ) {
       return;
     }
 
-    updateNavigationMode();
-
-    const navigationRangeIsVisible =
-      projectCards.some((project) => {
-        const position =
-          project.getBoundingClientRect();
-
-        return (
-          position.top <
-            window.innerHeight * 0.9 &&
-          position.bottom >
-            window.innerHeight * 0.1
-        );
-      });
-
-    projectNavigation.classList.toggle(
-      'is-hidden',
-      !navigationRangeIsVisible
-    );
-
-    projectNavigation.setAttribute(
-      'aria-hidden',
-      String(!navigationRangeIsVisible)
-    );
-
-    if (!navigationRangeIsVisible) {
-      return;
-    }
-
-    const viewportFocus =
-      window.innerHeight * 0.5;
-
-    let closestDistance =
-      Number.POSITIVE_INFINITY;
-
-    projectCards.forEach(
-      (project, index) => {
-        const position =
-          project.getBoundingClientRect();
-
-        const projectCenter =
-          position.top +
-          position.height / 2;
-
-        const distance = Math.abs(
-          projectCenter - viewportFocus
-        );
-
-        if (distance >= closestDistance) {
-          return;
-        }
-
-        closestDistance = distance;
-        activeProjectIndex = index;
-      }
-    );
-
-    setButtonAvailability(
-      projectUpButton,
-      activeProjectIndex > 0
-    );
-
-    setButtonAvailability(
-      projectDownButton,
-      activeProjectIndex <
-        projectCards.length - 1
-    );
-  };
-
-  const requestNavigationUpdate = () => {
-    if (updatePending) {
-      return;
-    }
-
-    updatePending = true;
-
-    window.requestAnimationFrame(() => {
-      updateProjectNavigation();
-      updatePending = false;
+    targetProject.scrollIntoView({
+      behavior:
+        reducedMotion.matches
+          ? 'auto'
+          : 'smooth',
+      block: 'center',
     });
   };
+
+  const updateProjectNavigation =
+    () => {
+      if (
+        !(
+          projectNavigation instanceof
+          HTMLElement
+        ) ||
+        projectCards.length === 0
+      ) {
+        return;
+      }
+
+      updateProjectsHeroMode();
+      updateNavigationMode();
+
+      const navigationRangeIsVisible =
+        projectCards.some(
+          (project) => {
+            const position =
+              project.getBoundingClientRect();
+
+            return (
+              position.top <
+                window.innerHeight *
+                  0.9 &&
+              position.bottom >
+                window.innerHeight *
+                  0.1
+            );
+          }
+        );
+
+      projectNavigation.classList.toggle(
+        'is-hidden',
+        !navigationRangeIsVisible
+      );
+
+      projectNavigation.setAttribute(
+        'aria-hidden',
+        String(
+          !navigationRangeIsVisible
+        )
+      );
+
+      if (
+        !navigationRangeIsVisible
+      ) {
+        return;
+      }
+
+      const viewportFocus =
+        window.innerHeight * 0.5;
+
+      let closestDistance =
+        Number.POSITIVE_INFINITY;
+
+      projectCards.forEach(
+        (project, index) => {
+          const position =
+            project.getBoundingClientRect();
+
+          const projectCenter =
+            position.top +
+            position.height / 2;
+
+          const distance =
+            Math.abs(
+              projectCenter -
+                viewportFocus
+            );
+
+          if (
+            distance >=
+            closestDistance
+          ) {
+            return;
+          }
+
+          closestDistance = distance;
+          activeProjectIndex = index;
+        }
+      );
+
+      setButtonAvailability(
+        projectUpButton,
+        activeProjectIndex > 0
+      );
+
+      setButtonAvailability(
+        projectDownButton,
+        activeProjectIndex <
+          projectCards.length - 1
+      );
+    };
+
+  const requestNavigationUpdate =
+    () => {
+      if (updatePending) {
+        return;
+      }
+
+      updatePending = true;
+
+      window.requestAnimationFrame(
+        () => {
+          updateProjectNavigation();
+          updatePending = false;
+        }
+      );
+    };
 
   if (
     projectUpButton instanceof
@@ -449,19 +522,28 @@ const projects = [
 
 <style>
   :global(.page-content) {
-    padding-top: clamp(2rem, 4vw, 3.75rem);
-    padding-bottom: clamp(6rem, 12vw, 10rem);
+    --projects-section-spacing:
+      clamp(4rem, 7vw, 6.5rem);
+
+    padding-top:
+      var(--projects-section-spacing);
+    padding-bottom:
+      clamp(6rem, 12vw, 10rem);
   }
 
   .projects-hero {
-    width: min(70vw, 80rem);
-    margin-inline: auto;
+    position: relative;
+    left: 50%;
+    width: 60vw;
+    margin: 0;
     display: grid;
     grid-template-columns:
-      auto
-      minmax(0, 1fr);
+      minmax(0, 2fr)
+      minmax(0, 4fr);
     align-items: center;
-    gap: clamp(1rem, 2.2vw, 2.5rem);
+    gap:
+      clamp(3rem, 6vw, 6rem);
+    transform: translateX(-50%);
   }
 
   .projects-hero h1 {
@@ -470,8 +552,9 @@ const projects = [
     padding:
       0.08em
       0.16em
-      0.24em
+      0.22em
       0.04em;
+    justify-self: center;
     display: inline-block;
     overflow: visible;
     color: transparent;
@@ -485,40 +568,76 @@ const projects = [
       );
     -webkit-background-clip: text;
     background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-size: clamp(3.5rem, 7vw, 6.25rem);
-    line-height: 1.18;
+    -webkit-text-fill-color:
+      transparent;
+    font-size:
+      clamp(3rem, 4.4vw, 5.5rem);
+    line-height: 1.12;
+    letter-spacing: -0.06em;
     white-space: nowrap;
   }
 
   .projects-lead {
+    width: 100%;
+    max-width: 760px;
     margin: 0;
-    color: var(--color-text-secondary);
-    font-size: clamp(1rem, 1.35vw, 1.14rem);
+    justify-self: center;
+    color:
+      var(--color-text-secondary);
+    font-size:
+      clamp(1rem, 1.45vw, 1.16rem);
     line-height: 1.7;
-    white-space: nowrap;
+  }
+
+  .projects-hero.is-stacked {
+    width: 80vw;
+    grid-template-columns: 1fr;
+    gap:
+      clamp(1.75rem, 4vw, 2.75rem);
+    text-align: center;
+  }
+
+  .projects-hero.is-stacked h1,
+  .projects-hero.is-stacked
+    .projects-lead {
+    margin-inline: auto;
+  }
+
+  .projects-hero.is-stacked
+    .projects-lead {
+    max-width: 720px;
   }
 
   .projects-list {
+    position: relative;
+    left: 50%;
     width: 100vw;
     margin:
-      clamp(4rem, 7vw, 6rem)
+      var(--projects-section-spacing)
       0
-      0
-      50%;
+      0;
     display: grid;
-    gap: clamp(5.5rem, 8vw, 7rem);
+    gap:
+      clamp(5.5rem, 8vw, 7rem);
     overflow: visible;
     transform: translateX(-50%);
   }
 
   .project-entry {
+    --project-entry-offset:
+      8.5rem;
+    --project-emblem-size:
+      27rem;
+    --project-content-gap:
+      clamp(1.75rem, 2.2vw, 2.5rem);
+
     position: relative;
     box-sizing: border-box;
     width: 80vw;
     min-height: 28.5rem;
     margin-inline: auto;
-    padding-left: 8.5rem;
+    padding-left:
+      var(--project-entry-offset);
     display: flex;
     align-items: center;
     scroll-margin-top: 7rem;
@@ -529,11 +648,18 @@ const projects = [
     animation:
       reveal-project
       760ms
-      cubic-bezier(0.22, 1, 0.36, 1)
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      )
       backwards;
-    animation-delay: var(--reveal-delay);
+    animation-delay:
+      var(--reveal-delay);
     transition:
-      transform var(--transition-standard);
+      transform
+        var(--transition-standard);
   }
 
   .project-entry:hover,
@@ -553,21 +679,30 @@ const projects = [
       clamp(2.1rem, 2.8vw, 2.5rem)
       clamp(2rem, 3vw, 2.75rem)
       clamp(2.1rem, 2.8vw, 2.5rem)
-      clamp(18.5rem, 20vw, 21rem);
+      calc(
+        var(--project-emblem-size) -
+        var(--project-entry-offset) +
+        var(--project-content-gap)
+      );
     display: flex;
     overflow: hidden;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-large);
+    border: 1px solid
+      var(--color-border);
+    border-radius:
+      var(--radius-large);
     background:
       linear-gradient(
         145deg,
         rgba(18, 27, 40, 0.93),
         rgba(9, 14, 22, 0.86)
       );
-    box-shadow: var(--shadow-card);
+    box-shadow:
+      var(--shadow-card);
     transition:
-      border-color var(--transition-standard),
-      box-shadow var(--transition-standard);
+      border-color
+        var(--transition-standard),
+      box-shadow
+        var(--transition-standard);
   }
 
   .project-card::before {
@@ -579,12 +714,15 @@ const projects = [
     content: "";
     pointer-events: none;
     border-radius: 50%;
-    background: rgba(37, 99, 235, 0.17);
+    background:
+      rgba(37, 99, 235, 0.17);
     filter: blur(4.5rem);
     opacity: 0.18;
     transition:
-      opacity var(--transition-standard),
-      transform var(--transition-standard);
+      opacity
+        var(--transition-standard),
+      transform
+        var(--transition-standard);
   }
 
   .project-card::after {
@@ -600,33 +738,49 @@ const projects = [
         transparent 78%
       );
     opacity: 0;
-    transform: translateX(-70%);
+    transform:
+      translateX(-70%);
     transition:
-      opacity var(--transition-standard),
-      transform 850ms
-        cubic-bezier(0.22, 1, 0.36, 1);
+      opacity
+        var(--transition-standard),
+      transform
+        850ms
+        cubic-bezier(
+          0.22,
+          1,
+          0.36,
+          1
+        );
   }
 
-  .project-entry:hover .project-card,
-  .project-entry:focus-within .project-card {
-    border-color: var(--color-border-strong);
+  .project-entry:hover
+    .project-card,
+  .project-entry:focus-within
+    .project-card {
+    border-color:
+      var(--color-border-strong);
     box-shadow:
-      0 36px 110px rgba(0, 0, 0, 0.45),
-      0 0 4rem rgba(37, 99, 235, 0.15);
+      0 36px 110px
+        rgba(0, 0, 0, 0.45),
+      0 0 4rem
+        rgba(37, 99, 235, 0.15);
   }
 
-  .project-entry:hover .project-card::before,
+  .project-entry:hover
+    .project-card::before,
   .project-entry:focus-within
     .project-card::before {
     opacity: 0.85;
     transform: scale(1.17);
   }
 
-  .project-entry:hover .project-card::after,
+  .project-entry:hover
+    .project-card::after,
   .project-entry:focus-within
     .project-card::after {
     opacity: 1;
-    transform: translateX(70%);
+    transform:
+      translateX(70%);
   }
 
   .project-content {
@@ -639,7 +793,8 @@ const projects = [
       minmax(0, 2fr)
       minmax(9.5rem, 0.55fr);
     align-items: stretch;
-    gap: clamp(1.75rem, 3vw, 2.75rem);
+    gap:
+      var(--project-content-gap);
   }
 
   .project-primary {
@@ -660,8 +815,10 @@ const projects = [
     display: inline-flex;
     align-items: center;
     gap: 0.55rem;
-    color: var(--color-blue-bright);
-    font-family: var(--font-mono);
+    color:
+      var(--color-blue-bright);
+    font-family:
+      var(--font-mono);
     font-size: 0.64rem;
     font-weight: 560;
     letter-spacing: 0.065em;
@@ -677,24 +834,29 @@ const projects = [
   }
 
   .project-status-active > span {
-    background: var(--color-blue-bright);
+    background:
+      var(--color-blue-bright);
     box-shadow:
-      0 0 0.9rem rgba(125, 211, 252, 0.58);
+      0 0 0.9rem
+        rgba(125, 211, 252, 0.58);
   }
 
   .project-status-planned {
-    color: var(--color-text-muted);
+    color:
+      var(--color-text-muted);
   }
 
   .project-status-planned > span {
-    border: 1px solid var(--color-text-muted);
+    border: 1px solid
+      var(--color-text-muted);
     background: transparent;
   }
 
   .project-primary h2 {
     width: fit-content;
     margin: 1rem 0 0;
-    color: var(--color-text);
+    color:
+      var(--color-text);
     background:
       linear-gradient(
         105deg,
@@ -704,29 +866,36 @@ const projects = [
       );
     -webkit-background-clip: text;
     background-clip: text;
-    -webkit-text-fill-color: var(--color-text);
-    font-size: clamp(1.7rem, 2.8vw, 2.7rem);
+    -webkit-text-fill-color:
+      var(--color-text);
+    font-size:
+      clamp(1.7rem, 2.8vw, 2.7rem);
     font-weight: 600;
     line-height: 1.04;
     letter-spacing: -0.052em;
     transition:
-      color var(--transition-standard),
+      color
+        var(--transition-standard),
       -webkit-text-fill-color
         var(--transition-standard);
   }
 
-  .project-entry:hover .project-primary h2,
+  .project-entry:hover
+    .project-primary h2,
   .project-entry:focus-within
     .project-primary h2 {
     color: transparent;
-    -webkit-text-fill-color: transparent;
+    -webkit-text-fill-color:
+      transparent;
   }
 
   .project-description {
     max-width: 760px;
     margin: 1.2rem 0 0;
-    color: var(--color-text-secondary);
-    font-size: clamp(0.9rem, 1.1vw, 1rem);
+    color:
+      var(--color-text-secondary);
+    font-size:
+      clamp(0.9rem, 1.1vw, 1rem);
     line-height: 1.7;
   }
 
@@ -741,9 +910,12 @@ const projects = [
     align-items: center;
     justify-content: center;
     gap: 0.65rem;
-    border: 1px solid var(--color-border-strong);
-    border-radius: var(--radius-small);
-    color: var(--color-text);
+    border: 1px solid
+      var(--color-border-strong);
+    border-radius:
+      var(--radius-small);
+    color:
+      var(--color-text);
     background:
       linear-gradient(
         135deg,
@@ -751,35 +923,49 @@ const projects = [
         rgba(14, 20, 30, 0.84)
       );
     box-shadow:
-      0 0.8rem 2.5rem rgba(0, 0, 0, 0.18);
-    font-family: var(--font-mono);
+      0 0.8rem 2.5rem
+        rgba(0, 0, 0, 0.18);
+    font-family:
+      var(--font-mono);
     font-size: 0.7rem;
     font-weight: 570;
     letter-spacing: 0.025em;
     line-height: 1;
     text-decoration: none;
     transition:
-      color var(--transition-fast),
-      border-color var(--transition-fast),
-      box-shadow var(--transition-standard),
-      gap var(--transition-standard),
-      transform var(--transition-standard);
+      color
+        var(--transition-fast),
+      border-color
+        var(--transition-fast),
+      box-shadow
+        var(--transition-standard),
+      gap
+        var(--transition-standard),
+      transform
+        var(--transition-standard);
   }
 
   .project-link:hover,
   .project-link:focus-visible {
     gap: 0.9rem;
-    color: var(--color-blue-bright);
-    border-color: var(--color-blue-bright);
+    color:
+      var(--color-blue-bright);
+    border-color:
+      var(--color-blue-bright);
     box-shadow:
-      0 1rem 3rem rgba(37, 99, 235, 0.2);
-    transform: translateY(-0.15rem);
+      0 1rem 3rem
+        rgba(37, 99, 235, 0.2);
+    transform:
+      translateY(-0.15rem);
   }
 
   .project-link-disabled {
-    color: var(--color-text-muted);
-    border-color: var(--color-border);
-    background: rgba(7, 9, 13, 0.25);
+    color:
+      var(--color-text-muted);
+    border-color:
+      var(--color-border);
+    background:
+      rgba(7, 9, 13, 0.25);
     box-shadow: none;
   }
 
@@ -790,13 +976,16 @@ const projects = [
     display: flex;
     justify-content: center;
     flex-direction: column;
-    border-left: 1px solid var(--color-border);
+    border-left: 1px solid
+      var(--color-border);
   }
 
   .tools-label {
     margin: 0;
-    color: var(--color-blue-light);
-    font-family: var(--font-mono);
+    color:
+      var(--color-blue-light);
+    font-family:
+      var(--font-mono);
     font-size: 0.65rem;
     font-weight: 570;
     letter-spacing: 0.075em;
@@ -816,30 +1005,43 @@ const projects = [
 
   .technology-list li {
     padding: 0.48rem 0.65rem;
-    border: 1px solid var(--color-border);
+    border: 1px solid
+      var(--color-border);
     border-radius: 999px;
-    color: var(--color-text-secondary);
-    background: rgba(7, 9, 13, 0.36);
+    color:
+      var(--color-text-secondary);
+    background:
+      rgba(7, 9, 13, 0.36);
     font-size: 0.7rem;
     line-height: 1.15;
     transition:
-      color var(--transition-fast),
-      border-color var(--transition-fast),
-      background-color var(--transition-fast),
-      transform var(--transition-standard);
+      color
+        var(--transition-fast),
+      border-color
+        var(--transition-fast),
+      background-color
+        var(--transition-fast),
+      transform
+        var(--transition-standard);
   }
 
-  .project-entry:hover .technology-list li,
+  .project-entry:hover
+    .technology-list li,
   .project-entry:focus-within
     .technology-list li {
-    border-color: rgba(96, 165, 250, 0.24);
-    background: rgba(37, 99, 235, 0.055);
+    border-color:
+      rgba(96, 165, 250, 0.24);
+    background:
+      rgba(37, 99, 235, 0.055);
   }
 
   .technology-list li:hover {
-    color: var(--color-text);
-    border-color: var(--color-blue-light);
-    transform: translateY(-0.12rem);
+    color:
+      var(--color-text);
+    border-color:
+      var(--color-blue-light);
+    transform:
+      translateY(-0.12rem);
   }
 
   .project-emblem {
@@ -847,7 +1049,8 @@ const projects = [
     top: 50%;
     left: 0;
     z-index: 5;
-    width: 27rem;
+    width:
+      var(--project-emblem-size);
     aspect-ratio: 1;
     display: grid;
     place-content: center;
@@ -868,26 +1071,36 @@ const projects = [
     box-shadow:
       0 0 0 0.65rem
         rgba(59, 130, 246, 0.055),
-      0 1.5rem 4rem rgba(0, 0, 0, 0.48),
-      0 0 3rem rgba(37, 99, 235, 0.17);
+      0 1.5rem 4rem
+        rgba(0, 0, 0, 0.48),
+      0 0 3rem
+        rgba(37, 99, 235, 0.17);
     text-align: center;
     transform:
       translateY(-50%)
       scale(1);
     transition:
-      border-color var(--transition-standard),
-      box-shadow var(--transition-standard),
-      transform var(--transition-standard);
+      border-color
+        var(--transition-standard),
+      box-shadow
+        var(--transition-standard),
+      transform
+        var(--transition-standard);
   }
 
-  .project-entry:hover .project-emblem,
-  .project-entry:focus-within .project-emblem {
-    border-color: var(--color-blue-bright);
+  .project-entry:hover
+    .project-emblem,
+  .project-entry:focus-within
+    .project-emblem {
+    border-color:
+      var(--color-blue-bright);
     box-shadow:
       0 0 0 0.75rem
         rgba(59, 130, 246, 0.08),
-      0 1.8rem 4.5rem rgba(0, 0, 0, 0.55),
-      0 0 4rem rgba(96, 165, 250, 0.32);
+      0 1.8rem 4.5rem
+        rgba(0, 0, 0, 0.55),
+      0 0 4rem
+        rgba(96, 165, 250, 0.32);
     transform:
       translateY(-50%)
       scale(1.035);
@@ -895,8 +1108,10 @@ const projects = [
 
   .emblem-caption {
     margin-bottom: 1.2rem;
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
+    color:
+      var(--color-text-muted);
+    font-family:
+      var(--font-mono);
     font-size: 0.58rem;
     font-weight: 560;
     letter-spacing: 0.12em;
@@ -918,7 +1133,8 @@ const projects = [
     border: 1px solid
       var(--color-border-strong);
     border-radius: 50%;
-    color: var(--color-text);
+    color:
+      var(--color-text);
     background:
       linear-gradient(
         145deg,
@@ -928,27 +1144,35 @@ const projects = [
     box-shadow:
       inset 0 1px 0
         rgba(255, 255, 255, 0.05),
-      0 0 1.4rem rgba(37, 99, 235, 0.12);
-    font-family: var(--font-mono);
+      0 0 1.4rem
+        rgba(37, 99, 235, 0.12);
+    font-family:
+      var(--font-mono);
     font-size: 0.82rem;
     font-weight: 650;
     letter-spacing: -0.03em;
     transition:
-      border-color var(--transition-standard),
-      transform var(--transition-standard);
+      border-color
+        var(--transition-standard),
+      transform
+        var(--transition-standard);
   }
 
   .technology-join {
-    color: var(--color-blue-bright);
-    font-family: var(--font-mono);
+    color:
+      var(--color-blue-bright);
+    font-family:
+      var(--font-mono);
     font-size: 1rem;
     transition:
-      transform var(--transition-standard);
+      transform
+        var(--transition-standard);
   }
 
   .project-entry:hover
     .technology-mark:first-child {
-    border-color: var(--color-blue-light);
+    border-color:
+      var(--color-blue-light);
     transform:
       translateX(-0.12rem)
       rotate(-4deg);
@@ -956,17 +1180,20 @@ const projects = [
 
   .project-entry:hover
     .technology-mark:last-child {
-    border-color: var(--color-blue-light);
+    border-color:
+      var(--color-blue-light);
     transform:
       translateX(0.12rem)
       rotate(4deg);
   }
 
-  .project-entry:hover .technology-join {
+  .project-entry:hover
+    .technology-join {
     transform: rotate(90deg);
   }
 
-  .project-planned .project-card {
+  .project-planned
+    .project-card {
     border-color:
       rgba(148, 163, 184, 0.12);
     background:
@@ -977,7 +1204,8 @@ const projects = [
       );
   }
 
-  .project-planned .project-emblem {
+  .project-planned
+    .project-emblem {
     border-color:
       rgba(148, 163, 184, 0.24);
     filter: saturate(0.78);
@@ -986,22 +1214,26 @@ const projects = [
   .project-navigation {
     position: fixed;
     top: 50%;
-    right: 1vw;
+    right: 0;
     z-index: 40;
-    width: clamp(4rem, 8vw, 8.5rem);
+    width: 10vw;
     display: flex;
     align-items: center;
     flex-direction: column;
-    gap: clamp(0.45rem, 0.8vw, 0.7rem);
+    gap:
+      clamp(0.45rem, 0.8vw, 0.7rem);
     visibility: visible;
     opacity: 1;
     transform:
       translateY(-50%)
       scale(1);
     transition:
-      visibility var(--transition-standard),
-      opacity var(--transition-standard),
-      transform var(--transition-standard);
+      visibility
+        var(--transition-standard),
+      opacity
+        var(--transition-standard),
+      transform
+        var(--transition-standard);
   }
 
   .project-navigation.is-hidden {
@@ -1016,14 +1248,17 @@ const projects = [
 
   .project-navigation-label {
     box-sizing: border-box;
-    width: 100%;
+    width:
+      min(100%, 7.5rem);
     min-height: 4rem;
     padding: 0.8rem 0.55rem;
     display: grid;
     place-items: center;
-    border: 1px solid var(--color-border-strong);
+    border: 1px solid
+      var(--color-border-strong);
     border-radius: 999px;
-    color: var(--color-text-secondary);
+    color:
+      var(--color-text-secondary);
     background:
       linear-gradient(
         145deg,
@@ -1031,9 +1266,12 @@ const projects = [
         rgba(7, 9, 13, 0.95)
       );
     box-shadow:
-      0 1.2rem 3.5rem rgba(0, 0, 0, 0.42),
-      0 0 2rem rgba(37, 99, 235, 0.12);
-    font-family: var(--font-mono);
+      0 1.2rem 3.5rem
+        rgba(0, 0, 0, 0.42),
+      0 0 2rem
+        rgba(37, 99, 235, 0.12);
+    font-family:
+      var(--font-mono);
     font-size:
       clamp(0.52rem, 0.62vw, 0.64rem);
     font-weight: 570;
@@ -1044,14 +1282,18 @@ const projects = [
   }
 
   .project-navigation-button {
-    width: clamp(3rem, 3.4vw, 3.75rem);
-    height: clamp(3rem, 3.4vw, 3.75rem);
+    width:
+      clamp(3rem, 3.4vw, 3.75rem);
+    height:
+      clamp(3rem, 3.4vw, 3.75rem);
     padding: 0;
     display: grid;
     place-items: center;
-    border: 1px solid var(--color-border-strong);
+    border: 1px solid
+      var(--color-border-strong);
     border-radius: 50%;
-    color: var(--color-blue-bright);
+    color:
+      var(--color-blue-bright);
     background:
       linear-gradient(
         145deg,
@@ -1059,25 +1301,34 @@ const projects = [
         rgba(7, 9, 13, 0.96)
       );
     box-shadow:
-      0 1rem 3rem rgba(0, 0, 0, 0.42),
-      0 0 2rem rgba(37, 99, 235, 0.14);
+      0 1rem 3rem
+        rgba(0, 0, 0, 0.42),
+      0 0 2rem
+        rgba(37, 99, 235, 0.14);
     font: inherit;
     font-size: 1.15rem;
     cursor: pointer;
     transition:
-      color var(--transition-fast),
-      border-color var(--transition-fast),
-      box-shadow var(--transition-standard),
-      transform var(--transition-standard);
+      color
+        var(--transition-fast),
+      border-color
+        var(--transition-fast),
+      box-shadow
+        var(--transition-standard),
+      transform
+        var(--transition-standard);
   }
 
   .project-navigation-button:hover,
   .project-navigation-button:focus-visible {
     color: #ffffff;
-    border-color: var(--color-blue-bright);
+    border-color:
+      var(--color-blue-bright);
     box-shadow:
-      0 1.2rem 3.5rem rgba(0, 0, 0, 0.46),
-      0 0 2.4rem rgba(59, 130, 246, 0.28);
+      0 1.2rem 3.5rem
+        rgba(0, 0, 0, 0.46),
+      0 0 2.4rem
+        rgba(59, 130, 246, 0.28);
     transform: scale(1.06);
   }
 
@@ -1086,8 +1337,6 @@ const projects = [
   }
 
   .project-navigation.is-compact {
-    right: 0.55rem;
-    width: auto;
     gap: 0.45rem;
   }
 
@@ -1098,8 +1347,10 @@ const projects = [
 
   .project-navigation.is-compact
     .project-navigation-button {
-    width: 2.9rem;
-    height: 2.9rem;
+    width:
+      clamp(2.25rem, 7vw, 2.9rem);
+    height:
+      clamp(2.25rem, 7vw, 2.9rem);
     font-size: 1rem;
   }
 
@@ -1120,15 +1371,25 @@ const projects = [
   }
 
   @media (max-width: 1320px) {
-    .projects-lead {
-      white-space: normal;
-    }
-
     .projects-list {
-      gap: clamp(5rem, 9vw, 7rem);
+      gap:
+        clamp(5rem, 9vw, 7rem);
     }
 
     .project-entry {
+      --project-entry-offset:
+        5.5rem;
+      --project-emblem-size:
+        11rem;
+      --compact-card-padding:
+        clamp(1.5rem, 4vw, 2.25rem);
+      --compact-copy-inset:
+        calc(
+          var(--project-emblem-size) /
+          2 +
+          var(--compact-card-padding)
+        );
+
       width: 80vw;
       min-height: 0;
       padding:
@@ -1142,46 +1403,109 @@ const projects = [
     .project-card {
       width: 100%;
       height: auto;
-      min-height: 42rem;
-      padding:
-        7.5rem
-        clamp(1.5rem, 4vw, 2.25rem)
-        clamp(1.75rem, 4vw, 2.25rem);
+      min-height: 0;
+      padding: 0;
     }
 
     .project-content {
-      min-height: 32rem;
+      height: auto;
+      min-height: 0;
       grid-template-columns: 1fr;
       grid-template-rows:
-        minmax(19rem, 1fr)
+        auto
         auto;
-      gap: 2rem;
+      gap: 0;
     }
 
     .project-primary {
-      min-height: 19rem;
-      padding-bottom: 4.75rem;
+      height: auto;
+      min-height: 0;
+      padding:
+        1.35rem
+        0
+        5rem;
+      display: block;
+    }
+
+    .project-copy {
+      width: 100%;
+      text-align: center;
+    }
+
+    .project-status {
+      margin-left:
+        var(--compact-copy-inset);
+      display: flex;
+      width: fit-content;
+      text-align: left;
+    }
+
+    .project-primary h2 {
+      width:
+        calc(
+          100% -
+          2 *
+          var(--compact-copy-inset)
+        );
+      max-width: 760px;
+      margin:
+        clamp(1.5rem, 3vw, 2.25rem)
+        auto
+        0;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .project-description {
+      width:
+        calc(
+          100% -
+          2 *
+          var(--compact-copy-inset)
+        );
+      max-width: 760px;
+      margin:
+        clamp(1.6rem, 3vw, 2.25rem)
+        auto
+        0;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .project-link {
+      right:
+        var(--compact-card-padding);
+      bottom: 1.25rem;
     }
 
     .project-tools {
       padding:
         1.65rem
-        0
-        0;
-      border-top: 1px solid var(--color-border);
+        var(--compact-card-padding)
+        1.85rem;
+      align-items: flex-start;
+      border-top: 1px solid
+        var(--color-border);
       border-left: 0;
+      text-align: left;
+    }
+
+    .technology-list {
+      justify-content: flex-start;
     }
 
     .project-emblem {
       top: 0;
       left: 0;
-      width: 11rem;
+      width:
+        var(--project-emblem-size);
       transform:
         translateY(0)
         scale(1);
     }
 
-    .project-entry:hover .project-emblem,
+    .project-entry:hover
+      .project-emblem,
     .project-entry:focus-within
       .project-emblem {
       transform:
@@ -1205,39 +1529,42 @@ const projects = [
     }
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 760px) {
+    :global(.page-content) {
+      --projects-section-spacing:
+        clamp(3rem, 10vw, 4.5rem);
+    }
+
     .projects-hero {
+      width: 80vw;
       grid-template-columns: 1fr;
-      gap: 0.9rem;
+      gap: 1.5rem;
       text-align: center;
     }
 
-    .projects-hero h1 {
+    .projects-hero h1,
+    .projects-lead {
       margin-inline: auto;
     }
 
+    .projects-hero h1 {
+      font-size:
+        clamp(2.8rem, 13vw, 4rem);
+    }
+
     .projects-lead {
-      max-width: 640px;
-      margin-inline: auto;
+      max-width: 680px;
     }
   }
 
   @media (max-width: 720px) {
-    .project-navigation {
-      right: 0.5rem;
-      width: auto;
-      gap: 0.45rem;
-    }
-
-    .project-navigation-label {
-      display: none;
-    }
-
     .project-navigation-button,
     .project-navigation.is-compact
       .project-navigation-button {
-      width: 2.6rem;
-      height: 2.6rem;
+      width:
+        clamp(2rem, 7vw, 2.6rem);
+      height:
+        clamp(2rem, 7vw, 2.6rem);
       font-size: 0.9rem;
     }
 
@@ -1250,12 +1577,14 @@ const projects = [
   }
 
   @media (max-width: 640px) {
-    .projects-list {
-      margin-top: 4.5rem;
-      gap: 5rem;
-    }
-
     .project-entry {
+      --project-entry-offset:
+        4.25rem;
+      --project-emblem-size:
+        8.5rem;
+      --compact-card-padding:
+        1.15rem;
+
       width: 80vw;
       padding:
         4.25rem
@@ -1265,44 +1594,45 @@ const projects = [
     }
 
     .project-card {
-      min-height: 43rem;
-      padding:
-        6.25rem
-        1.15rem
-        1.5rem;
-      border-radius: var(--radius-medium);
-    }
-
-    .project-content {
-      min-height: 35rem;
-    }
-
-    .project-emblem {
-      width: 8.5rem;
+      border-radius:
+        var(--radius-medium);
     }
 
     .project-primary {
-      min-height: 21rem;
+      padding:
+        1.1rem
+        0
+        5rem;
     }
 
     .project-primary h2 {
+      margin-top: 1.75rem;
       font-size:
         clamp(1.65rem, 8vw, 2.3rem);
     }
 
     .project-description {
+      margin-top: 1.5rem;
       font-size: 0.9rem;
     }
 
-    .project-link {
-      right: 0;
-      left: 0;
-      width: 100%;
+    .project-tools {
+      padding:
+        1.4rem
+        var(--compact-card-padding)
+        1.55rem;
     }
   }
 
   @media (max-width: 520px) {
     .project-entry {
+      --project-entry-offset:
+        3.5rem;
+      --project-emblem-size:
+        7rem;
+      --compact-card-padding:
+        0.95rem;
+
       padding:
         3.5rem
         0
@@ -1310,21 +1640,15 @@ const projects = [
         3.5rem;
     }
 
-    .project-card {
-      min-height: 42rem;
+    .project-primary {
       padding:
-        5.5rem
         0.95rem
-        1.25rem;
+        0
+        4.75rem;
     }
 
-    .project-content {
-      min-height: 34rem;
-      gap: 1.5rem;
-    }
-
-    .project-emblem {
-      width: 7rem;
+    .project-status {
+      font-size: 0.56rem;
     }
 
     .emblem-caption {
@@ -1342,23 +1666,31 @@ const projects = [
       gap: 0.32rem;
     }
 
-    .project-primary {
-      min-height: 20.5rem;
-      padding-bottom: 4.5rem;
-    }
-
     .project-primary h2 {
+      margin-top: 1.5rem;
       font-size:
         clamp(1.45rem, 7.3vw, 2rem);
     }
 
     .project-description {
+      margin-top: 1.25rem;
       font-size: 0.84rem;
       line-height: 1.62;
     }
 
+    .project-link {
+      right:
+        var(--compact-card-padding);
+      left:
+        var(--compact-card-padding);
+      width: auto;
+    }
+
     .project-tools {
-      padding-top: 1.3rem;
+      padding:
+        1.3rem
+        var(--compact-card-padding)
+        1.4rem;
     }
 
     .technology-list {
@@ -1370,20 +1702,19 @@ const projects = [
       font-size: 0.62rem;
     }
 
-    .project-navigation {
-      right: 0.22rem;
-      gap: 0.35rem;
-    }
-
     .project-navigation-button,
     .project-navigation.is-compact
       .project-navigation-button {
-      width: 2.1rem;
-      height: 2.1rem;
+      width:
+        clamp(1.75rem, 7vw, 2.1rem);
+      height:
+        clamp(1.75rem, 7vw, 2.1rem);
       font-size: 0.76rem;
       box-shadow:
-        0 0.7rem 1.6rem rgba(0, 0, 0, 0.42),
-        0 0 1.1rem rgba(37, 99, 235, 0.12);
+        0 0.7rem 1.6rem
+          rgba(0, 0, 0, 0.42),
+        0 0 1.1rem
+          rgba(37, 99, 235, 0.12);
     }
 
     .project-entry:hover,
@@ -1394,7 +1725,10 @@ const projects = [
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
+  @media (
+    prefers-reduced-motion:
+    reduce
+  ) {
     .project-entry {
       opacity: 1;
       transform: none;

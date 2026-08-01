@@ -148,8 +148,11 @@ const skillColumns = [
   <section
     class="skills-hero"
     aria-labelledby="skills-title"
+    data-skills-hero
   >
-    <h1 id="skills-title">Skills</h1>
+    <h1 id="skills-title">
+      Skills
+    </h1>
 
     <p class="skills-lead">
       Professional software quality experience combined with active
@@ -205,32 +208,83 @@ const skillColumns = [
   </section>
 </BaseLayout>
 
+<script>
+  const skillsHero = document.querySelector(
+    '[data-skills-hero]'
+  );
+
+  const compactHeroRatio = 0.6;
+
+  const updateSkillsHeroMode = () => {
+    if (!(skillsHero instanceof HTMLElement)) {
+      return;
+    }
+
+    const availableScreenWidth =
+      window.screen.availWidth ||
+      window.screen.width ||
+      window.innerWidth;
+
+    const compactThreshold =
+      availableScreenWidth *
+      compactHeroRatio;
+
+    skillsHero.classList.toggle(
+      'is-stacked',
+      window.innerWidth <=
+        compactThreshold
+    );
+  };
+
+  updateSkillsHeroMode();
+
+  window.addEventListener(
+    'resize',
+    updateSkillsHeroMode
+  );
+
+  window.addEventListener(
+    'load',
+    updateSkillsHeroMode
+  );
+</script>
+
 <style>
   :global(.page-content) {
-    padding-top: clamp(2rem, 4vw, 3.75rem);
-    padding-bottom: clamp(5rem, 10vw, 9rem);
+    --skills-section-spacing:
+      clamp(4rem, 7vw, 6.5rem);
+
+    padding-top:
+      var(--skills-section-spacing);
+    padding-bottom:
+      clamp(5rem, 10vw, 9rem);
   }
 
   .skills-hero {
-    width: min(80vw, 88rem);
-    margin-inline: auto;
+    position: relative;
+    left: 50%;
+    width: 60vw;
+    margin: 0;
     display: grid;
     grid-template-columns:
-      minmax(18rem, 4fr)
-      minmax(24rem, 6fr);
+      minmax(0, 2fr)
+      minmax(0, 4fr);
     align-items: center;
-    gap: clamp(2rem, 5vw, 5rem);
+    gap:
+      clamp(3rem, 6vw, 6rem);
     text-align: left;
+    transform: translateX(-50%);
   }
 
   .skills-hero h1 {
     width: fit-content;
     margin: 0;
     padding:
-      0.06em
-      0.14em
-      0.18em
-      0.03em;
+      0.08em
+      0.16em
+      0.22em
+      0.04em;
+    justify-self: center;
     display: inline-block;
     overflow: visible;
     color: transparent;
@@ -244,31 +298,61 @@ const skillColumns = [
       );
     -webkit-background-clip: text;
     background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-size: clamp(3.5rem, 7vw, 6.25rem);
+    -webkit-text-fill-color:
+      transparent;
+    font-size:
+      clamp(3rem, 4.4vw, 5.5rem);
     line-height: 1.12;
+    letter-spacing: -0.06em;
     white-space: nowrap;
   }
 
   .skills-lead {
-    max-width: 720px;
+    width: 100%;
+    max-width: 760px;
     margin: 0;
-    color: var(--color-text-secondary);
-    font-size: clamp(0.98rem, 1.45vw, 1.14rem);
-    line-height: 1.65;
+    justify-self: center;
+    color:
+      var(--color-text-secondary);
+    font-size:
+      clamp(1rem, 1.45vw, 1.16rem);
+    line-height: 1.7;
+  }
+
+  .skills-hero.is-stacked {
+    width: 80vw;
+    grid-template-columns: 1fr;
+    gap:
+      clamp(1.75rem, 4vw, 2.75rem);
+    text-align: center;
+  }
+
+  .skills-hero.is-stacked h1,
+  .skills-hero.is-stacked
+    .skills-lead {
+    margin-inline: auto;
+  }
+
+  .skills-hero.is-stacked
+    .skills-lead {
+    max-width: 720px;
   }
 
   .skills-grid {
-    width: min(80vw, 88rem);
+    position: relative;
+    left: 50%;
+    width: 80vw;
     margin:
-      clamp(2.75rem, 5vw, 4.5rem)
-      auto
+      var(--skills-section-spacing)
+      0
       0;
     display: grid;
     grid-template-columns:
       repeat(4, minmax(0, 1fr));
     align-items: start;
-    gap: clamp(0.85rem, 1.6vw, 1.5rem);
+    gap:
+      clamp(0.85rem, 1.6vw, 1.5rem);
+    transform: translateX(-50%);
   }
 
   .skill-column {
@@ -279,8 +363,10 @@ const skillColumns = [
       clamp(1.2rem, 1.8vw, 1.65rem)
       clamp(1.6rem, 2.2vw, 2rem);
     overflow: hidden;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-large);
+    border: 1px solid
+      var(--color-border);
+    border-radius:
+      var(--radius-large);
     background:
       linear-gradient(
         150deg,
@@ -297,11 +383,15 @@ const skillColumns = [
       720ms
       cubic-bezier(0.22, 1, 0.36, 1)
       backwards;
-    animation-delay: var(--reveal-delay);
+    animation-delay:
+      var(--reveal-delay);
     transition:
-      border-color var(--transition-standard),
-      box-shadow var(--transition-standard),
-      transform var(--transition-standard);
+      border-color
+        var(--transition-standard),
+      box-shadow
+        var(--transition-standard),
+      transform
+        var(--transition-standard);
   }
 
   .skill-column::before {
@@ -313,12 +403,15 @@ const skillColumns = [
     content: "";
     pointer-events: none;
     border-radius: 50%;
-    background: rgba(37, 99, 235, 0.16);
+    background:
+      rgba(37, 99, 235, 0.16);
     filter: blur(3.5rem);
     opacity: 0.18;
     transition:
-      opacity var(--transition-standard),
-      transform var(--transition-standard);
+      opacity
+        var(--transition-standard),
+      transform
+        var(--transition-standard);
   }
 
   .skill-column::after {
@@ -336,17 +429,23 @@ const skillColumns = [
     opacity: 0;
     transform: translateX(-60%);
     transition:
-      opacity var(--transition-standard),
-      transform 750ms cubic-bezier(0.22, 1, 0.36, 1);
+      opacity
+        var(--transition-standard),
+      transform
+        750ms
+        cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .skill-column:hover,
   .skill-column:focus-within {
     z-index: 3;
-    border-color: var(--color-border-strong);
+    border-color:
+      var(--color-border-strong);
     box-shadow:
-      0 34px 100px rgba(0, 0, 0, 0.42),
-      0 0 3.5rem rgba(37, 99, 235, 0.14);
+      0 34px 100px
+        rgba(0, 0, 0, 0.42),
+      0 0 3.5rem
+        rgba(37, 99, 235, 0.14);
     transform:
       translateY(-0.5rem)
       scale(1.018);
@@ -376,7 +475,8 @@ const skillColumns = [
 
   .column-level {
     display: block;
-    color: var(--color-text-muted);
+    color:
+      var(--color-text-muted);
     font-family: var(--font-mono);
     font-size: 0.61rem;
     font-weight: 560;
@@ -399,26 +499,35 @@ const skillColumns = [
       );
     -webkit-background-clip: text;
     background-clip: text;
-    -webkit-text-fill-color: var(--color-text);
-    font-size: clamp(1.45rem, 2vw, 2rem);
+    -webkit-text-fill-color:
+      var(--color-text);
+    font-size:
+      clamp(1.45rem, 2vw, 2rem);
     font-weight: 590;
     line-height: 1.08;
     letter-spacing: -0.045em;
     transition:
-      color var(--transition-standard),
-      -webkit-text-fill-color var(--transition-standard);
+      color
+        var(--transition-standard),
+      -webkit-text-fill-color
+        var(--transition-standard);
   }
 
-  .skill-column:hover .column-header h2,
-  .skill-column:focus-within .column-header h2 {
+  .skill-column:hover
+    .column-header h2,
+  .skill-column:focus-within
+    .column-header h2 {
     color: transparent;
-    -webkit-text-fill-color: transparent;
+    -webkit-text-fill-color:
+      transparent;
   }
 
   .column-description {
     margin: 1rem 0 0;
-    color: var(--color-text-secondary);
-    font-size: clamp(0.8rem, 0.85vw, 0.9rem);
+    color:
+      var(--color-text-secondary);
+    font-size:
+      clamp(0.8rem, 0.85vw, 0.9rem);
     line-height: 1.65;
   }
 
@@ -427,12 +536,14 @@ const skillColumns = [
     padding-top: 1.5rem;
     display: grid;
     gap: 1.8rem;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid
+      var(--color-border);
   }
 
   .skill-group h3 {
     margin: 0 0 0.85rem;
-    color: var(--color-blue-light);
+    color:
+      var(--color-blue-light);
     font-family: var(--font-mono);
     font-size: 0.64rem;
     font-weight: 570;
@@ -452,29 +563,42 @@ const skillColumns = [
 
   .skill-group li {
     padding: 0.48rem 0.62rem;
-    border: 1px solid var(--color-border);
+    border: 1px solid
+      var(--color-border);
     border-radius: 999px;
-    color: var(--color-text-secondary);
-    background: rgba(7, 9, 13, 0.38);
-    font-size: clamp(0.68rem, 0.72vw, 0.75rem);
+    color:
+      var(--color-text-secondary);
+    background:
+      rgba(7, 9, 13, 0.38);
+    font-size:
+      clamp(0.68rem, 0.72vw, 0.75rem);
     line-height: 1.18;
     transition:
       color var(--transition-fast),
-      border-color var(--transition-fast),
-      background-color var(--transition-fast),
-      transform var(--transition-standard);
+      border-color
+        var(--transition-fast),
+      background-color
+        var(--transition-fast),
+      transform
+        var(--transition-standard);
   }
 
-  .skill-column:hover .skill-group li,
-  .skill-column:focus-within .skill-group li {
-    border-color: rgba(96, 165, 250, 0.24);
-    background: rgba(37, 99, 235, 0.055);
+  .skill-column:hover
+    .skill-group li,
+  .skill-column:focus-within
+    .skill-group li {
+    border-color:
+      rgba(96, 165, 250, 0.24);
+    background:
+      rgba(37, 99, 235, 0.055);
   }
 
   .skill-group li:hover {
     color: var(--color-text);
-    border-color: var(--color-blue-light);
-    transform: translateY(-0.12rem);
+    border-color:
+      var(--color-blue-light);
+    transform:
+      translateY(-0.12rem);
   }
 
   @keyframes reveal-skill-column {
@@ -496,7 +620,8 @@ const skillColumns = [
   @media (max-width: 1180px) {
     .skills-grid {
       grid-template-columns: 1fr;
-      gap: clamp(2rem, 5vw, 3rem);
+      gap:
+        clamp(2rem, 5vw, 3rem);
     }
 
     .skill-column {
@@ -511,7 +636,8 @@ const skillColumns = [
 
     .column-header h2 {
       min-height: auto;
-      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-size:
+        clamp(1.8rem, 5vw, 2.6rem);
     }
 
     .column-description {
@@ -523,14 +649,21 @@ const skillColumns = [
     .skill-groups {
       grid-template-columns:
         repeat(2, minmax(0, 1fr));
-      gap: clamp(1.5rem, 4vw, 3rem);
+      gap:
+        clamp(1.5rem, 4vw, 3rem);
     }
   }
 
-  @media (max-width: 860px) {
+  @media (max-width: 760px) {
+    :global(.page-content) {
+      --skills-section-spacing:
+        clamp(3rem, 10vw, 4.5rem);
+    }
+
     .skills-hero {
+      width: 80vw;
       grid-template-columns: 1fr;
-      gap: 1.15rem;
+      gap: 1.5rem;
       text-align: center;
     }
 
@@ -539,19 +672,24 @@ const skillColumns = [
       margin-inline: auto;
     }
 
-    .skills-grid {
-      margin-top: 3.5rem;
+    .skills-hero h1 {
+      font-size:
+        clamp(2.8rem, 13vw, 4rem);
+    }
+
+    .skills-lead {
+      max-width: 680px;
     }
   }
 
   @media (max-width: 680px) {
-    .skills-hero,
     .skills-grid {
       width: 80vw;
     }
 
     .skill-column {
-      border-radius: var(--radius-medium);
+      border-radius:
+        var(--radius-medium);
     }
 
     .column-meta {
@@ -577,7 +715,10 @@ const skillColumns = [
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
+  @media (
+    prefers-reduced-motion:
+    reduce
+  ) {
     .skill-column {
       opacity: 1;
       transform: none;
@@ -593,4 +734,3 @@ const skillColumns = [
     }
   }
 </style>
-
