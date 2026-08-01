@@ -280,6 +280,8 @@ const experience = [
   );
 
   const compactHeroRatio = 0.6;
+  const narrowCueRatio = 0.85;
+  const compactCueRatio = 0.7;
 
   const updateExperienceHeroMode = () => {
     if (!(experienceHero instanceof HTMLElement)) {
@@ -302,6 +304,106 @@ const experience = [
     );
   };
 
+  const updateTimelineCueMode = () => {
+    if (
+      !(timelineCue instanceof HTMLAnchorElement)
+    ) {
+      return;
+    }
+
+    const availableScreenWidth =
+      window.screen.availWidth ||
+      window.screen.width ||
+      window.innerWidth;
+
+    const narrowThreshold =
+      availableScreenWidth *
+      narrowCueRatio;
+
+    const compactThreshold =
+      availableScreenWidth *
+      compactCueRatio;
+
+    const shouldUseCompactCue =
+      window.innerWidth <=
+        compactThreshold ||
+      compactTimeline.matches;
+
+    const shouldUseNarrowCue =
+      window.innerWidth <=
+        narrowThreshold &&
+      !shouldUseCompactCue;
+
+    timelineCue.classList.toggle(
+      'is-narrow',
+      shouldUseNarrowCue
+    );
+
+    timelineCue.classList.toggle(
+      'is-compact',
+      shouldUseCompactCue
+    );
+
+    if (shouldUseCompactCue) {
+      timelineCue.style.removeProperty(
+        '--timeline-cue-width'
+      );
+
+      return;
+    }
+
+    const leftCard =
+      document.querySelector(
+        '.timeline-left .experience-card'
+      );
+
+    const rightCard =
+      document.querySelector(
+        '.timeline-right .experience-card'
+      );
+
+    if (
+      !(leftCard instanceof HTMLElement) ||
+      !(rightCard instanceof HTMLElement)
+    ) {
+      timelineCue.style.removeProperty(
+        '--timeline-cue-width'
+      );
+
+      return;
+    }
+
+    const leftCardPosition =
+      leftCard.getBoundingClientRect();
+
+    const rightCardPosition =
+      rightCard.getBoundingClientRect();
+
+    const centralGap =
+      rightCardPosition.left -
+      leftCardPosition.right;
+
+    const safetySpace =
+      shouldUseNarrowCue
+        ? 64
+        : 44;
+
+    const availableCueWidth =
+      Math.max(
+        64,
+        Math.min(
+          148,
+          centralGap -
+            safetySpace
+        )
+      );
+
+    timelineCue.style.setProperty(
+      '--timeline-cue-width',
+      `${availableCueWidth}px`
+    );
+  };
+
   const positionTimelineCue = () => {
     if (
       !(timelineCue instanceof HTMLAnchorElement) ||
@@ -310,6 +412,8 @@ const experience = [
     ) {
       return;
     }
+
+    updateTimelineCueMode();
 
     const linePosition =
       timelineLine.getBoundingClientRect();
@@ -930,14 +1034,39 @@ const experience = [
   .timeline-cue {
     position: fixed;
     z-index: 45;
-    width: max-content;
+    width:
+      var(
+        --timeline-cue-width,
+        9.25rem
+      );
+    min-width: 5.25rem;
     max-width: 9.25rem;
-    min-height: 2.65rem;
-    padding: 0.58rem 0.76rem;
+    min-height:
+      clamp(
+        2.35rem,
+        2.3vw,
+        2.65rem
+      );
+    padding:
+      clamp(
+        0.48rem,
+        0.5vw,
+        0.58rem
+      )
+      clamp(
+        0.58rem,
+        0.65vw,
+        0.76rem
+      );
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.52rem;
+    gap:
+      clamp(
+        0.4rem,
+        0.4vw,
+        0.52rem
+      );
     border: 1px solid
       var(--color-border-strong);
     border-radius: 999px;
@@ -957,7 +1086,12 @@ const experience = [
       blur(16px);
     backdrop-filter: blur(16px);
     font-family: var(--font-mono);
-    font-size: 0.64rem;
+    font-size:
+      clamp(
+        0.55rem,
+        0.5vw,
+        0.64rem
+      );
     line-height: 1.3;
     letter-spacing: 0.025em;
     text-align: center;
@@ -974,6 +1108,43 @@ const experience = [
         var(--transition-fast),
       transform
         var(--transition-standard);
+  }
+
+  .timeline-cue.is-narrow {
+    min-width: 4rem;
+    max-width: 6.25rem;
+    min-height: 2.25rem;
+    padding:
+      0.42rem
+      0.52rem;
+    gap: 0.34rem;
+    font-size: 0.53rem;
+  }
+
+  .timeline-cue.is-narrow
+    .timeline-cue-arrow {
+    font-size: 0.88rem;
+  }
+
+  .timeline-cue.is-compact {
+    width: 2.55rem;
+    min-width: 2.55rem;
+    max-width: 2.55rem;
+    height: 2.55rem;
+    min-height: 2.55rem;
+    padding: 0;
+    gap: 0;
+    border-radius: 50%;
+  }
+
+  .timeline-cue.is-compact
+    .timeline-cue-label {
+    display: none;
+  }
+
+  .timeline-cue.is-compact
+    .timeline-cue-arrow {
+    font-size: 1.15rem;
   }
 
   .timeline-cue:hover,
@@ -1040,25 +1211,6 @@ const experience = [
   }
 
   @media (max-width: 1000px) {
-    .timeline-cue {
-      width: 2.55rem;
-      min-width: 2.55rem;
-      max-width: 2.55rem;
-      height: 2.55rem;
-      min-height: 2.55rem;
-      padding: 0;
-      gap: 0;
-      border-radius: 50%;
-    }
-
-    .timeline-cue-label {
-      display: none;
-    }
-
-    .timeline-cue-arrow {
-      font-size: 1.15rem;
-    }
-
     .timeline {
       --mobile-axis-offset: 1.15rem;
       --mobile-card-offset: 5.25rem;
