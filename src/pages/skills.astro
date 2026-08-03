@@ -1264,6 +1264,55 @@ const skillColumns = [
       display: none;
     }
   }
+  :global(.page-content) {
+    --card-navigation-button-size: 2.5rem;
+    --card-navigation-rail: 3rem;
+    --card-navigation-shift: 1.5rem;
+    --card-navigation-edge: 0.25rem;
+  }
+
+  .skill-navigation-button {
+    box-sizing: border-box;
+    width:
+      var(--card-navigation-button-size);
+    height:
+      var(--card-navigation-button-size);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 1180px) {
+    .skill-navigation {
+      right:
+        var(--card-navigation-edge);
+      width:
+        var(--card-navigation-rail);
+      padding-inline: 0;
+      gap: 0.5rem;
+    }
+
+    .skill-navigation-label {
+      display: none;
+    }
+
+    .skills-grid {
+      width:
+        min(
+          80vw,
+          calc(
+            100vw -
+            var(--card-navigation-rail) -
+            1rem
+          )
+        );
+      transform:
+        translateX(
+          calc(
+            -50% -
+            var(--card-navigation-shift)
+          )
+        );
+    }
+  }
   @media (
     prefers-reduced-motion:
     reduce
