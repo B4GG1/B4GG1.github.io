@@ -2328,10 +2328,19 @@ const projects = [
     }
   }
   :global(.page-content) {
-    --card-navigation-button-size: 2.5rem;
-    --card-navigation-rail: 3rem;
-    --card-navigation-shift: 1.5rem;
-    --card-navigation-edge: 0.25rem;
+    --card-navigation-button-size:
+      2.125rem;
+    --card-navigation-gutter:
+      max(
+        11vw,
+        2.25rem
+      );
+    --card-navigation-content-width:
+      calc(
+        100vw -
+        var(--card-navigation-gutter) -
+        var(--card-navigation-gutter)
+      );
   }
 
   .project-navigation-button,
@@ -2344,19 +2353,19 @@ const projects = [
       var(--card-navigation-button-size);
     height:
       var(--card-navigation-button-size);
-    font-size: 0.9rem;
+    font-size: 0.78rem;
   }
 
   @media (max-width: 720px) {
     .project-navigation,
     .project-navigation.is-narrow,
     .project-navigation.is-compact {
-      right:
-        var(--card-navigation-edge);
+      right: 0;
       width:
-        var(--card-navigation-rail);
+        var(--card-navigation-gutter);
       padding-inline: 0;
-      gap: 0.5rem;
+      align-items: center;
+      gap: 0.45rem;
     }
 
     .project-navigation-label,
@@ -2366,25 +2375,41 @@ const projects = [
       .project-navigation-label {
       display: none;
     }
+
+    .project-entry {
+      left: auto;
+      width:
+        var(--card-navigation-content-width);
+      margin-inline: auto;
+    }
   }
 
   @media (max-width: 640px) {
+    :global(.page-content) {
+      --card-navigation-gutter:
+        max(
+          11vw,
+          2.25rem,
+          calc(50vw - 12rem)
+        );
+      --card-navigation-content-width:
+        calc(
+          100vw -
+          var(--card-navigation-gutter) -
+          var(--card-navigation-gutter)
+        );
+    }
+
     .project-entry {
       --mobile-project-card-width:
-        min(
-          calc(
-            100vw -
-            var(--card-navigation-rail) -
-            1rem
-          ),
-          24rem
+        var(
+          --card-navigation-content-width
         );
 
-      left:
-        calc(
-          -1 *
-          var(--card-navigation-shift)
-        );
+      left: auto;
+      width:
+        var(--mobile-project-card-width);
+      margin-inline: auto;
     }
   }
   @media (

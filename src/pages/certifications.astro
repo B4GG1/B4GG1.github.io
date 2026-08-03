@@ -2992,10 +2992,19 @@ const selectedCourseHours = 147;
     }
   }
   :global(.page-content) {
-    --card-navigation-button-size: 2.5rem;
-    --card-navigation-rail: 3rem;
-    --card-navigation-shift: 1.5rem;
-    --card-navigation-edge: 0.25rem;
+    --card-navigation-button-size:
+      2.125rem;
+    --card-navigation-gutter:
+      max(
+        11vw,
+        2.25rem
+      );
+    --card-navigation-content-width:
+      calc(
+        100vw -
+        var(--card-navigation-gutter) -
+        var(--card-navigation-gutter)
+      );
   }
 
   .certification-navigation-button,
@@ -3008,19 +3017,19 @@ const selectedCourseHours = 147;
       var(--card-navigation-button-size);
     height:
       var(--card-navigation-button-size);
-    font-size: 0.9rem;
+    font-size: 0.78rem;
   }
 
   @media (max-width: 760px) {
     .certification-navigation,
     .certification-navigation.is-narrow,
     .certification-navigation.is-compact {
-      right:
-        var(--card-navigation-edge);
+      right: 0;
       width:
-        var(--card-navigation-rail);
+        var(--card-navigation-gutter);
       padding-inline: 0;
-      gap: 0.5rem;
+      align-items: center;
+      gap: 0.45rem;
     }
 
     .certification-navigation-label,
@@ -3035,21 +3044,9 @@ const selectedCourseHours = 147;
     .programs-section,
     .course-archive {
       width:
-        min(
-          80vw,
-          calc(
-            100vw -
-            var(--card-navigation-rail) -
-            1rem
-          )
-        );
+        var(--card-navigation-content-width);
       transform:
-        translateX(
-          calc(
-            -50% -
-            var(--card-navigation-shift)
-          )
-        );
+        translateX(-50%);
     }
   }
   @media (

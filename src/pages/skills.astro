@@ -1265,10 +1265,19 @@ const skillColumns = [
     }
   }
   :global(.page-content) {
-    --card-navigation-button-size: 2.5rem;
-    --card-navigation-rail: 3rem;
-    --card-navigation-shift: 1.5rem;
-    --card-navigation-edge: 0.25rem;
+    --card-navigation-button-size:
+      2.125rem;
+    --card-navigation-gutter:
+      max(
+        11vw,
+        2.25rem
+      );
+    --card-navigation-content-width:
+      calc(
+        100vw -
+        var(--card-navigation-gutter) -
+        var(--card-navigation-gutter)
+      );
   }
 
   .skill-navigation-button {
@@ -1277,17 +1286,17 @@ const skillColumns = [
       var(--card-navigation-button-size);
     height:
       var(--card-navigation-button-size);
-    font-size: 0.9rem;
+    font-size: 0.78rem;
   }
 
   @media (max-width: 1180px) {
     .skill-navigation {
-      right:
-        var(--card-navigation-edge);
+      right: 0;
       width:
-        var(--card-navigation-rail);
+        var(--card-navigation-gutter);
       padding-inline: 0;
-      gap: 0.5rem;
+      align-items: center;
+      gap: 0.45rem;
     }
 
     .skill-navigation-label {
@@ -1296,21 +1305,9 @@ const skillColumns = [
 
     .skills-grid {
       width:
-        min(
-          80vw,
-          calc(
-            100vw -
-            var(--card-navigation-rail) -
-            1rem
-          )
-        );
+        var(--card-navigation-content-width);
       transform:
-        translateX(
-          calc(
-            -50% -
-            var(--card-navigation-shift)
-          )
-        );
+        translateX(-50%);
     }
   }
   @media (
