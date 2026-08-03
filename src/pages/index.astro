@@ -238,6 +238,10 @@ const sections = [
     '.about-copy'
   );
 
+  const introDescription = document.querySelector(
+    '.intro-description'
+  );
+
   const navigationHeading = document.querySelector(
     '[data-navigation-heading]'
   );
@@ -270,6 +274,74 @@ const sections = [
     return siteHeader.getBoundingClientRect().height;
   };
 
+  let sectionGapFrame = 0;
+
+  const equalizeHomeSectionGaps = () => {
+    if (
+      !(
+        introDescription instanceof
+        HTMLElement
+      ) ||
+      !(aboutSection instanceof HTMLElement) ||
+      !(aboutHeading instanceof HTMLElement) ||
+      !(aboutCopy instanceof HTMLElement) ||
+      !(
+        navigationHeading instanceof
+        HTMLElement
+      )
+    ) {
+      return;
+    }
+
+    window.cancelAnimationFrame(
+      sectionGapFrame
+    );
+
+    aboutSection.style.removeProperty(
+      'padding-bottom'
+    );
+
+    sectionGapFrame =
+      window.requestAnimationFrame(
+        () => {
+          const firstSectionGap =
+            aboutHeading
+              .getBoundingClientRect()
+              .top -
+            introDescription
+              .getBoundingClientRect()
+              .bottom;
+
+          const secondSectionGap =
+            navigationHeading
+              .getBoundingClientRect()
+              .top -
+            aboutCopy
+              .getBoundingClientRect()
+              .bottom;
+
+          const basePaddingBottom =
+            Number.parseFloat(
+              window
+                .getComputedStyle(
+                  aboutSection
+                )
+                .paddingBottom
+            ) || 0;
+
+          const correctedPaddingBottom =
+            Math.max(
+              0,
+              basePaddingBottom +
+                firstSectionGap -
+                secondSectionGap
+            );
+
+          aboutSection.style.paddingBottom =
+            `${correctedPaddingBottom}px`;
+        }
+      );
+  };
   const getVisibleRatio = (
     element: HTMLElement
   ) => {
@@ -538,6 +610,11 @@ const sections = [
   }
 
   updateScrollCue();
+  equalizeHomeSectionGaps();
+
+  document.fonts.ready.then(
+    equalizeHomeSectionGaps
+  );
 
   window.addEventListener(
     'scroll',
@@ -556,10 +633,23 @@ const sections = [
     'load',
     updateScrollCue
   );
+
+  window.addEventListener(
+    'resize',
+    equalizeHomeSectionGaps
+  );
+
+  window.addEventListener(
+    'load',
+    equalizeHomeSectionGaps
+  );
 </script>
 
 <style>
   :global(.page-content) {
+    --home-section-gap:
+      clamp(6rem, 9vw, 8rem);
+
     padding-top: 0;
   }
 
@@ -748,12 +838,11 @@ const sections = [
   }
 
   .about-me {
-    min-height:
-      calc(100svh - 5.25rem);
+    min-height: auto;
     padding:
-      clamp(6rem, 9vw, 8rem)
+      var(--home-section-gap)
       0
-      clamp(8rem, 12vw, 11rem);
+      var(--home-section-gap);
     scroll-margin-top: 6rem;
   }
 
@@ -811,8 +900,6 @@ const sections = [
 
   .about-content {
     min-width: 0;
-    padding-bottom:
-      clamp(5.75rem, 7vw, 6.75rem);
   }
 
   .about-copy {
@@ -827,7 +914,8 @@ const sections = [
       clamp(1.04rem, 1.22vw, 1.13rem);
     line-height: 1.74;
   }
-.scroll-cue {
+
+  .scroll-cue {
     position: fixed;
     bottom:
       max(
@@ -899,7 +987,7 @@ const sections = [
 
   .portfolio-navigation {
     padding-top:
-      clamp(5rem, 9vw, 8rem);
+      var(--home-section-gap);
     scroll-margin-top: 6rem;
   }
 
@@ -1171,14 +1259,6 @@ const sections = [
       white-space: normal;
     }
 
-    .about-inner {
-      padding-inline: 8vw;
-      grid-template-columns:
-        minmax(0, 0.9fr)
-        minmax(0, 1.1fr);
-      gap:
-        clamp(3rem, 6vw, 5rem);
-    }
   }
 
   @media (max-width: 760px) {
@@ -1216,39 +1296,6 @@ const sections = [
         clamp(2.45rem, 10.5vw, 3.8rem);
     }
 
-    .about-me {
-      min-height: auto;
-      padding:
-        clamp(5rem, 18vw, 7rem)
-        0
-        clamp(7rem, 22vw, 9rem);
-    }
-
-    .about-inner {
-      padding-inline: 10vw;
-      grid-template-columns: 1fr;
-      gap: 2.75rem;
-    }
-
-    .about-heading {
-      text-align: center;
-    }
-
-    .about-heading h2 {
-      margin-inline: auto;
-    }
-
-    .about-heading > p {
-      margin-inline: auto;
-    }
-
-    .about-copy {
-      gap: 1.35rem;
-    }
-
-    .about-copy p {
-      text-align: left;
-    }
 
     .navigation-heading {
       grid-template-columns: 1fr;
@@ -1316,13 +1363,6 @@ const sections = [
   }
 
   @media (max-width: 1200px) {
-    .about-me {
-      min-height: auto;
-      padding:
-        clamp(5.5rem, 9vw, 7rem)
-        0
-        clamp(7rem, 10vw, 9rem);
-    }
 
     .about-inner {
       width: min(80vw, 900px);
@@ -1344,9 +1384,6 @@ const sections = [
       margin-inline: auto;
     }
 
-    .about-content {
-      padding-bottom: 6rem;
-    }
 
     .about-copy p {
       text-align: left;
@@ -1363,35 +1400,13 @@ const sections = [
       gap: 2rem;
     }
 
-    .about-content {
-      padding-bottom: 6.5rem;
+    .about-copy {
+      gap: 1.35rem;
     }
 
     .intro-heading h1 span {
       font-size: 1.1em;
     }
-  }
-
-  :global(.page-content) {
-    --home-section-gap:
-      clamp(6rem, 9vw, 8rem);
-  }
-
-  .about-me {
-    min-height: auto;
-    padding:
-      var(--home-section-gap)
-      0
-      0;
-  }
-
-  .about-content {
-    padding-bottom: 0;
-  }
-
-  .portfolio-navigation {
-    padding-top:
-      var(--home-section-gap);
   }
 
   @media (max-width: 1200px) {
