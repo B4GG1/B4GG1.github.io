@@ -68,7 +68,7 @@ const sections = [
       <div class="intro-heading">
         <h1 id="home-title">
           Welcome, my name is
-          <span>Bartosz Girzecki.</span>
+          <span>Bartosz Girzecki</span>
         </h1>
       </div>
 
@@ -179,7 +179,7 @@ const sections = [
         data-navigation-heading
       >
         <h2 id="navigation-title">
-          Find the information most relevant to you.
+          More to discover in my portfolio
         </h2>
 
         <p>
@@ -1369,6 +1369,35 @@ const sections = [
 
     .intro-heading h1 span {
       font-size: 1.1em;
+    }
+  }
+
+  :global(.page-content) {
+    --home-section-gap:
+      clamp(6rem, 9vw, 8rem);
+  }
+
+  .about-me {
+    min-height: auto;
+    padding:
+      var(--home-section-gap)
+      0
+      0;
+  }
+
+  .about-content {
+    padding-bottom: 0;
+  }
+
+  .portfolio-navigation {
+    padding-top:
+      var(--home-section-gap);
+  }
+
+  @media (max-width: 1200px) {
+    :global(.page-content) {
+      --home-section-gap:
+        clamp(5.5rem, 9vw, 7rem);
     }
   }
 </style>
