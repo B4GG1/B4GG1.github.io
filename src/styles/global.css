@@ -64,49 +64,39 @@ body {
   overflow-x: hidden;
   font-family: var(--font-sans);
   color: var(--color-text);
-  background:
+  background-color: var(--color-bg);
+  background-image:
     radial-gradient(
-      circle at 82% -8%,
-      rgba(37, 99, 235, 0.22),
-      transparent 31rem
+      ellipse 52% 120% at -12% 66%,
+      rgba(59, 130, 246, 0.16) 0%,
+      rgba(59, 130, 246, 0.09) 28%,
+      rgba(59, 130, 246, 0.038) 48%,
+      transparent 70%
     ),
     radial-gradient(
-      circle at -8% 38%,
-      rgba(14, 165, 233, 0.08),
-      transparent 26rem
+      ellipse 52% 120% at 112% 34%,
+      rgba(59, 130, 246, 0.16) 0%,
+      rgba(59, 130, 246, 0.09) 28%,
+      rgba(59, 130, 246, 0.038) 48%,
+      transparent 70%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(59, 130, 246, 0.04) 0%,
+      transparent 19%,
+      transparent 81%,
+      rgba(59, 130, 246, 0.04) 100%
     ),
     linear-gradient(
       180deg,
       var(--color-bg) 0%,
-      #080b11 55%,
+      #080b11 52%,
       var(--color-bg) 100%
     );
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-}
-
-body::before {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  content: "";
-  pointer-events: none;
-  opacity: 0.2;
-  background-image:
-    linear-gradient(
-      rgba(125, 211, 252, 0.07) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(125, 211, 252, 0.07) 1px,
-      transparent 1px
-    );
-  background-size: 64px 64px;
-  -webkit-mask-image:
-    linear-gradient(to bottom, #000 0%, transparent 76%);
-  mask-image:
-    linear-gradient(to bottom, #000 0%, transparent 76%);
 }
 
 ::selection {

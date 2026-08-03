@@ -45,26 +45,46 @@ const sections = [
   >
     <div class="home-intro">
       <div class="portrait-frame">
-        <div class="portrait-placeholder">
-          <span>Professional photo</span>
+        <div
+          class="portrait-placeholder"
+          data-profile-frame
+        >
+          <img
+            src="/assets/images/home/profile/IMG20220924152057-removebg-preview.png"
+            alt="Portrait of Bartosz Girzecki"
+            width="550"
+            height="550"
+            loading="eager"
+            decoding="async"
+            data-profile-photo
+          />
+
+          <span data-profile-placeholder>
+            Professional photo
+          </span>
         </div>
       </div>
 
       <div class="intro-heading">
         <h1 id="home-title">
-          Hi, I'm <span>Bartosz Girzecki.</span>
+          Welcome, my name is
+          <span>Bartosz Girzecki.</span>
         </h1>
       </div>
 
       <div class="intro-description">
         <p>
-          <strong>Welcome to my portfolio.</strong> I have nearly six years
-          of professional quality assurance experience gained in the game
-          development industry. That background shaped the way I approach
-          software, communication and product quality. I am currently
-          expanding into Python test automation and web and backend
-          engineering. My primary long-term creative direction is game
-          design, supported by practical game development experience.
+          <strong>And this is my personal portfolio website.</strong>{' '}
+          I’m a technical specialist with several years of professional
+          experience in quality assurance, gained in the game development
+          industry.{' '}
+          Through that experience, supported by my personal strengths, I’ve
+          developed a thoughtful, high-standard approach to product
+          development, communication, collaboration, problem-solving, and
+          quality.{' '}
+          I’m currently expanding my skills in Python test automation,
+          software engineering, and backend development, while continuing to
+          develop my long-term interest in game design and game development.
         </p>
       </div>
     </div>
@@ -72,11 +92,14 @@ const sections = [
 
   <a
     class="scroll-cue"
-    href="#portfolio-navigation"
+    href="#about-me"
     data-scroll-cue
-    aria-label="Explore my portfolio"
+    data-target="#about-me"
+    aria-label="Read more about me"
   >
-    <span>Explore my portfolio</span>
+    <span data-scroll-cue-label>
+      Read more about me
+    </span>
 
     <span
       class="scroll-cue-arrow"
@@ -85,6 +108,65 @@ const sections = [
       ↓
     </span>
   </a>
+
+  <section
+    id="about-me"
+    class="about-me"
+    aria-labelledby="about-title"
+    data-about-section
+  >
+    <div class="about-inner">
+      <div class="about-heading">
+        <h2 id="about-title">
+          About me
+        </h2>
+
+        <p>
+          A little more about the person behind the technical experience.
+        </p>
+      </div>
+
+      <div class="about-content">
+        <div class="about-copy">
+          <p>
+            I see myself as a curious and creative person who values
+            precision, continuous development, and structured thinking.
+            I enjoy understanding how things work, improving ideas, and
+            turning abstract concepts into practical plans. This mindset
+            also shapes the way I communicate, collaborate, and solve
+            problems.
+          </p>
+
+          <p>
+            Outside of work, I enjoy staying active and exploring fantasy
+            through novels, video games, manga, and anime. Worlds from
+            The Lord of the Rings trilogy or The Witcher Saga have stayed
+            with me for years. One Piece, my favourite manga and anime, has
+            had an especially strong and lasting influence on my creativity,
+            persistence, and approach to personal growth.
+          </p>
+
+          <p>
+            Video games have been part of my life since childhood and have
+            helped shape the person I am today. Witcher 3, Skyrim, and
+            Gothic 2 are just a few of my favourite games, and I have played
+            hundreds of titles over the years. I’m fascinated by how games
+            combine systems, storytelling, visual design, music, and player
+            choice.
+          </p>
+
+          <p>
+            One of my favourite creative activities is coming up with new
+            game systems and mechanics. I enjoy breaking those ideas down
+            into smaller elements, analysing and developing them, and
+            considering how they could be implemented. I also like reading
+            about new phones, computer hardware, and the practical evolution
+            of technology.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section
     id="portfolio-navigation"
@@ -136,8 +218,40 @@ const sections = [
     '[data-scroll-cue]'
   );
 
+  const scrollCueLabel = document.querySelector(
+    '[data-scroll-cue-label]'
+  );
+
+  const aboutSection = document.querySelector(
+    '[data-about-section]'
+  );
+
+  const aboutTitle = document.querySelector(
+    '.about-heading h2'
+  );
+
+  const aboutHeading = document.querySelector(
+    '.about-heading'
+  );
+
+  const aboutCopy = document.querySelector(
+    '.about-copy'
+  );
+
   const navigationHeading = document.querySelector(
     '[data-navigation-heading]'
+  );
+
+  const profileFrame = document.querySelector(
+    '[data-profile-frame]'
+  );
+
+  const profilePhoto = document.querySelector(
+    '[data-profile-photo]'
+  );
+
+  const profilePlaceholder = document.querySelector(
+    '[data-profile-placeholder]'
   );
 
   const reducedMotion = window.matchMedia(
@@ -156,20 +270,90 @@ const sections = [
     return siteHeader.getBoundingClientRect().height;
   };
 
+  const getVisibleRatio = (
+    element: HTMLElement
+  ) => {
+    const position =
+      element.getBoundingClientRect();
+
+    const visibleHeight = Math.max(
+      0,
+      Math.min(
+        position.bottom,
+        window.innerHeight
+      ) -
+        Math.max(position.top, 0)
+    );
+
+    const referenceHeight = Math.min(
+      position.height,
+      window.innerHeight
+    );
+
+    if (referenceHeight <= 0) {
+      return 0;
+    }
+
+    return visibleHeight / referenceHeight;
+  };
+
+  const setScrollCueTarget = (
+    target: '#about-me' |
+      '#portfolio-navigation'
+  ) => {
+    if (
+      !(scrollCue instanceof HTMLAnchorElement) ||
+      !(scrollCueLabel instanceof HTMLElement)
+    ) {
+      return;
+    }
+
+    const exploresPortfolio =
+      target === '#portfolio-navigation';
+
+    const label = exploresPortfolio
+      ? 'Explore my portfolio'
+      : 'Read more about me';
+
+    scrollCue.dataset.target = target;
+    scrollCue.setAttribute('href', target);
+    scrollCue.setAttribute(
+      'aria-label',
+      label
+    );
+
+    scrollCueLabel.textContent = label;
+  };
+
   const updateScrollCue = () => {
     if (
       !(scrollCue instanceof HTMLAnchorElement) ||
+      !(aboutSection instanceof HTMLElement) ||
       !(navigationHeading instanceof HTMLElement)
     ) {
       return;
     }
 
-    const headingPosition =
+    const aboutPosition =
+      aboutSection.getBoundingClientRect();
+
+    const navigationPosition =
       navigationHeading.getBoundingClientRect();
 
+    const hasReachedAbout =
+      getVisibleRatio(aboutSection) >= 0.55 ||
+      aboutPosition.top <=
+        getHeaderHeight() + 24;
+
     const shouldHide =
-      headingPosition.top <=
+      navigationPosition.top <=
       window.innerHeight * 0.88;
+
+    setScrollCueTarget(
+      hasReachedAbout
+        ? '#portfolio-navigation'
+        : '#about-me'
+    );
 
     scrollCue.classList.toggle(
       'is-hidden',
@@ -186,32 +370,121 @@ const sections = [
   };
 
   if (
-    scrollCue instanceof HTMLAnchorElement &&
-    navigationHeading instanceof HTMLElement
+    scrollCue instanceof HTMLAnchorElement
   ) {
     scrollCue.addEventListener(
       'click',
       (event) => {
+        const targetSelector =
+          scrollCue.dataset.target;
+
+        if (!targetSelector) {
+          return;
+        }
+
         event.preventDefault();
 
-        const targetPosition =
-          navigationHeading
-            .getBoundingClientRect()
-            .top +
-          window.scrollY -
-          getHeaderHeight() -
-          24;
+        const headerHeight =
+          getHeaderHeight();
 
-        scrollCue.classList.add(
-          'is-hidden'
+        const scrollCuePosition =
+          scrollCue.getBoundingClientRect();
+
+        const buttonReserve = Math.max(
+          window.innerHeight -
+            scrollCuePosition.top +
+            16,
+          88
         );
 
-        scrollCue.tabIndex = -1;
+        const viewportTop =
+          headerHeight + 32;
 
-        scrollCue.setAttribute(
-          'aria-hidden',
-          'true'
-        );
+        const viewportBottom =
+          window.innerHeight -
+          buttonReserve;
+
+        const availableHeight =
+          Math.max(
+            viewportBottom -
+              viewportTop,
+            1
+          );
+
+        let targetPosition = 0;
+
+        if (
+          targetSelector === '#about-me'
+        ) {
+          if (
+            !(aboutTitle instanceof HTMLElement) ||
+            !(aboutHeading instanceof HTMLElement) ||
+            !(aboutCopy instanceof HTMLElement)
+          ) {
+            return;
+          }
+
+          const titlePosition =
+            aboutTitle.getBoundingClientRect();
+
+          const headingPosition =
+            aboutHeading.getBoundingClientRect();
+
+          const copyPosition =
+            aboutCopy.getBoundingClientRect();
+
+          if (window.innerWidth <= 760) {
+            targetPosition =
+              titlePosition.top +
+              window.scrollY -
+              headerHeight -
+              42;
+          } else {
+            const blockTop =
+              window.innerWidth <= 1200
+                ? headingPosition.top
+                : copyPosition.top;
+
+            const blockBottom =
+              copyPosition.bottom;
+
+            const blockHeight =
+              blockBottom - blockTop;
+
+            const desiredTop =
+              blockHeight <= availableHeight
+                ? viewportTop +
+                  (
+                    availableHeight -
+                    blockHeight
+                  ) / 2
+                : viewportTop;
+
+            targetPosition =
+              blockTop +
+              window.scrollY -
+              desiredTop;
+          }
+        } else {
+          if (
+            !(
+              navigationHeading
+                instanceof HTMLElement
+            )
+          ) {
+            return;
+          }
+
+          const navigationPosition =
+            navigationHeading
+              .getBoundingClientRect();
+
+          targetPosition =
+            navigationPosition.top +
+            window.scrollY -
+            headerHeight -
+            32;
+        }
 
         window.scrollTo({
           top: targetPosition,
@@ -221,6 +494,47 @@ const sections = [
         });
       }
     );
+  }
+
+  const setProfilePhotoState = (
+    isLoaded: boolean
+  ) => {
+    if (
+      !(profileFrame instanceof HTMLElement) ||
+      !(profilePlaceholder instanceof HTMLElement)
+    ) {
+      return;
+    }
+
+    profileFrame.classList.toggle(
+      'has-photo',
+      isLoaded
+    );
+
+    profilePlaceholder.setAttribute(
+      'aria-hidden',
+      String(isLoaded)
+    );
+  };
+
+  if (profilePhoto instanceof HTMLImageElement) {
+    if (profilePhoto.complete) {
+      setProfilePhotoState(
+        profilePhoto.naturalWidth > 0
+      );
+    } else {
+      profilePhoto.addEventListener(
+        'load',
+        () => setProfilePhotoState(true),
+        { once: true }
+      );
+
+      profilePhoto.addEventListener(
+        'error',
+        () => setProfilePhotoState(false),
+        { once: true }
+      );
+    }
   }
 
   updateScrollCue();
@@ -250,6 +564,7 @@ const sections = [
   }
 
   .home-intro-viewport,
+  .about-me,
   .portfolio-navigation {
     position: relative;
     left: 50%;
@@ -311,6 +626,7 @@ const sections = [
   }
 
   .portrait-placeholder {
+    position: relative;
     width: 100%;
     height: 100%;
     display: grid;
@@ -330,7 +646,22 @@ const sections = [
       );
   }
 
+  .portrait-placeholder img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 22%;
+    opacity: 0;
+    transform: scale(1.01);
+    transition:
+      opacity var(--transition-standard);
+  }
+
   .portrait-placeholder span {
+    position: relative;
+    z-index: 1;
     max-width: 8rem;
     color: var(--color-text-muted);
     font-family: var(--font-mono);
@@ -339,6 +670,18 @@ const sections = [
     line-height: 1.5;
     text-align: center;
     text-transform: uppercase;
+    opacity: 1;
+    transition:
+      opacity var(--transition-standard);
+  }
+
+  .portrait-placeholder.has-photo img {
+    opacity: 1;
+  }
+
+  .portrait-placeholder.has-photo span {
+    pointer-events: none;
+    opacity: 0;
   }
 
   .intro-heading {
@@ -352,15 +695,23 @@ const sections = [
   }
 
   .intro-heading h1 {
+    max-width: 800px;
     margin: 0;
     font-size:
-      clamp(2.8rem, 4.25vw, 5rem);
-    line-height: 1;
-    letter-spacing: -0.06em;
-    white-space: nowrap;
+      clamp(2.45rem, 3.7vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.055em;
+    white-space: normal;
   }
 
   .intro-heading h1 span {
+    display: block;
+    margin-top: 0.12em;
+    padding:
+      0
+      0.14em
+      0.08em
+      0.02em;
     color: transparent;
     background:
       linear-gradient(
@@ -370,6 +721,8 @@ const sections = [
       );
     -webkit-background-clip: text;
     background-clip: text;
+    font-size: 1.2em;
+    line-height: 0.96;
   }
 
   .intro-description {
@@ -394,7 +747,87 @@ const sections = [
     font-weight: 600;
   }
 
-  .scroll-cue {
+  .about-me {
+    min-height:
+      calc(100svh - 5.25rem);
+    padding:
+      clamp(6rem, 9vw, 8rem)
+      0
+      clamp(8rem, 12vw, 11rem);
+    scroll-margin-top: 6rem;
+  }
+
+  .about-inner {
+    width: 100%;
+    padding-inline: 10vw;
+    display: grid;
+    grid-template-columns:
+      minmax(0, 0.82fr)
+      minmax(0, 1.18fr);
+    align-items: center;
+    gap:
+      clamp(3rem, 8vw, 8rem);
+  }
+
+  .about-heading {
+    align-self: center;
+  }
+
+  .about-heading h2 {
+    width: fit-content;
+    margin: 0;
+    padding:
+      0
+      0.14em
+      0.08em
+      0;
+    overflow: visible;
+    color: transparent;
+    background:
+      linear-gradient(
+        105deg,
+        #ffffff 0%,
+        #dbeafe 45%,
+        var(--color-blue-light) 100%
+      );
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-size:
+      clamp(3rem, 6vw, 5.75rem);
+    letter-spacing: -0.06em;
+    line-height: 1;
+  }
+
+  .about-heading > p {
+    max-width: 25rem;
+    margin:
+      clamp(1.5rem, 3vw, 2.25rem)
+      0
+      0;
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .about-content {
+    min-width: 0;
+    padding-bottom:
+      clamp(5.75rem, 7vw, 6.75rem);
+  }
+
+  .about-copy {
+    display: grid;
+    gap: 1.15rem;
+  }
+
+  .about-copy p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size:
+      clamp(1.04rem, 1.22vw, 1.13rem);
+    line-height: 1.74;
+  }
+.scroll-cue {
     position: fixed;
     bottom:
       max(
@@ -487,8 +920,28 @@ const sections = [
   }
 
   .navigation-heading h2 {
+    width: fit-content;
     max-width: 640px;
     margin: 0;
+    padding:
+      0.06em
+      0.18em
+      0.12em
+      0.04em;
+    justify-self: start;
+    overflow: visible;
+    color: transparent;
+    background:
+      linear-gradient(
+        105deg,
+        #ffffff 0%,
+        #dbeafe 42%,
+        var(--color-blue-light) 100%
+      );
+    -webkit-background-clip: text;
+    background-clip: text;
+    line-height: 1.08;
+    text-align: left;
   }
 
   .navigation-heading > p {
@@ -580,7 +1033,13 @@ const sections = [
 
   .section-content strong {
     width: fit-content;
+    padding:
+      0.06em
+      0.14em
+      0.1em
+      0.04em;
     justify-self: center;
+    overflow: visible;
     color: var(--color-text);
     background:
       linear-gradient(
@@ -708,8 +1167,17 @@ const sections = [
 
     .intro-heading h1 {
       font-size:
-        clamp(2.5rem, 5.2vw, 3.8rem);
+        clamp(2.35rem, 4.8vw, 3.8rem);
       white-space: normal;
+    }
+
+    .about-inner {
+      padding-inline: 8vw;
+      grid-template-columns:
+        minmax(0, 0.9fr)
+        minmax(0, 1.1fr);
+      gap:
+        clamp(3rem, 6vw, 5rem);
     }
   }
 
@@ -745,7 +1213,41 @@ const sections = [
 
     .intro-heading h1 {
       font-size:
-        clamp(3rem, 13vw, 4.6rem);
+        clamp(2.45rem, 10.5vw, 3.8rem);
+    }
+
+    .about-me {
+      min-height: auto;
+      padding:
+        clamp(5rem, 18vw, 7rem)
+        0
+        clamp(7rem, 22vw, 9rem);
+    }
+
+    .about-inner {
+      padding-inline: 10vw;
+      grid-template-columns: 1fr;
+      gap: 2.75rem;
+    }
+
+    .about-heading {
+      text-align: center;
+    }
+
+    .about-heading h2 {
+      margin-inline: auto;
+    }
+
+    .about-heading > p {
+      margin-inline: auto;
+    }
+
+    .about-copy {
+      gap: 1.35rem;
+    }
+
+    .about-copy p {
+      text-align: left;
     }
 
     .navigation-heading {
@@ -753,9 +1255,15 @@ const sections = [
       gap: 1.25rem;
     }
 
+
     .navigation-heading h2,
     .navigation-heading > p {
       margin-inline: auto;
+    }
+
+    .navigation-heading h2 {
+      justify-self: center;
+      text-align: center;
     }
 
     .section-content {
@@ -793,12 +1301,74 @@ const sections = [
     prefers-reduced-motion:
     reduce
   ) {
+    .portrait-placeholder img,
+    .portrait-placeholder span {
+      transition: none;
+    }
+
     .scroll-cue-arrow {
       animation: none;
     }
 
     .section-content > span {
       transition: none;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    .about-me {
+      min-height: auto;
+      padding:
+        clamp(5.5rem, 9vw, 7rem)
+        0
+        clamp(7rem, 10vw, 9rem);
+    }
+
+    .about-inner {
+      width: min(80vw, 900px);
+      margin-inline: auto;
+      padding-inline: 0;
+      grid-template-columns: 1fr;
+      gap: 2.25rem;
+    }
+
+    .about-heading {
+      text-align: center;
+    }
+
+    .about-heading h2 {
+      margin-inline: auto;
+    }
+
+    .about-heading > p {
+      margin-inline: auto;
+    }
+
+    .about-content {
+      padding-bottom: 6rem;
+    }
+
+    .about-copy p {
+      text-align: left;
+    }
+
+    .intro-heading h1 span {
+      font-size: 1.16em;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .about-inner {
+      width: 80vw;
+      gap: 2rem;
+    }
+
+    .about-content {
+      padding-bottom: 6.5rem;
+    }
+
+    .intro-heading h1 span {
+      font-size: 1.1em;
     }
   }
 </style>
