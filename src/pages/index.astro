@@ -304,21 +304,41 @@ const sections = [
     sectionGapFrame =
       window.requestAnimationFrame(
         () => {
-          const firstSectionGap =
-            aboutHeading
-              .getBoundingClientRect()
-              .top -
+          const introPosition =
             introDescription
-              .getBoundingClientRect()
-              .bottom;
+              .getBoundingClientRect();
+
+          const aboutHeadingPosition =
+            aboutHeading
+              .getBoundingClientRect();
+
+          const aboutCopyPosition =
+            aboutCopy
+              .getBoundingClientRect();
+
+          const navigationPosition =
+            navigationHeading
+              .getBoundingClientRect();
+
+          const aboutContentTop =
+            Math.min(
+              aboutHeadingPosition.top,
+              aboutCopyPosition.top
+            );
+
+          const aboutContentBottom =
+            Math.max(
+              aboutHeadingPosition.bottom,
+              aboutCopyPosition.bottom
+            );
+
+          const firstSectionGap =
+            aboutContentTop -
+            introPosition.bottom;
 
           const secondSectionGap =
-            navigationHeading
-              .getBoundingClientRect()
-              .top -
-            aboutCopy
-              .getBoundingClientRect()
-              .bottom;
+            navigationPosition.top -
+            aboutContentBottom;
 
           const basePaddingBottom =
             Number.parseFloat(
