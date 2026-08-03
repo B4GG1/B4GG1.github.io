@@ -170,6 +170,7 @@ const skillColumns = [
         <article
           class="skill-column"
           style={`--reveal-delay: ${100 + index * 140}ms;`}
+          data-skill-card
         >
           <header class="column-header">
             <div class="column-meta">
@@ -206,6 +207,37 @@ const skillColumns = [
       ))
     }
   </section>
+
+  <nav
+    class="skill-navigation is-hidden"
+    aria-label="Navigate between skill categories"
+    aria-hidden="true"
+    data-skill-navigation
+  >
+    <button
+      class="skill-navigation-button is-unavailable"
+      type="button"
+      aria-label="Go to previous skill category"
+      aria-hidden="true"
+      disabled
+      data-skill-up
+    >
+      <span aria-hidden="true">↑</span>
+    </button>
+
+    <span class="skill-navigation-label">
+      More skills
+    </span>
+
+    <button
+      class="skill-navigation-button"
+      type="button"
+      aria-label="Go to next skill category"
+      data-skill-down
+    >
+      <span aria-hidden="true">↓</span>
+    </button>
+  </nav>
 </BaseLayout>
 
 <script>
@@ -213,7 +245,44 @@ const skillColumns = [
     '[data-skills-hero]'
   );
 
+  const skillCards = Array.from(
+    document.querySelectorAll(
+      '[data-skill-card]'
+    )
+  ).filter(
+    (card) =>
+      card instanceof HTMLElement
+  );
+
+  const skillNavigation =
+    document.querySelector(
+      '[data-skill-navigation]'
+    );
+
+  const skillUpButton =
+    document.querySelector(
+      '[data-skill-up]'
+    );
+
+  const skillDownButton =
+    document.querySelector(
+      '[data-skill-down]'
+    );
+
+  const stackedSkills =
+    window.matchMedia(
+      '(max-width: 1180px)'
+    );
+
+  const reducedMotion =
+    window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    );
+
   const compactHeroRatio = 0.6;
+
+  let activeSkillIndex = 0;
+  let skillUpdatePending = false;
 
   const updateSkillsHeroMode = () => {
     if (!(skillsHero instanceof HTMLElement)) {
@@ -236,16 +305,282 @@ const skillColumns = [
     );
   };
 
+  const setSkillButtonAvailability = (
+    button,
+    isAvailable
+  ) => {
+    if (
+      !(
+        button instanceof
+        HTMLButtonElement
+      )
+    ) {
+      return;
+    }
+
+    button.disabled = !isAvailable;
+
+    button.classList.toggle(
+      'is-unavailable',
+      !isAvailable
+    );
+
+    button.setAttribute(
+      'aria-hidden',
+      String(!isAvailable)
+    );
+  };
+
+  const scrollToSkill = (
+    skillIndex
+  ) => {
+    const targetSkill =
+      skillCards[skillIndex];
+
+    if (
+      !(
+        targetSkill instanceof
+        HTMLElement
+      )
+    ) {
+      return;
+    }
+
+    targetSkill.scrollIntoView({
+      behavior:
+        reducedMotion.matches
+          ? 'auto'
+          : 'smooth',
+      block: 'center',
+    });
+  };
+
+  const updateSkillNavigation = () => {
+    if (
+      !(
+        skillNavigation instanceof
+        HTMLElement
+      ) ||
+      skillCards.length === 0
+    ) {
+      return;
+    }
+
+    updateSkillsHeroMode();
+
+    const navigationRangeIsVisible =
+      stackedSkills.matches &&
+      skillCards.some(
+        (skillCard) => {
+          const position =
+            skillCard.getBoundingClientRect();
+
+          return (
+            position.top <
+              window.innerHeight *
+                0.92 &&
+            position.bottom >
+              window.innerHeight *
+                0.08
+          );
+        }
+      );
+
+    skillNavigation.classList.toggle(
+      'is-hidden',
+      !navigationRangeIsVisible
+    );
+
+    skillNavigation.setAttribute(
+      'aria-hidden',
+      String(
+        !navigationRangeIsVisible
+      )
+    );
+
+    if (!navigationRangeIsVisible) {
+      return;
+    }
+
+    const viewportCenter =
+      window.innerHeight * 0.5;
+
+    let closestDistance =
+      Number.POSITIVE_INFINITY;
+
+    skillCards.forEach(
+      (skillCard, index) => {
+        const position =
+          skillCard.getBoundingClientRect();
+
+        const cardCenter =
+          position.top +
+          position.height / 2;
+
+        const distance =
+          Math.abs(
+            cardCenter -
+              viewportCenter
+          );
+
+        if (
+          distance >=
+          closestDistance
+        ) {
+          return;
+        }
+
+        closestDistance = distance;
+        activeSkillIndex = index;
+      }
+    );
+
+    setSkillButtonAvailability(
+      skillUpButton,
+      activeSkillIndex > 0
+    );
+
+    setSkillButtonAvailability(
+      skillDownButton,
+      activeSkillIndex <
+        skillCards.length - 1
+    );
+  };
+
+  const requestSkillNavigationUpdate =
+    () => {
+      if (skillUpdatePending) {
+        return;
+      }
+
+      skillUpdatePending = true;
+
+      window.requestAnimationFrame(
+        () => {
+          updateSkillNavigation();
+          skillUpdatePending = false;
+        }
+      );
+    };
+
+  const centerSkillCardAfterClick = (
+    event,
+    skillCard
+  ) => {
+    if (!stackedSkills.matches) {
+      return;
+    }
+
+    if (
+      !(event.target instanceof Element)
+    ) {
+      return;
+    }
+
+    if (
+      event.target.closest(
+        'a, button, input, textarea, select, label'
+      )
+    ) {
+      return;
+    }
+
+    const selectedText =
+      window.getSelection()?.toString();
+
+    if (selectedText) {
+      return;
+    }
+
+    const position =
+      skillCard.getBoundingClientRect();
+
+    const distanceFromCenter =
+      position.top +
+      position.height / 2 -
+      window.innerHeight / 2;
+
+    if (
+      Math.abs(distanceFromCenter) < 40
+    ) {
+      return;
+    }
+
+    skillCard.scrollIntoView({
+      behavior:
+        reducedMotion.matches
+          ? 'auto'
+          : 'smooth',
+      block: 'center',
+    });
+  };
+
+  skillCards.forEach(
+    (skillCard) => {
+      skillCard.addEventListener(
+        'click',
+        (event) => {
+          centerSkillCardAfterClick(
+            event,
+            skillCard
+          );
+        }
+      );
+    }
+  );
+
+  if (
+    skillUpButton instanceof
+    HTMLButtonElement
+  ) {
+    skillUpButton.addEventListener(
+      'click',
+      () => {
+        scrollToSkill(
+          activeSkillIndex - 1
+        );
+      }
+    );
+  }
+
+  if (
+    skillDownButton instanceof
+    HTMLButtonElement
+  ) {
+    skillDownButton.addEventListener(
+      'click',
+      () => {
+        scrollToSkill(
+          activeSkillIndex + 1
+        );
+      }
+    );
+  }
+
   updateSkillsHeroMode();
+  updateSkillNavigation();
+
+  window.addEventListener(
+    'scroll',
+    requestSkillNavigationUpdate,
+    {
+      passive: true,
+    }
+  );
 
   window.addEventListener(
     'resize',
-    updateSkillsHeroMode
+    requestSkillNavigationUpdate
   );
 
   window.addEventListener(
     'load',
-    updateSkillsHeroMode
+    requestSkillNavigationUpdate
+  );
+
+  stackedSkills.addEventListener(
+    'change',
+    requestSkillNavigationUpdate
   );
 </script>
 
@@ -601,6 +936,173 @@ const skillColumns = [
       translateY(-0.12rem);
   }
 
+  .skill-navigation {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    z-index: 40;
+    box-sizing: border-box;
+    width: 10vw;
+    padding-inline:
+      clamp(
+        0.35rem,
+        0.8vw,
+        0.85rem
+      );
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap:
+      clamp(
+        0.45rem,
+        0.8vw,
+        0.7rem
+      );
+    visibility: visible;
+    opacity: 1;
+    transform:
+      translateY(-50%)
+      scale(1);
+    transition:
+      visibility
+        var(--transition-standard),
+      opacity
+        var(--transition-standard),
+      transform
+        var(--transition-standard);
+  }
+
+  .skill-navigation.is-hidden {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform:
+      translateY(-50%)
+      translateX(0.8rem)
+      scale(0.95);
+  }
+
+  .skill-navigation-label {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 7.5rem;
+    min-height:
+      clamp(
+        3rem,
+        4vw,
+        4rem
+      );
+    padding:
+      clamp(
+        0.6rem,
+        0.7vw,
+        0.8rem
+      )
+      clamp(
+        0.35rem,
+        0.5vw,
+        0.55rem
+      );
+    display: grid;
+    place-items: center;
+    border: 1px solid
+      var(--color-border-strong);
+    border-radius: 999px;
+    color:
+      var(--color-text-secondary);
+    background:
+      linear-gradient(
+        145deg,
+        rgba(18, 27, 40, 0.97),
+        rgba(7, 9, 13, 0.95)
+      );
+    box-shadow:
+      0 1.2rem 3.5rem
+        rgba(0, 0, 0, 0.42),
+      0 0 2rem
+        rgba(37, 99, 235, 0.12);
+    font-family:
+      var(--font-mono);
+    font-size:
+      clamp(
+        0.46rem,
+        0.55vw,
+        0.64rem
+      );
+    font-weight: 570;
+    letter-spacing: 0.055em;
+    line-height: 1.25;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .skill-navigation-button {
+    width:
+      clamp(
+        2.6rem,
+        3.2vw,
+        3.5rem
+      );
+    height:
+      clamp(
+        2.6rem,
+        3.2vw,
+        3.5rem
+      );
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border: 1px solid
+      var(--color-border-strong);
+    border-radius: 50%;
+    color:
+      var(--color-blue-bright);
+    background:
+      linear-gradient(
+        145deg,
+        rgba(18, 27, 40, 0.98),
+        rgba(7, 9, 13, 0.96)
+      );
+    box-shadow:
+      0 1rem 3rem
+        rgba(0, 0, 0, 0.42),
+      0 0 2rem
+        rgba(37, 99, 235, 0.14);
+    font: inherit;
+    font-size:
+      clamp(
+        0.95rem,
+        1vw,
+        1.15rem
+      );
+    cursor: pointer;
+    transition:
+      color
+        var(--transition-fast),
+      border-color
+        var(--transition-fast),
+      box-shadow
+        var(--transition-standard),
+      transform
+        var(--transition-standard);
+  }
+
+  .skill-navigation-button:hover,
+  .skill-navigation-button:focus-visible {
+    color: #ffffff;
+    border-color:
+      var(--color-blue-bright);
+    box-shadow:
+      0 1.2rem 3.5rem
+        rgba(0, 0, 0, 0.46),
+      0 0 2.4rem
+        rgba(59, 130, 246, 0.28);
+    transform: scale(1.06);
+  }
+
+  .skill-navigation-button.is-unavailable {
+    display: none;
+  }
   @keyframes reveal-skill-column {
     from {
       opacity: 0;
@@ -715,6 +1217,53 @@ const skillColumns = [
     }
   }
 
+  @media (max-width: 1180px) {
+    .skill-navigation-label {
+      display: none;
+    }
+  }
+  @media (max-width: 720px) {
+    .skill-navigation {
+      right: 0.65rem;
+      width: auto;
+      padding-inline: 0;
+      gap: 0.45rem;
+    }
+
+    .skill-navigation-label {
+      display: none;
+    }
+
+    .skill-navigation-button {
+      width:
+        clamp(
+          1.9rem,
+          7vw,
+          2.5rem
+        );
+      height:
+        clamp(
+          1.9rem,
+          7vw,
+          2.5rem
+        );
+      font-size: 0.82rem;
+    }
+  }
+
+  @media (
+    (hover: none) and
+    (pointer: coarse)
+  ) {
+    .skill-column {
+      -webkit-tap-highlight-color:
+        transparent;
+    }
+
+    .skill-column::after {
+      display: none;
+    }
+  }
   @media (
     prefers-reduced-motion:
     reduce

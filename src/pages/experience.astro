@@ -517,6 +517,72 @@ const experience = [
     'change',
     positionTimelineCue
   );
+  const experienceCenteringMotion =
+    window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    );
+
+  const centerExperienceCardAfterClick = (
+    event,
+    experienceCard
+  ) => {
+    if (
+      !(event.target instanceof Element)
+    ) {
+      return;
+    }
+
+    if (
+      event.target.closest(
+        'a, button, input, textarea, select, label'
+      )
+    ) {
+      return;
+    }
+
+    const selectedText =
+      window.getSelection()?.toString();
+
+    if (selectedText) {
+      return;
+    }
+
+    const position =
+      experienceCard.getBoundingClientRect();
+
+    const distanceFromCenter =
+      position.top +
+      position.height / 2 -
+      window.innerHeight / 2;
+
+    if (
+      Math.abs(distanceFromCenter) < 40
+    ) {
+      return;
+    }
+
+    experienceCard.scrollIntoView({
+      behavior:
+        experienceCenteringMotion.matches
+          ? 'auto'
+          : 'smooth',
+      block: 'center',
+    });
+  };
+
+  timelineItems.forEach(
+    (experienceCard) => {
+      experienceCard.addEventListener(
+        'click',
+        (event) => {
+          centerExperienceCardAfterClick(
+            event,
+            experienceCard
+          );
+        }
+      );
+    }
+  );
 </script>
 
 <style>

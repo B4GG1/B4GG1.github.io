@@ -1088,6 +1088,82 @@ const selectedCourseHours = 147;
     'load',
     requestNavigationUpdate
   );
+  const centeringCertificationCards =
+    Array.from(
+      document.querySelectorAll(
+        '.featured-credential, .program-card, .course-card'
+      )
+    ).filter(
+      (card) =>
+        card instanceof HTMLElement
+    );
+
+  const certificationCenteringMotion =
+    window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    );
+
+  const centerCertificationCardAfterClick = (
+    event,
+    certificationCard
+  ) => {
+    if (
+      !(event.target instanceof Element)
+    ) {
+      return;
+    }
+
+    if (
+      event.target.closest(
+        'a, button, input, textarea, select, label'
+      )
+    ) {
+      return;
+    }
+
+    const selectedText =
+      window.getSelection()?.toString();
+
+    if (selectedText) {
+      return;
+    }
+
+    const position =
+      certificationCard.getBoundingClientRect();
+
+    const distanceFromCenter =
+      position.top +
+      position.height / 2 -
+      window.innerHeight / 2;
+
+    if (
+      Math.abs(distanceFromCenter) < 40
+    ) {
+      return;
+    }
+
+    certificationCard.scrollIntoView({
+      behavior:
+        certificationCenteringMotion.matches
+          ? 'auto'
+          : 'smooth',
+      block: 'center',
+    });
+  };
+
+  centeringCertificationCards.forEach(
+    (certificationCard) => {
+      certificationCard.addEventListener(
+        'click',
+        (event) => {
+          centerCertificationCardAfterClick(
+            event,
+            certificationCard
+          );
+        }
+      );
+    }
+  );
 </script>
 
 <style>
@@ -2885,6 +2961,36 @@ const selectedCourseHours = 147;
     }
   }
 
+  @media (max-width: 720px) {
+    .certification-navigation {
+      right: 0.65rem;
+      width: auto;
+      padding-inline: 0;
+      gap: 0.45rem;
+    }
+
+    .certification-navigation-label {
+      display: none;
+    }
+  }
+
+  @media (
+    (hover: none) and
+    (pointer: coarse)
+  ) {
+    .featured-credential,
+    .program-card,
+    .course-card {
+      -webkit-tap-highlight-color:
+        transparent;
+    }
+
+    .featured-credential::after,
+    .program-card::after,
+    .course-card::after {
+      display: none;
+    }
+  }
   @media (
     prefers-reduced-motion:
     reduce

@@ -541,6 +541,72 @@ const projects = [
   window.requestAnimationFrame(
     updateProjectNavigation
   );
+  const centeringReducedMotion =
+    window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    );
+
+  const centerProjectCardAfterClick = (
+    event,
+    projectCard
+  ) => {
+    if (
+      !(event.target instanceof Element)
+    ) {
+      return;
+    }
+
+    if (
+      event.target.closest(
+        'a, button, input, textarea, select, label'
+      )
+    ) {
+      return;
+    }
+
+    const selectedText =
+      window.getSelection()?.toString();
+
+    if (selectedText) {
+      return;
+    }
+
+    const position =
+      projectCard.getBoundingClientRect();
+
+    const distanceFromCenter =
+      position.top +
+      position.height / 2 -
+      window.innerHeight / 2;
+
+    if (
+      Math.abs(distanceFromCenter) < 40
+    ) {
+      return;
+    }
+
+    projectCard.scrollIntoView({
+      behavior:
+        centeringReducedMotion.matches
+          ? 'auto'
+          : 'smooth',
+      block: 'center',
+    });
+  };
+
+  projectCards.forEach(
+    (projectCard) => {
+      projectCard.addEventListener(
+        'click',
+        (event) => {
+          centerProjectCardAfterClick(
+            event,
+            projectCard
+          );
+        }
+      );
+    }
+  );
 </script>
 
 <style>
@@ -1827,6 +1893,32 @@ const projects = [
     }
   }
 
+  @media (max-width: 720px) {
+    .project-navigation {
+      right: 0.65rem;
+      width: auto;
+      padding-inline: 0;
+      gap: 0.45rem;
+    }
+
+    .project-navigation-label {
+      display: none;
+    }
+  }
+
+  @media (
+    (hover: none) and
+    (pointer: coarse)
+  ) {
+    .project-entry {
+      -webkit-tap-highlight-color:
+        transparent;
+    }
+
+    .project-card::after {
+      display: none;
+    }
+  }
   @media (
     prefers-reduced-motion:
     reduce
