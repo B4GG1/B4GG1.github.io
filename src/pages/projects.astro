@@ -205,7 +205,7 @@ const testedGames = [
         >
           <div class="project-emblem">
             <img
-              src={`${project.logo}?v=2`}
+              src={`${project.logo}?v=3`}
               alt={project.logoAlt}
               style={`
                 --project-logo-scale: ${project.logoScale};
@@ -509,6 +509,7 @@ const testedGames = [
   const updateProjectsHeroMode =
     () => {
       const shouldUseStackedLayout =
+        window.innerWidth <= 760 ||
         window.innerWidth <=
           getResponsiveThreshold(
             compactHeroRatio
@@ -926,6 +927,7 @@ const testedGames = [
   let activeTestedGameIndex = 0;
   let testedGamesIsAnimating = false;
   let testedGamesAnimationTimer = 0;
+  let testedGamesUserScrollTimer = 0;
 
   const getTestedGamesAnimationDuration =
     () =>
@@ -1301,6 +1303,117 @@ const testedGames = [
     }
   );
 
+  const syncTestedGamesAfterUserScroll =
+    () => {
+      if (
+        !(
+          testedGamesViewport instanceof
+          HTMLElement
+        ) ||
+        testedGamesIsAnimating
+      ) {
+        return;
+      }
+
+      const viewportBounds =
+        testedGamesViewport
+          .getBoundingClientRect();
+
+      const viewportCenter =
+        viewportBounds.left +
+        viewportBounds.width / 2;
+
+      let closestCard = null;
+      let closestDistance =
+        Number.POSITIVE_INFINITY;
+
+      allTestedGameCards.forEach(
+        (card) => {
+          const cardBounds =
+            card.getBoundingClientRect();
+
+          const cardCenter =
+            cardBounds.left +
+            cardBounds.width / 2;
+
+          const distance =
+            Math.abs(
+              cardCenter -
+                viewportCenter
+            );
+
+          if (
+            distance >=
+            closestDistance
+          ) {
+            return;
+          }
+
+          closestDistance = distance;
+          closestCard = card;
+        }
+      );
+
+      if (
+        !(
+          closestCard instanceof
+          HTMLElement
+        )
+      ) {
+        return;
+      }
+
+      const gameIndex =
+        getTestedGameIndex(
+          closestCard
+        );
+
+      const groupIndex =
+        getTestedGameGroupIndex(
+          closestCard
+        );
+
+      activeTestedGameIndex =
+        gameIndex;
+
+      if (groupIndex !== 1) {
+        jumpToMainTestedGame(
+          gameIndex
+        );
+      }
+    };
+
+  if (
+    testedGamesViewport instanceof
+    HTMLElement
+  ) {
+    testedGamesViewport.addEventListener(
+      'scroll',
+      () => {
+        if (testedGamesIsAnimating) {
+          return;
+        }
+
+        window.clearTimeout(
+          testedGamesUserScrollTimer
+        );
+
+        testedGamesUserScrollTimer =
+          window.setTimeout(
+            syncTestedGamesAfterUserScroll,
+            180
+          );
+      },
+      {
+        passive: true,
+      }
+    );
+
+    testedGamesViewport.addEventListener(
+      'scrollend',
+      syncTestedGamesAfterUserScroll
+    );
+  }
   window.addEventListener(
     'resize',
     () => {
@@ -4127,7 +4240,7 @@ const testedGames = [
   ) {
     --tested-game-composite-cover-fix: 1;
     --tested-game-cover-image:
-      url("/assets/images/games/Guardians_of_the_galaxy.jpg");
+      url("/assets/images/games/Guardians_of_the_galaxy.webp");
     --tested-game-cover-base:
       #05070c;
     --tested-game-foreground-scale:
@@ -4143,7 +4256,7 @@ const testedGames = [
   ) {
     --tested-game-composite-cover-fix: 1;
     --tested-game-cover-image:
-      url("/assets/images/games/Outriders.jpg");
+      url("/assets/images/games/Outriders.webp");
     --tested-game-cover-base:
       #03151c;
     --tested-game-foreground-scale:
@@ -4159,7 +4272,7 @@ const testedGames = [
   ) {
     --tested-game-composite-cover-fix: 1;
     --tested-game-cover-image:
-      url("/assets/images/games/Avengers.jpg");
+      url("/assets/images/games/Avengers.webp");
     --tested-game-cover-base:
       #07111f;
     --tested-game-foreground-scale:
@@ -4175,7 +4288,7 @@ const testedGames = [
   ) {
     --tested-game-composite-cover-fix: 1;
     --tested-game-cover-image:
-      url("/assets/images/games/Hunt_Together.jpg");
+      url("/assets/images/games/Hunt_Together.webp");
     --tested-game-cover-base:
       #120718;
     --tested-game-foreground-scale:
@@ -4191,7 +4304,7 @@ const testedGames = [
   ) {
     --tested-game-composite-cover-fix: 1;
     --tested-game-cover-image:
-      url("/assets/images/games/Tempestfall.jpg");
+      url("/assets/images/games/Tempestfall.webp");
     --tested-game-cover-base:
       #180f06;
     --tested-game-foreground-scale:
@@ -4207,7 +4320,7 @@ const testedGames = [
   ) {
     --tested-game-composite-cover-fix: 1;
     --tested-game-cover-image:
-      url("/assets/images/games/Crimen.jpg");
+      url("/assets/images/games/Crimen.webp");
     --tested-game-cover-base:
       #031318;
     --tested-game-foreground-scale:
@@ -4223,7 +4336,7 @@ const testedGames = [
   ) {
     --tested-game-composite-cover-fix: 1;
     --tested-game-cover-image:
-      url("/assets/images/games/Moldwasher.jpg");
+      url("/assets/images/games/Moldwasher.webp");
     --tested-game-cover-base:
       #071317;
     --tested-game-foreground-scale:
@@ -4495,49 +4608,49 @@ const testedGames = [
     img[src$="/Guardians_of_the_galaxy.jpg"]
   ) {
     --strong-cover-image:
-      url("/assets/images/games/Guardians_of_the_galaxy.jpg");
+      url("/assets/images/games/Guardians_of_the_galaxy.webp");
   }
 
   .tested-game-cover:has(
     img[src$="/Outriders.jpg"]
   ) {
     --strong-cover-image:
-      url("/assets/images/games/Outriders.jpg");
+      url("/assets/images/games/Outriders.webp");
   }
 
   .tested-game-cover:has(
     img[src$="/Avengers.jpg"]
   ) {
     --strong-cover-image:
-      url("/assets/images/games/Avengers.jpg");
+      url("/assets/images/games/Avengers.webp");
   }
 
   .tested-game-cover:has(
     img[src$="/Hunt_Together.jpg"]
   ) {
     --strong-cover-image:
-      url("/assets/images/games/Hunt_Together.jpg");
+      url("/assets/images/games/Hunt_Together.webp");
   }
 
   .tested-game-cover:has(
     img[src$="/Tempestfall.jpg"]
   ) {
     --strong-cover-image:
-      url("/assets/images/games/Tempestfall.jpg");
+      url("/assets/images/games/Tempestfall.webp");
   }
 
   .tested-game-cover:has(
     img[src$="/Crimen.jpg"]
   ) {
     --strong-cover-image:
-      url("/assets/images/games/Crimen.jpg");
+      url("/assets/images/games/Crimen.webp");
   }
 
   .tested-game-cover:has(
     img[src$="/Moldwasher.jpg"]
   ) {
     --strong-cover-image:
-      url("/assets/images/games/Moldwasher.jpg");
+      url("/assets/images/games/Moldwasher.webp");
   }
 
   .tested-game-cover:has(
@@ -5183,6 +5296,146 @@ const testedGames = [
       transform:
         translate3d(0, 0, 0)
         scale(1.72) !important;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .tested-games-heading {
+      --projects-mobile-production-fix: 1;
+
+      width: 88vw;
+      max-width: 36rem;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .tested-games-heading h2 {
+      width: 100%;
+      max-width: 100%;
+      margin-inline: auto;
+      justify-self: center;
+      white-space: normal;
+      text-align: center;
+      text-wrap: balance;
+    }
+
+    .tested-games-description {
+      width: 100%;
+      max-width: 34rem;
+      margin-inline: auto;
+      justify-self: center;
+      text-align: center;
+    }
+
+    .tested-games-viewport {
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      touch-action: pan-x pan-y;
+    }
+
+    .tested-game-card {
+      scroll-snap-align: center;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .tested-games-carousel {
+      --tested-games-fixed-card-width:
+        min(66vw, 15.5rem);
+      --tested-games-fixed-gap:
+        0.8rem;
+      --tested-games-fixed-peek:
+        clamp(
+          1.75rem,
+          8vw,
+          2.5rem
+        );
+
+      --tested-games-visible-width:
+        var(
+          --tested-games-fixed-card-width
+        );
+
+      --tested-games-viewport-width:
+        calc(
+          var(
+            --tested-games-fixed-card-width
+          ) +
+          var(
+            --tested-games-fixed-peek
+          ) +
+          var(
+            --tested-games-fixed-peek
+          )
+        );
+    }
+
+    .tested-games-viewport {
+      width:
+        var(
+          --tested-games-viewport-width
+        );
+      max-width:
+        calc(100vw - 1rem);
+    }
+
+    .tested-game-card {
+      min-height: 0;
+      padding: 0.85rem;
+      border-radius:
+        var(--radius-medium);
+    }
+
+    .tested-game-copy {
+      margin-top: 0.8rem;
+    }
+
+    .tested-game-copy h3 {
+      font-size:
+        clamp(
+          0.82rem,
+          3.8vw,
+          0.95rem
+        );
+    }
+
+    .tested-games-control {
+      width: 2.35rem;
+      height: 2.35rem;
+    }
+
+    .tested-games-control-previous {
+      left: 0.7rem;
+    }
+
+    .tested-games-control-next {
+      right: 3.6rem;
+    }
+
+    .tested-games-control span {
+      font-size: 0.92rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .tested-games-carousel {
+      --tested-games-fixed-card-width:
+        min(64vw, 14.5rem);
+      --tested-games-fixed-peek:
+        clamp(
+          1.5rem,
+          7vw,
+          2rem
+        );
+    }
+
+    .tested-games-control-next {
+      right: 3.45rem;
     }
   }
 </style>
