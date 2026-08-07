@@ -615,28 +615,11 @@ const selectedCourseHours = 147;
       <span aria-hidden="true">×</span>
     </button>
 
-    <button
-      class="document-carousel-control document-carousel-previous is-hidden"
-      type="button"
-      aria-label="Show previous document page"
-      data-document-previous
-    >
-      <span aria-hidden="true">←</span>
-    </button>
 
     <div
       class="document-gallery"
       data-document-gallery
     ></div>
-
-    <button
-      class="document-carousel-control document-carousel-next is-hidden"
-      type="button"
-      aria-label="Show next document page"
-      data-document-next
-    >
-      <span aria-hidden="true">→</span>
-    </button>
 
 
   </dialog>
@@ -1016,74 +999,12 @@ const selectedCourseHours = 147;
     documentDialog.close();
   };
 
-  const documentPreviousButton =
-    document.querySelector(
-      '[data-document-previous]'
-    );
-
-  const documentNextButton =
-    document.querySelector(
-      '[data-document-next]'
-    );
-
 
   let activeDocumentEntries = [];
   let activeDocumentIndex = 0;
   let activeDocumentTitle =
     'Document preview';
 
-  const updateDocumentControls = () => {
-    const hasMultipleDocuments =
-      activeDocumentEntries.length > 1;
-
-    if (
-      documentPreviousButton instanceof
-      HTMLButtonElement
-    ) {
-      documentPreviousButton.hidden =
-        !hasMultipleDocuments;
-
-      documentPreviousButton.disabled =
-        !hasMultipleDocuments;
-
-      documentPreviousButton.setAttribute(
-        'aria-hidden',
-        String(!hasMultipleDocuments)
-      );
-
-      documentPreviousButton.style.setProperty(
-        'display',
-        hasMultipleDocuments
-          ? 'grid'
-          : 'none',
-        'important'
-      );
-    }
-
-    if (
-      documentNextButton instanceof
-      HTMLButtonElement
-    ) {
-      documentNextButton.hidden =
-        !hasMultipleDocuments;
-
-      documentNextButton.disabled =
-        !hasMultipleDocuments;
-
-      documentNextButton.setAttribute(
-        'aria-hidden',
-        String(!hasMultipleDocuments)
-      );
-
-      documentNextButton.style.setProperty(
-        'display',
-        hasMultipleDocuments
-          ? 'grid'
-          : 'none',
-        'important'
-      );
-    }
-  };
   const fitDocumentImage = (
     image
   ) => {
@@ -1515,26 +1436,295 @@ const selectedCourseHours = 147;
     }
 
     if (
-      documentPreviousButton instanceof
-      HTMLButtonElement
+      activeDocumentEntries.length > 1
     ) {
-      page.append(
-        documentPreviousButton
-      );
-    }
+      const previousButton =
+        document.createElement(
+          'button'
+        );
 
-    if (
-      documentNextButton instanceof
-      HTMLButtonElement
-    ) {
+      previousButton.className =
+        'document-carousel-control document-carousel-previous';
+
+      previousButton.type =
+        'button';
+
+      previousButton.setAttribute(
+        'aria-label',
+        'Show previous document page'
+      );
+
+      const previousIcon =
+        document.createElement(
+          'span'
+        );
+
+      previousIcon.textContent =
+        '←';
+
+      previousIcon.setAttribute(
+        'aria-hidden',
+        'true'
+      );
+
+      previousButton.append(
+        previousIcon
+      );
+
+      previousButton.style.setProperty(
+        'position',
+        'absolute',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'top',
+        '50%',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'left',
+        '1rem',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'z-index',
+        '100',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'width',
+        '3rem',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'height',
+        '3rem',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'padding',
+        '0',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'display',
+        'grid',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'place-items',
+        'center',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'border',
+        '1px solid var(--color-border-strong)',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'border-radius',
+        '50%',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'color',
+        'var(--color-blue-bright)',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'background',
+        'rgba(7, 14, 24, 0.88)',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'box-shadow',
+        '0 1rem 3rem rgba(0, 0, 0, 0.5)',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'transform',
+        'translateY(-50%)',
+        'important'
+      );
+
+      previousButton.style.setProperty(
+        'cursor',
+        'pointer',
+        'important'
+      );
+
+      previousButton.addEventListener(
+        'click',
+        (event) => {
+          event.stopPropagation();
+
+          showDocumentPage(
+            activeDocumentIndex - 1
+          );
+        }
+      );
+
+      const nextButton =
+        document.createElement(
+          'button'
+        );
+
+      nextButton.className =
+        'document-carousel-control document-carousel-next';
+
+      nextButton.type =
+        'button';
+
+      nextButton.setAttribute(
+        'aria-label',
+        'Show next document page'
+      );
+
+      const nextIcon =
+        document.createElement(
+          'span'
+        );
+
+      nextIcon.textContent =
+        '→';
+
+      nextIcon.setAttribute(
+        'aria-hidden',
+        'true'
+      );
+
+      nextButton.append(
+        nextIcon
+      );
+
+      nextButton.style.setProperty(
+        'position',
+        'absolute',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'top',
+        '50%',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'right',
+        '1rem',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'z-index',
+        '100',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'width',
+        '3rem',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'height',
+        '3rem',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'padding',
+        '0',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'display',
+        'grid',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'place-items',
+        'center',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'border',
+        '1px solid var(--color-border-strong)',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'border-radius',
+        '50%',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'color',
+        'var(--color-blue-bright)',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'background',
+        'rgba(7, 14, 24, 0.88)',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'box-shadow',
+        '0 1rem 3rem rgba(0, 0, 0, 0.5)',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'transform',
+        'translateY(-50%)',
+        'important'
+      );
+
+      nextButton.style.setProperty(
+        'cursor',
+        'pointer',
+        'important'
+      );
+
+      nextButton.addEventListener(
+        'click',
+        (event) => {
+          event.stopPropagation();
+
+          showDocumentPage(
+            activeDocumentIndex + 1
+          );
+        }
+      );
+
       page.append(
-        documentNextButton
+        previousButton,
+        nextButton
       );
     }
 
     documentGallery.append(page);
-
-    updateDocumentControls();
   };
 
   const showDocumentPage = (
@@ -1647,33 +1837,6 @@ const selectedCourseHours = 147;
     renderActiveDocument();
   };
 
-  if (
-    documentPreviousButton instanceof
-    HTMLButtonElement
-  ) {
-    documentPreviousButton.addEventListener(
-      'click',
-      () => {
-        showDocumentPage(
-          activeDocumentIndex - 1
-        );
-      }
-    );
-  }
-
-  if (
-    documentNextButton instanceof
-    HTMLButtonElement
-  ) {
-    documentNextButton.addEventListener(
-      'click',
-      () => {
-        showDocumentPage(
-          activeDocumentIndex + 1
-        );
-      }
-    );
-  }
 
   if (
     documentDialog instanceof
