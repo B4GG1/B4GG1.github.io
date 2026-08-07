@@ -128,8 +128,8 @@ const courseGroups = [
         documents: [
           {
             src:
-              '/certificates/udemy-api-automation-python.pdf',
-            type: 'pdf',
+              '/certificates/udemy-api-automation-python.jpg',
+            type: 'image',
             alt:
               'Udemy certificate for API automation testing with Python and BDD.',
           },
@@ -147,8 +147,8 @@ const courseGroups = [
         documents: [
           {
             src:
-              '/certificates/udemy-playwright-python.pdf',
-            type: 'pdf',
+              '/certificates/udemy-playwright-python.jpg',
+            type: 'image',
             alt:
               'Udemy certificate for Playwright Python automation testing.',
           },
@@ -166,8 +166,8 @@ const courseGroups = [
         documents: [
           {
             src:
-              '/certificates/udemy-selenium-python.pdf',
-            type: 'pdf',
+              '/certificates/udemy-selenium-python.jpg',
+            type: 'image',
             alt:
               'Udemy certificate for Selenium WebDriver with Python.',
           },
@@ -194,8 +194,8 @@ const courseGroups = [
         documents: [
           {
             src:
-              '/certificates/udemy-cpp-beginning.pdf',
-            type: 'pdf',
+              '/certificates/udemy-cpp-beginning.jpg',
+            type: 'image',
             alt:
               'Udemy certificate for Beginning C++ Programming.',
           },
@@ -213,8 +213,8 @@ const courseGroups = [
         documents: [
           {
             src:
-              '/certificates/udemy-unreal-action-rpg.pdf',
-            type: 'pdf',
+              '/certificates/udemy-unreal-action-rpg.jpg',
+            type: 'image',
             alt:
               'Udemy certificate for Unreal Engine 5 C++ Advanced Action RPG.',
           },
@@ -241,8 +241,8 @@ const courseGroups = [
         documents: [
           {
             src:
-              '/certificates/udemy-blender-creator.pdf',
-            type: 'pdf',
+              '/certificates/udemy-blender-creator.jpg',
+            type: 'image',
             alt:
               'Udemy certificate for Complete Blender Creator 3D Modelling.',
           },
@@ -615,10 +615,30 @@ const selectedCourseHours = 147;
       <span aria-hidden="true">×</span>
     </button>
 
+    <button
+      class="document-carousel-control document-carousel-previous is-hidden"
+      type="button"
+      aria-label="Show previous document page"
+      data-document-previous
+    >
+      <span aria-hidden="true">←</span>
+    </button>
+
     <div
       class="document-gallery"
       data-document-gallery
     ></div>
+
+    <button
+      class="document-carousel-control document-carousel-next is-hidden"
+      type="button"
+      aria-label="Show next document page"
+      data-document-next
+    >
+      <span aria-hidden="true">→</span>
+    </button>
+
+
   </dialog>
 
   <nav
@@ -996,6 +1016,578 @@ const selectedCourseHours = 147;
     documentDialog.close();
   };
 
+  const documentPreviousButton =
+    document.querySelector(
+      '[data-document-previous]'
+    );
+
+  const documentNextButton =
+    document.querySelector(
+      '[data-document-next]'
+    );
+
+
+  let activeDocumentEntries = [];
+  let activeDocumentIndex = 0;
+  let activeDocumentTitle =
+    'Document preview';
+
+  const updateDocumentControls = () => {
+    const hasMultipleDocuments =
+      activeDocumentEntries.length > 1;
+
+    if (
+      documentPreviousButton instanceof
+      HTMLButtonElement
+    ) {
+      documentPreviousButton.hidden =
+        !hasMultipleDocuments;
+
+      documentPreviousButton.disabled =
+        !hasMultipleDocuments;
+
+      documentPreviousButton.setAttribute(
+        'aria-hidden',
+        String(!hasMultipleDocuments)
+      );
+
+      documentPreviousButton.style.setProperty(
+        'display',
+        hasMultipleDocuments
+          ? 'grid'
+          : 'none',
+        'important'
+      );
+    }
+
+    if (
+      documentNextButton instanceof
+      HTMLButtonElement
+    ) {
+      documentNextButton.hidden =
+        !hasMultipleDocuments;
+
+      documentNextButton.disabled =
+        !hasMultipleDocuments;
+
+      documentNextButton.setAttribute(
+        'aria-hidden',
+        String(!hasMultipleDocuments)
+      );
+
+      documentNextButton.style.setProperty(
+        'display',
+        hasMultipleDocuments
+          ? 'grid'
+          : 'none',
+        'important'
+      );
+    }
+  };
+  const fitDocumentImage = (
+    image
+  ) => {
+    if (
+      !(
+        image instanceof
+        HTMLImageElement
+      ) ||
+      !(
+        documentDialog instanceof
+        HTMLDialogElement
+      ) ||
+      !(
+        documentGallery instanceof
+        HTMLElement
+      ) ||
+      image.naturalWidth <= 0 ||
+      image.naturalHeight <= 0
+    ) {
+      return;
+    }
+
+    const page =
+      image.closest(
+        '.document-page'
+      );
+
+    if (!(page instanceof HTMLElement)) {
+      return;
+    }
+
+    const viewportWidth =
+      window.visualViewport?.width ??
+      window.innerWidth;
+
+    const viewportHeight =
+      window.visualViewport?.height ??
+      window.innerHeight;
+
+    const isMobile =
+      viewportWidth <= 600;
+
+    const outerMargin =
+      isMobile
+        ? 12
+        : 28;
+
+    const availableWidth =
+      Math.max(
+        1,
+        viewportWidth -
+          outerMargin * 2
+      );
+
+    const availableHeight =
+      Math.max(
+        1,
+        viewportHeight -
+          outerMargin * 2
+      );
+
+    const widthScale =
+      availableWidth /
+      image.naturalWidth;
+
+    const heightScale =
+      availableHeight /
+      image.naturalHeight;
+
+    const scale =
+      Math.min(
+        widthScale,
+        heightScale
+      ) * 0.85;
+
+    const renderedWidth =
+      Math.max(
+        1,
+        Math.floor(
+          image.naturalWidth *
+          scale
+        )
+      );
+
+    const renderedHeight =
+      Math.max(
+        1,
+        Math.floor(
+          image.naturalHeight *
+          scale
+        )
+      );
+
+    documentDialog.style.setProperty(
+      'width',
+      `${renderedWidth}px`,
+      'important'
+    );
+
+    documentDialog.style.setProperty(
+      'height',
+      `${renderedHeight}px`,
+      'important'
+    );
+
+    documentDialog.style.setProperty(
+      'min-width',
+      '0',
+      'important'
+    );
+
+    documentDialog.style.setProperty(
+      'min-height',
+      '0',
+      'important'
+    );
+
+    documentDialog.style.setProperty(
+      'max-width',
+      'none',
+      'important'
+    );
+
+    documentDialog.style.setProperty(
+      'max-height',
+      'none',
+      'important'
+    );
+
+    documentDialog.style.setProperty(
+      'padding',
+      '0',
+      'important'
+    );
+
+    documentDialog.style.setProperty(
+      'margin',
+      'auto',
+      'important'
+    );
+
+    documentDialog.style.setProperty(
+      'border',
+      '0',
+      'important'
+    );
+
+    documentDialog.style.setProperty(
+      'overflow',
+      'visible',
+      'important'
+    );
+
+    documentDialog.style.setProperty(
+      'background',
+      'transparent',
+      'important'
+    );
+
+    documentGallery.style.setProperty(
+      'box-sizing',
+      'border-box',
+      'important'
+    );
+
+    documentGallery.style.setProperty(
+      'width',
+      `${renderedWidth}px`,
+      'important'
+    );
+
+    documentGallery.style.setProperty(
+      'height',
+      `${renderedHeight}px`,
+      'important'
+    );
+
+    documentGallery.style.setProperty(
+      'min-width',
+      '0',
+      'important'
+    );
+
+    documentGallery.style.setProperty(
+      'min-height',
+      '0',
+      'important'
+    );
+
+    documentGallery.style.setProperty(
+      'margin',
+      '0',
+      'important'
+    );
+
+    documentGallery.style.setProperty(
+      'padding',
+      '0',
+      'important'
+    );
+
+    documentGallery.style.setProperty(
+      'display',
+      'block',
+      'important'
+    );
+
+    documentGallery.style.setProperty(
+      'overflow',
+      'hidden',
+      'important'
+    );
+
+    page.style.setProperty(
+      'box-sizing',
+      'border-box',
+      'important'
+    );
+
+    page.style.setProperty(
+      'width',
+      `${renderedWidth}px`,
+      'important'
+    );
+
+    page.style.setProperty(
+      'height',
+      `${renderedHeight}px`,
+      'important'
+    );
+
+    page.style.setProperty(
+      'min-width',
+      '0',
+      'important'
+    );
+
+    page.style.setProperty(
+      'min-height',
+      '0',
+      'important'
+    );
+
+    page.style.setProperty(
+      'max-width',
+      'none',
+      'important'
+    );
+
+    page.style.setProperty(
+      'max-height',
+      'none',
+      'important'
+    );
+
+    page.style.setProperty(
+      'margin',
+      '0',
+      'important'
+    );
+
+    page.style.setProperty(
+      'padding',
+      '0',
+      'important'
+    );
+
+    page.style.setProperty(
+      'display',
+      'block',
+      'important'
+    );
+
+    page.style.setProperty(
+      'overflow',
+      'hidden',
+      'important'
+    );
+
+    image.style.setProperty(
+      'width',
+      `${renderedWidth}px`,
+      'important'
+    );
+
+    image.style.setProperty(
+      'height',
+      `${renderedHeight}px`,
+      'important'
+    );
+
+    image.style.setProperty(
+      'min-width',
+      '0',
+      'important'
+    );
+
+    image.style.setProperty(
+      'min-height',
+      '0',
+      'important'
+    );
+
+    image.style.setProperty(
+      'max-width',
+      'none',
+      'important'
+    );
+
+    image.style.setProperty(
+      'max-height',
+      'none',
+      'important'
+    );
+
+    image.style.setProperty(
+      'margin',
+      '0',
+      'important'
+    );
+
+    image.style.setProperty(
+      'padding',
+      '0',
+      'important'
+    );
+
+    image.style.setProperty(
+      'display',
+      'block',
+      'important'
+    );
+
+    image.style.setProperty(
+      'object-fit',
+      'contain',
+      'important'
+    );
+
+    image.style.setProperty(
+      'object-position',
+      'center center',
+      'important'
+    );
+  };
+  const renderActiveDocument = () => {
+    if (
+      !(
+        documentGallery instanceof
+        HTMLElement
+      )
+    ) {
+      return;
+    }
+
+    documentGallery.replaceChildren();
+
+    const entry =
+      activeDocumentEntries[
+        activeDocumentIndex
+      ];
+
+    if (
+      !entry ||
+      entry.type !== 'image' ||
+      typeof entry.src !== 'string'
+    ) {
+      const placeholder =
+        document.createElement('p');
+
+      placeholder.className =
+        'document-placeholder';
+
+      placeholder.textContent =
+        'Document preview is unavailable.';
+
+      documentGallery.append(
+        placeholder
+      );
+
+      return;
+    }
+
+    const page =
+      document.createElement(
+        'figure'
+      );
+
+    page.className =
+      'document-page';
+
+    const image =
+      document.createElement(
+        'img'
+      );
+
+    image.src = entry.src;
+
+    image.alt =
+      typeof entry.alt === 'string'
+        ? entry.alt
+        : activeDocumentTitle;
+
+    image.loading = 'eager';
+    image.decoding = 'async';
+
+    image.addEventListener(
+      'load',
+      () => {
+        window.requestAnimationFrame(
+          () => {
+            fitDocumentImage(
+              image
+            );
+          }
+        );
+      }
+    );
+
+    page.append(image);
+
+    if (
+      documentCloseButton instanceof
+      HTMLButtonElement
+    ) {
+      page.append(
+        documentCloseButton
+      );
+    }
+
+    if (
+      documentPreviousButton instanceof
+      HTMLButtonElement
+    ) {
+      page.append(
+        documentPreviousButton
+      );
+    }
+
+    if (
+      documentNextButton instanceof
+      HTMLButtonElement
+    ) {
+      page.append(
+        documentNextButton
+      );
+    }
+
+    documentGallery.append(page);
+
+    updateDocumentControls();
+  };
+
+  const showDocumentPage = (
+    targetIndex
+  ) => {
+    const documentCount =
+      activeDocumentEntries.length;
+
+    if (documentCount === 0) {
+      return;
+    }
+
+    activeDocumentIndex =
+      (
+        targetIndex +
+        documentCount
+      ) %
+      documentCount;
+
+    renderActiveDocument();
+  };
+
+  const fitAllDocumentImages = () => {
+    if (
+      !(
+        documentDialog instanceof
+        HTMLDialogElement
+      ) ||
+      !documentDialog.open ||
+      !(
+        documentGallery instanceof
+        HTMLElement
+      )
+    ) {
+      return;
+    }
+
+    const image =
+      documentGallery.querySelector(
+        '.document-page img'
+      );
+
+    if (
+      image instanceof
+      HTMLImageElement &&
+      image.complete
+    ) {
+      fitDocumentImage(
+        image
+      );
+    }
+  };
+
   const openDocumentDialog = (
     trigger
   ) => {
@@ -1007,34 +1599,41 @@ const selectedCourseHours = 147;
       !(
         documentDialog instanceof
         HTMLDialogElement
-      ) ||
-      !(
-        documentGallery instanceof
-        HTMLElement
       )
     ) {
       return;
     }
 
-    documentGallery.replaceChildren();
+    activeDocumentTitle =
+      trigger.dataset.documentTitle ??
+      'Document preview';
 
-    const placeholder =
-      document.createElement('p');
+    activeDocumentEntries = [];
+    activeDocumentIndex = 0;
 
-    placeholder.className =
-      'document-placeholder';
+    try {
+      const parsedEntries =
+        JSON.parse(
+          trigger.dataset.documentImages ??
+            '[]'
+        );
 
-    placeholder.textContent =
-      'Document preview has not been added to this build yet.';
-
-    documentGallery.append(
-      placeholder
-    );
+      if (Array.isArray(parsedEntries)) {
+        activeDocumentEntries =
+          parsedEntries.filter(
+            (entry) =>
+              entry?.type === 'image' &&
+              typeof entry.src ===
+                'string'
+          );
+      }
+    } catch {
+      activeDocumentEntries = [];
+    }
 
     documentDialog.setAttribute(
       'aria-label',
-      trigger.dataset.documentTitle ??
-        'Document preview'
+      activeDocumentTitle
     );
 
     lastDocumentTrigger = trigger;
@@ -1044,8 +1643,76 @@ const selectedCourseHours = 147;
     document.documentElement.classList.add(
       'has-open-document-dialog'
     );
+
+    renderActiveDocument();
   };
 
+  if (
+    documentPreviousButton instanceof
+    HTMLButtonElement
+  ) {
+    documentPreviousButton.addEventListener(
+      'click',
+      () => {
+        showDocumentPage(
+          activeDocumentIndex - 1
+        );
+      }
+    );
+  }
+
+  if (
+    documentNextButton instanceof
+    HTMLButtonElement
+  ) {
+    documentNextButton.addEventListener(
+      'click',
+      () => {
+        showDocumentPage(
+          activeDocumentIndex + 1
+        );
+      }
+    );
+  }
+
+  if (
+    documentDialog instanceof
+    HTMLDialogElement
+  ) {
+    documentDialog.addEventListener(
+      'keydown',
+      (event) => {
+        if (
+          activeDocumentEntries.length <=
+          1
+        ) {
+          return;
+        }
+
+        if (
+          event.key ===
+          'ArrowLeft'
+        ) {
+          event.preventDefault();
+
+          showDocumentPage(
+            activeDocumentIndex - 1
+          );
+        }
+
+        if (
+          event.key ===
+          'ArrowRight'
+        ) {
+          event.preventDefault();
+
+          showDocumentPage(
+            activeDocumentIndex + 1
+          );
+        }
+      }
+    );
+  }
   documentOpenButtons.forEach(
     (button) => {
       button.addEventListener(
@@ -1116,6 +1783,15 @@ const selectedCourseHours = 147;
   window.addEventListener(
     'resize',
     requestNavigationUpdate
+  );
+
+  window.addEventListener(
+    'resize',
+    () => {
+      window.requestAnimationFrame(
+        fitAllDocumentImages
+      );
+    }
   );
 
   window.addEventListener(
@@ -2381,134 +3057,6 @@ const selectedCourseHours = 147;
     line-height: 1.45;
   }
 
-  .document-dialog {
-    width: min(96vw, 86rem);
-    max-height: 96vh;
-    margin: auto;
-    padding: 0;
-    overflow: auto;
-    border: 0;
-    color:
-      var(--color-text);
-    background: transparent;
-    box-shadow: none;
-  }
-
-  .document-dialog::backdrop {
-    background:
-      rgba(8, 35, 72, 0.84);
-    -webkit-backdrop-filter:
-      blur(0.8rem);
-    backdrop-filter:
-      blur(0.8rem);
-  }
-
-  .document-dialog-close {
-    position: fixed;
-    top:
-      clamp(1rem, 2vw, 2rem);
-    right:
-      clamp(1rem, 2vw, 2rem);
-    z-index: 3;
-    width:
-      clamp(2.75rem, 4vw, 3.4rem);
-    height:
-      clamp(2.75rem, 4vw, 3.4rem);
-    padding: 0;
-    display: grid;
-    place-items: center;
-    border: 1px solid
-      var(--color-blue-bright);
-    border-radius: 50%;
-    color: #ffffff;
-    background:
-      rgba(37, 99, 235, 0.72);
-    box-shadow:
-      0 1rem 3rem
-        rgba(0, 0, 0, 0.44),
-      0 0 2.5rem
-        rgba(96, 165, 250, 0.34);
-    -webkit-backdrop-filter:
-      blur(1rem);
-    backdrop-filter:
-      blur(1rem);
-    font-size:
-      clamp(1.35rem, 2vw, 1.7rem);
-    line-height: 1;
-    cursor: pointer;
-    transition:
-      background-color
-        var(--transition-fast),
-      border-color
-        var(--transition-fast),
-      box-shadow
-        var(--transition-standard),
-      transform
-        var(--transition-standard);
-  }
-
-  .document-dialog-close:hover,
-  .document-dialog-close:focus-visible {
-    border-color: #ffffff;
-    background:
-      rgba(59, 130, 246, 0.94);
-    box-shadow:
-      0 1.2rem 3.5rem
-        rgba(0, 0, 0, 0.5),
-      0 0 3rem
-        rgba(125, 211, 252, 0.5);
-    transform:
-      rotate(5deg)
-      scale(1.06);
-  }
-
-  .document-gallery {
-    width: 100%;
-    min-height: 80vh;
-    padding:
-      clamp(1rem, 3vw, 3rem);
-    display: grid;
-    grid-template-columns: 1fr;
-    align-items: start;
-    justify-items: center;
-    gap:
-      clamp(1.5rem, 4vw, 3rem);
-  }
-
-  .document-page {
-    width: 100%;
-    display: grid;
-    place-items: center;
-  }
-
-  .document-page img {
-    width: auto;
-    max-width: 100%;
-    max-height: 90vh;
-    display: block;
-    object-fit: contain;
-    border-radius:
-      var(--radius-small);
-    background: #ffffff;
-    box-shadow:
-      0 2.5rem 7rem
-        rgba(0, 0, 0, 0.52);
-  }
-
-  .document-pdf {
-    width: 100%;
-    height:
-      min(88vh, 62rem);
-    display: block;
-    border: 0;
-    border-radius:
-      var(--radius-small);
-    background: #ffffff;
-    box-shadow:
-      0 2.5rem 7rem
-        rgba(0, 0, 0, 0.52);
-  }
-
   .certification-navigation {
     position: fixed;
     top: 50%;
@@ -3008,22 +3556,7 @@ const selectedCourseHours = 147;
       overflow-wrap: anywhere;
     }
 
-    .document-dialog {
-      width: 100vw;
-      max-height: 100vh;
-    }
 
-    .document-gallery {
-      min-height: 100vh;
-      padding:
-        4.5rem
-        0.75rem
-        1rem;
-    }
-
-    .document-pdf {
-      height: 82vh;
-    }
   }
 
   @media (max-width: 720px) {
@@ -3141,21 +3674,21 @@ const selectedCourseHours = 147;
     }
   }
 
+
   .document-dialog[data-document-dialog] {
     position: fixed;
     inset: 0;
     box-sizing: border-box;
     width:
       min(
-        calc(100vw - 3rem),
-        48rem
+        96vw,
+        100rem
       );
-    max-width: 48rem;
-    max-height:
-      min(
-        calc(100vh - 3rem),
-        34rem
-      );
+    height: 92vh;
+    height: 92dvh;
+    max-width: 96vw;
+    max-height: 92vh;
+    max-height: 92dvh;
     margin: auto;
     padding: 0;
     overflow: hidden;
@@ -3166,25 +3699,17 @@ const selectedCourseHours = 147;
     color:
       var(--color-text);
     background:
-      linear-gradient(
-        145deg,
-        rgba(16, 27, 43, 0.94),
-        rgba(6, 12, 21, 0.9)
-      );
+      rgba(8, 14, 23, 0.98);
     box-shadow:
       0 3rem 8rem
         rgba(0, 0, 0, 0.68),
       0 0 4rem
-        rgba(37, 99, 235, 0.2);
-    -webkit-backdrop-filter:
-      blur(1rem);
-    backdrop-filter:
-      blur(1rem);
+        rgba(37, 99, 235, 0.18);
   }
 
   .document-dialog[data-document-dialog]::backdrop {
     background:
-      rgba(3, 9, 18, 0.68);
+      rgba(3, 9, 18, 0.76);
     -webkit-backdrop-filter:
       blur(0.75rem);
     backdrop-filter:
@@ -3194,31 +3719,11 @@ const selectedCourseHours = 147;
   .document-dialog[data-document-dialog]
     .document-dialog-close {
     position: absolute;
-    top:
-      clamp(
-        0.85rem,
-        2vw,
-        1.25rem
-      );
-    right:
-      clamp(
-        0.85rem,
-        2vw,
-        1.25rem
-      );
-    z-index: 4;
-    width:
-      clamp(
-        2.55rem,
-        4vw,
-        3rem
-      );
-    height:
-      clamp(
-        2.55rem,
-        4vw,
-        3rem
-      );
+    top: 0.9rem;
+    right: 0.9rem;
+    z-index: 10;
+    width: 3rem;
+    height: 3rem;
     padding: 0;
     display: grid;
     place-items: center;
@@ -3228,31 +3733,11 @@ const selectedCourseHours = 147;
     color:
       var(--color-blue-bright);
     background:
-      linear-gradient(
-        145deg,
-        rgba(18, 27, 40, 0.82),
-        rgba(7, 9, 13, 0.76)
-      );
+      rgba(10, 17, 27, 0.94);
     box-shadow:
-      0 1rem 2.8rem
-        rgba(0, 0, 0, 0.42),
-      0 0 1.8rem
-        rgba(
-          37,
-          99,
-          235,
-          0.14
-        );
-    -webkit-backdrop-filter:
-      blur(0.8rem);
-    backdrop-filter:
-      blur(0.8rem);
-    font-size:
-      clamp(
-        1.25rem,
-        2vw,
-        1.55rem
-      );
+      0 1rem 3rem
+        rgba(0, 0, 0, 0.45);
+    font-size: 1.5rem;
     line-height: 1;
     cursor: pointer;
   }
@@ -3265,93 +3750,823 @@ const selectedCourseHours = 147;
     border-color:
       var(--color-blue-light);
     background:
-      linear-gradient(
-        145deg,
-        rgba(22, 33, 49, 0.94),
-        rgba(8, 12, 18, 0.9)
-      );
-    box-shadow:
-      0 1.2rem 3.2rem
-        rgba(0, 0, 0, 0.48),
-      0 0 2.2rem
-        rgba(
-          96,
-          165,
-          250,
-          0.24
-        );
-    transform:
-      rotate(5deg)
-      scale(1.06);
+      rgba(22, 33, 49, 0.98);
   }
 
   .document-dialog[data-document-dialog]
     .document-gallery {
     box-sizing: border-box;
     width: 100%;
-    min-height:
-      min(
-        calc(100vh - 3rem),
-        26rem
-      );
+    height: 100%;
+    min-height: 0;
     padding:
+      4.5rem
       clamp(
-        5rem,
-        10vw,
-        7rem
+        0.75rem,
+        2vw,
+        1.5rem
       )
-      clamp(
-        1.5rem,
-        5vw,
-        4rem
-      )
-      clamp(
-        3rem,
-        7vw,
-        5rem
+      1rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  :global(.document-page) {
+    box-sizing: border-box;
+    width: 100%;
+    height:
+      calc(
+        92vh -
+        6.25rem
       );
+    height:
+      calc(
+        92dvh -
+        6.25rem
+      );
+    min-height:
+      calc(
+        92vh -
+        6.25rem
+      );
+    min-height:
+      calc(
+        92dvh -
+        6.25rem
+      );
+    flex:
+      0
+      0
+      auto;
+    margin: 0;
+    padding: 0;
     display: grid;
     place-items: center;
     overflow: hidden;
-    text-align: center;
+  }
+
+  :global(.document-page img) {
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    margin: auto !important;
+    display: block !important;
+    object-fit:
+      contain !important;
+    object-position:
+      center center !important;
+    border-radius:
+      var(--radius-small);
+    background: #ffffff;
+    box-shadow:
+      0 2rem 6rem
+        rgba(0, 0, 0, 0.5);
   }
 
   .document-placeholder {
     max-width: 32rem;
-    margin: 0;
+    margin: auto;
     color:
       var(--color-text-secondary);
-    font-size:
-      clamp(
-        0.95rem,
-        1.4vw,
-        1.1rem
-      );
     line-height: 1.7;
     text-align: center;
   }
 
   @media (max-width: 600px) {
     .document-dialog[data-document-dialog] {
-      width:
-        calc(100vw - 1.5rem);
-      max-height:
-        calc(100vh - 1.5rem);
-      border-radius:
-        var(--radius-medium);
+    position: fixed;
+    inset: 0;
+    box-sizing: border-box;
+    width: auto;
+    height: auto;
+    max-width: 94vw;
+    max-height: 90vh;
+    max-height: 90dvh;
+    margin: auto;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    border-radius:
+      var(--radius-small);
+    color:
+      var(--color-text);
+    background: transparent;
+    box-shadow:
+      0 2.5rem 7rem
+        rgba(0, 0, 0, 0.56);
+  }
+
+  .document-dialog[data-document-dialog]::backdrop {
+    background:
+      rgba(3, 9, 18, 0.76);
+    -webkit-backdrop-filter:
+      blur(0.75rem);
+    backdrop-filter:
+      blur(0.75rem);
+  }
+
+  .document-dialog[data-document-dialog]
+    .document-gallery {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+    overflow: hidden;
+    border-radius:
+      var(--radius-small);
+    background: transparent;
+  }
+
+  :global(.document-page) {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+    overflow: hidden;
+    border-radius:
+      var(--radius-small);
+  }
+
+  :global(.document-page img) {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    display: block;
+    object-fit: contain;
+    object-position:
+      center center;
+    border-radius:
+      var(--radius-small);
+    background: #ffffff;
+  }
+
+  .document-dialog[data-document-dialog]
+    .document-dialog-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 20;
+    width:
+      clamp(
+        2.5rem,
+        3.2vw,
+        3rem
+      );
+    height:
+      clamp(
+        2.5rem,
+        3.2vw,
+        3rem
+      );
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border: 1px solid
+      rgba(125, 211, 252, 0.5);
+    border-radius: 50%;
+    color:
+      var(--color-blue-bright);
+    background:
+      rgba(7, 14, 24, 0.86);
+    box-shadow:
+      0 0.75rem 2rem
+        rgba(0, 0, 0, 0.42);
+    -webkit-backdrop-filter:
+      blur(0.8rem);
+    backdrop-filter:
+      blur(0.8rem);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      color
+        var(--transition-fast),
+      border-color
+        var(--transition-fast),
+      background-color
+        var(--transition-fast),
+      transform
+        var(--transition-standard);
+  }
+
+  .document-dialog[data-document-dialog]
+    .document-dialog-close:hover,
+  .document-dialog[data-document-dialog]
+    .document-dialog-close:focus-visible {
+    color: #ffffff;
+    border-color: #ffffff;
+    background:
+      rgba(37, 99, 235, 0.9);
+    transform:
+      scale(1.06);
+  }
+
+  .document-carousel-control {
+    position: absolute;
+    top: 50%;
+    z-index: 20;
+    width:
+      clamp(
+        2.6rem,
+        3.5vw,
+        3.25rem
+      );
+    height:
+      clamp(
+        2.6rem,
+        3.5vw,
+        3.25rem
+      );
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border: 1px solid
+      rgba(125, 211, 252, 0.48);
+    border-radius: 50%;
+    color: #ffffff;
+    background:
+      rgba(7, 14, 24, 0.78);
+    box-shadow:
+      0 0.8rem 2.5rem
+        rgba(0, 0, 0, 0.42);
+    -webkit-backdrop-filter:
+      blur(0.8rem);
+    backdrop-filter:
+      blur(0.8rem);
+    font-size: 1rem;
+    cursor: pointer;
+    transform:
+      translateY(-50%);
+    transition:
+      border-color
+        var(--transition-fast),
+      background-color
+        var(--transition-fast),
+      transform
+        var(--transition-standard);
+  }
+
+  .document-carousel-previous {
+    left: 0.75rem;
+  }
+
+  .document-carousel-next {
+    right: 0.75rem;
+  }
+
+  .document-carousel-control:hover,
+  .document-carousel-control:focus-visible {
+    border-color: #ffffff;
+    background:
+      rgba(37, 99, 235, 0.88);
+    transform:
+      translateY(-50%)
+      scale(1.06);
+  }
+
+  .document-carousel-control.is-hidden {
+    display: none;
+  }
+
+  .document-carousel-counter {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 50%;
+    z-index: 20;
+    min-width: 3.5rem;
+    padding:
+      0.45rem
+      0.7rem;
+    border: 1px solid
+      rgba(125, 211, 252, 0.4);
+    border-radius: 999px;
+    color:
+      var(--color-text-secondary);
+    background:
+      rgba(7, 14, 24, 0.78);
+    box-shadow:
+      0 0.75rem 2rem
+        rgba(0, 0, 0, 0.34);
+    -webkit-backdrop-filter:
+      blur(0.8rem);
+    backdrop-filter:
+      blur(0.8rem);
+    font-family:
+      var(--font-mono);
+    font-size: 0.62rem;
+    line-height: 1;
+    text-align: center;
+    transform:
+      translateX(-50%);
+  }
+
+  .document-carousel-counter.is-hidden {
+    display: none;
+  }
+
+  .document-placeholder {
+    padding: 3rem;
+    color:
+      var(--color-text-secondary);
+    background:
+      var(--color-bg-soft);
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    .document-dialog[data-document-dialog] {
+      max-width: 96vw;
+      max-height: 92vh;
+      max-height: 92dvh;
     }
 
     .document-dialog[data-document-dialog]
-      .document-gallery {
-      min-height:
-        min(
-          calc(100vh - 1.5rem),
-          24rem
-        );
-      padding:
-        4.75rem
-        1.25rem
-        3rem;
+      .document-dialog-close {
+      top: 0.5rem;
+      right: 0.5rem;
+    }
+
+    .document-carousel-previous {
+      left: 0.5rem;
+    }
+
+    .document-carousel-next {
+      right: 0.5rem;
+    }
+
+    .document-carousel-counter {
+      bottom: 0.5rem;
+    }
+  }
+
+  .document-dialog[open][data-document-dialog] {
+    padding: 0 !important;
+    overflow: visible !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow:
+      0 2.5rem 7rem
+        rgba(0, 0, 0, 0.56) !important;
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-gallery {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border-radius:
+      var(--radius-small);
+    background: transparent !important;
+  }
+
+  :global(
+    .document-dialog[open]
+    .document-page
+  ) {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  :global(
+    .document-dialog[open]
+    .document-page img
+  ) {
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius:
+      var(--radius-small);
+    background: #ffffff;
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-dialog-close,
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-control {
+    box-sizing: border-box;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border: 1px solid
+      var(--color-border-strong);
+    border-radius: 50%;
+    color:
+      var(--color-blue-bright);
+    background:
+      linear-gradient(
+        145deg,
+        rgba(18, 27, 40, 0.94),
+        rgba(7, 9, 13, 0.9)
+      );
+    box-shadow:
+      0 1rem 3rem
+        rgba(0, 0, 0, 0.5),
+      0 0 2rem
+        rgba(37, 99, 235, 0.16);
+    -webkit-backdrop-filter:
+      blur(0.8rem);
+    backdrop-filter:
+      blur(0.8rem);
+    cursor: pointer;
+    transition:
+      color
+        var(--transition-fast),
+      border-color
+        var(--transition-fast),
+      box-shadow
+        var(--transition-standard),
+      transform
+        var(--transition-standard);
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-dialog-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 30;
+    font-size: 1.35rem;
+    line-height: 1;
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-control {
+    position: absolute;
+    top: 50%;
+    z-index: 30;
+    font-size: 0.9rem;
+    transform:
+      translateY(-50%);
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-previous {
+    left: 0.75rem;
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-next {
+    right: 0.75rem;
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-dialog-close:hover,
+  .document-dialog[open][data-document-dialog]
+    .document-dialog-close:focus-visible {
+    color: #ffffff;
+    border-color:
+      var(--color-blue-bright);
+    box-shadow:
+      0 1.2rem 3.5rem
+        rgba(0, 0, 0, 0.52),
+      0 0 2.4rem
+        rgba(59, 130, 246, 0.3);
+    transform:
+      scale(1.06);
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-control:hover,
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-control:focus-visible {
+    color: #ffffff;
+    border-color:
+      var(--color-blue-bright);
+    box-shadow:
+      0 1.2rem 3.5rem
+        rgba(0, 0, 0, 0.52),
+      0 0 2.4rem
+        rgba(59, 130, 246, 0.3);
+    transform:
+      translateY(-50%)
+      scale(1.06);
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-control.is-hidden {
+    display: none !important;
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-counter {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 50%;
+    z-index: 30;
+    padding:
+      0.4rem
+      0.65rem;
+    border: 1px solid
+      var(--color-border-strong);
+    border-radius: 999px;
+    color:
+      var(--color-text-secondary);
+    background:
+      rgba(7, 9, 13, 0.86);
+    box-shadow:
+      0 0.8rem 2rem
+        rgba(0, 0, 0, 0.4);
+    -webkit-backdrop-filter:
+      blur(0.8rem);
+    backdrop-filter:
+      blur(0.8rem);
+    font-family:
+      var(--font-mono);
+    font-size: 0.6rem;
+    line-height: 1;
+    transform:
+      translateX(-50%);
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-counter.is-hidden {
+    display: none !important;
+  }
+
+  @media (max-width: 600px) {
+    .document-dialog[open][data-document-dialog]
+      .document-dialog-close {
+      top: 0.45rem;
+      right: 0.45rem;
+    }
+
+    .document-dialog[open][data-document-dialog]
+      .document-carousel-previous {
+      left: 0.45rem;
+    }
+
+    .document-dialog[open][data-document-dialog]
+      .document-carousel-next {
+      right: 0.45rem;
+    }
+
+    .document-dialog[open][data-document-dialog]
+      .document-carousel-counter {
+      bottom: 0.45rem;
+    }
+  }
+  .document-dialog[open][data-document-dialog]
+    .document-dialog-close {
+    top: 1.25rem !important;
+    right: 1rem !important;
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-control {
+    top: 52% !important;
+    width: 3rem !important;
+    height: 3rem !important;
+    color:
+      var(--color-blue-bright) !important;
+    border-color:
+      var(--color-blue-bright) !important;
+    background:
+      rgba(7, 14, 24, 0.82) !important;
+    box-shadow:
+      0 1rem 3rem
+        rgba(0, 0, 0, 0.46),
+      0 0 2rem
+        rgba(37, 99, 235, 0.18) !important;
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-previous {
+    left: 1rem !important;
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-next {
+    right: 1rem !important;
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-control:hover,
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-control:focus-visible {
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+    background:
+      rgba(37, 99, 235, 0.9) !important;
+    box-shadow:
+      0 1.2rem 3.5rem
+        rgba(0, 0, 0, 0.52),
+      0 0 2.4rem
+        rgba(59, 130, 246, 0.3) !important;
+  }
+
+  .document-dialog[open][data-document-dialog]
+    .document-carousel-control.is-hidden {
+    display: none !important;
+  }
+
+  .document-carousel-counter {
+    display: none !important;
+  }
+
+  @media (max-width: 600px) {
+    .document-dialog[open][data-document-dialog]
+      .document-dialog-close {
+      top: 0.9rem !important;
+      right: 0.75rem !important;
+    }
+
+    .document-dialog[open][data-document-dialog]
+      .document-carousel-previous {
+      left: 0.65rem !important;
+    }
+
+    .document-dialog[open][data-document-dialog]
+      .document-carousel-next {
+      right: 0.65rem !important;
+    }
+  }
+
+  :global(.document-page) {
+    position: relative !important;
+  }
+
+  :global(
+    .document-page
+    .document-dialog-close
+  ) {
+    position: absolute !important;
+    top: 1.65rem !important;
+    right: 1rem !important;
+    z-index: 50 !important;
+    width: 2.75rem !important;
+    height: 2.75rem !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    place-items: center !important;
+    border: 1px solid
+      var(--color-border-strong) !important;
+    border-radius: 50% !important;
+    color:
+      var(--color-blue-bright) !important;
+    background:
+      linear-gradient(
+        145deg,
+        rgba(18, 27, 40, 0.96),
+        rgba(7, 9, 13, 0.92)
+      ) !important;
+    box-shadow:
+      0 1rem 3rem
+        rgba(0, 0, 0, 0.48),
+      0 0 2rem
+        rgba(37, 99, 235, 0.16) !important;
+    -webkit-backdrop-filter:
+      blur(0.8rem);
+    backdrop-filter:
+      blur(0.8rem);
+    font-size: 1.35rem !important;
+    line-height: 1 !important;
+    cursor: pointer !important;
+  }
+
+  :global(
+    .document-page
+    .document-carousel-control
+  ) {
+    position: absolute !important;
+    top: 52% !important;
+    z-index: 50 !important;
+    width: 2.75rem !important;
+    height: 2.75rem !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    place-items: center !important;
+    border: 1px solid
+      var(--color-border-strong) !important;
+    border-radius: 50% !important;
+    color:
+      var(--color-blue-bright) !important;
+    background:
+      linear-gradient(
+        145deg,
+        rgba(18, 27, 40, 0.96),
+        rgba(7, 9, 13, 0.92)
+      ) !important;
+    box-shadow:
+      0 1rem 3rem
+        rgba(0, 0, 0, 0.48),
+      0 0 2rem
+        rgba(37, 99, 235, 0.16) !important;
+    -webkit-backdrop-filter:
+      blur(0.8rem);
+    backdrop-filter:
+      blur(0.8rem);
+    font-size: 0.82rem !important;
+    line-height: 1 !important;
+    cursor: pointer !important;
+    transform:
+      translateY(-50%) !important;
+  }
+
+  :global(
+    .document-page
+    .document-carousel-previous
+  ) {
+    left: 0.85rem !important;
+  }
+
+  :global(
+    .document-page
+    .document-carousel-next
+  ) {
+    right: 0.85rem !important;
+  }
+
+  :global(
+    .document-page
+    .document-carousel-control[hidden]
+  ),
+  :global(
+    .document-page
+    .document-carousel-control.is-hidden
+  ) {
+    display: none !important;
+  }
+
+  :global(
+    .document-page
+    .document-dialog-close:hover
+  ),
+  :global(
+    .document-page
+    .document-dialog-close:focus-visible
+  ) {
+    color: #ffffff !important;
+    border-color:
+      var(--color-blue-bright) !important;
+    box-shadow:
+      0 1.2rem 3.5rem
+        rgba(0, 0, 0, 0.52),
+      0 0 2.4rem
+        rgba(59, 130, 246, 0.3) !important;
+    transform:
+      scale(1.06) !important;
+  }
+
+  :global(
+    .document-page
+    .document-carousel-control:hover
+  ),
+  :global(
+    .document-page
+    .document-carousel-control:focus-visible
+  ) {
+    color: #ffffff !important;
+    border-color:
+      var(--color-blue-bright) !important;
+    box-shadow:
+      0 1.2rem 3.5rem
+        rgba(0, 0, 0, 0.52),
+      0 0 2.4rem
+        rgba(59, 130, 246, 0.3) !important;
+    transform:
+      translateY(-50%)
+      scale(1.06) !important;
+  }
+
+  .document-carousel-counter {
+    display: none !important;
+  }
+
+  @media (max-width: 600px) {
+    :global(
+      .document-page
+      .document-dialog-close
+    ) {
+      top: 1.1rem !important;
+      right: 0.65rem !important;
+    }
+
+    :global(
+      .document-page
+      .document-carousel-previous
+    ) {
+      left: 0.55rem !important;
+    }
+
+    :global(
+      .document-page
+      .document-carousel-next
+    ) {
+      right: 0.55rem !important;
     }
   }
 </style>
