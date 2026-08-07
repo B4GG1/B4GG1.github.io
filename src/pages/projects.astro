@@ -742,6 +742,51 @@ const testedGames = [
         activeProjectIndex <
           projectNavigationTargets.length - 1
       );
+
+      const shouldAlignNavigationWithGames =
+        window.innerWidth <= 720 &&
+        projectNavigationTargets[
+          activeProjectIndex
+        ] === testedGamesSection &&
+        testedGamesHeading instanceof
+          HTMLElement;
+
+      projectNavigation.classList.toggle(
+        'is-tested-games-position',
+        shouldAlignNavigationWithGames
+      );
+
+      if (
+        shouldAlignNavigationWithGames &&
+        testedGamesHeading instanceof
+          HTMLElement
+      ) {
+        const headingPosition =
+          testedGamesHeading
+            .getBoundingClientRect();
+
+        const headingCenter =
+          headingPosition.top +
+          headingPosition.height / 2;
+
+        const navigationTop =
+          Math.min(
+            Math.max(
+              headingCenter,
+              56
+            ),
+            window.innerHeight - 56
+          );
+
+        projectNavigation.style.setProperty(
+          '--tested-games-navigation-top',
+          `${navigationTop}px`
+        );
+      } else {
+        projectNavigation.style.removeProperty(
+          '--tested-games-navigation-top'
+        );
+      }
     };
 
   const requestNavigationUpdate =
@@ -5414,7 +5459,7 @@ const testedGames = [
     }
 
     .tested-games-control-next {
-      right: 3.6rem;
+      right: 0.7rem;
     }
 
     .tested-games-control span {
@@ -5434,8 +5479,16 @@ const testedGames = [
         );
     }
 
-    .tested-games-control-next {
-      right: 3.45rem;
+
+  }
+
+  @media (max-width: 720px) {
+    .project-navigation.is-tested-games-position {
+      top:
+        var(
+          --tested-games-navigation-top,
+          50%
+        );
     }
   }
 </style>
