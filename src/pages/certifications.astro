@@ -9,6 +9,9 @@ const primaryCredential = {
   date: '05 Apr 2023',
   credentialId: '20150/CTFL/2023',
   mark: 'CTFL',
+  logo:
+    '/assets/images/certifications/SJSI ISTQB.jpg',
+  logoAlt: 'SJSI and ISTQB logo',
   description:
     'A formal software testing qualification confirming Foundation Level knowledge within the ISTQB certification framework.',
   documentLabel: 'View certificate',
@@ -32,6 +35,9 @@ const professionalPrograms = [
     duration: '240 hours',
     credentialId: '5048/2020',
     mark: 'PY',
+    logo:
+      '/assets/images/certifications/Coderslab.jpg',
+    logoAlt: 'Coders Lab logo',
     description:
       'An intensive practical backend development program combining programming, databases, web technologies and project work.',
     topics: [
@@ -79,6 +85,9 @@ const professionalPrograms = [
     duration: 'Completed training',
     credentialId: null,
     mark: 'EDU',
+    logo:
+      '/assets/images/certifications/Giganci programowania.jpg',
+    logoAlt: 'Giganci Programowania logo',
     description:
       'Training preparing participants to work as programming instructors for children and young people.',
     topics: [
@@ -318,20 +327,15 @@ const selectedCourseHours = 147;
       <div class="credential-main">
         <div
           class="credential-seal"
-          aria-label="Future issuer logo placement"
+          aria-label={primaryCredential.logoAlt}
         >
-          <span
-            class="seal-orbit"
-            aria-hidden="true"
-          ></span>
-
-          <span
-            class="seal-orbit seal-orbit-inner"
-            aria-hidden="true"
-          ></span>
-
-          <strong>{primaryCredential.mark}</strong>
-          <small>Certified</small>
+          <img
+            class="credential-logo"
+            src={primaryCredential.logo}
+            alt={primaryCredential.logoAlt}
+            loading="eager"
+            decoding="async"
+          />
         </div>
 
         <div class="credential-copy">
@@ -417,10 +421,15 @@ const selectedCourseHours = 147;
           >
             <div
               class="program-mark"
-              aria-label="Future provider logo placement"
+              aria-label={program.logoAlt}
             >
-              <span>{program.mark}</span>
-              <small>{program.number}</small>
+              <img
+                class="program-logo"
+                src={program.logo}
+                alt={program.logoAlt}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
 
             <div class="program-content">
@@ -538,9 +547,15 @@ const selectedCourseHours = 147;
                   >
                     <div
                       class="course-mark"
-                      aria-label="Future platform or issuer logo placement"
+                      aria-label="Udemy"
                     >
-                      {course.mark}
+                      <img
+                        class="course-logo"
+                        src="/assets/images/certifications/Udemy.jpg"
+                        alt="Udemy logo"
+                        loading="lazy"
+                        decoding="async"
+                      />
                     </div>
 
                     <div class="course-content">
@@ -1581,22 +1596,16 @@ const selectedCourseHours = 147;
     width:
       clamp(9rem, 15vw, 13.5rem);
     aspect-ratio: 1;
-    display: grid;
-    place-content: center;
+    padding:
+      clamp(0.55rem, 1vw, 0.85rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
     border: 1px solid
       rgba(125, 211, 252, 0.45);
     border-radius: 50%;
-    background:
-      radial-gradient(
-        circle at 34% 27%,
-        rgba(96, 165, 250, 0.26),
-        transparent 42%
-      ),
-      linear-gradient(
-        145deg,
-        var(--color-surface-strong),
-        var(--color-bg-soft)
-      );
+    background: #ffffff;
     box-shadow:
       0 0 0 0.6rem
         rgba(59, 130, 246, 0.055),
@@ -1604,13 +1613,10 @@ const selectedCourseHours = 147;
         rgba(0, 0, 0, 0.45),
       0 0 3.5rem
         rgba(37, 99, 235, 0.19);
-    text-align: center;
     transition:
       border-color
         var(--transition-standard),
       box-shadow
-        var(--transition-standard),
-      transform
         var(--transition-standard);
   }
 
@@ -1625,51 +1631,16 @@ const selectedCourseHours = 147;
         rgba(0, 0, 0, 0.52),
       0 0 4rem
         rgba(96, 165, 250, 0.3);
-    transform:
-      rotate(-2deg)
-      scale(1.025);
   }
 
-  .seal-orbit {
-    position: absolute;
-    inset: 0.75rem;
-    border: 1px dashed
-      rgba(125, 211, 252, 0.28);
-    border-radius: 50%;
-  }
-
-  .seal-orbit-inner {
-    inset: 2rem;
-    border-style: solid;
-    opacity: 0.55;
-  }
-
-  .credential-seal strong {
-    position: relative;
-    z-index: 1;
-    color:
-      var(--color-text);
-    font-family:
-      var(--font-mono);
-    font-size:
-      clamp(1.5rem, 3vw, 2.4rem);
-    letter-spacing: -0.055em;
-  }
-
-  .credential-seal small {
-    position: relative;
-    z-index: 1;
-    margin-top: 0.45rem;
+  .credential-logo {
+    width: 100%;
+    height: 100%;
     display: block;
-    color:
-      var(--color-blue-light);
-    font-family:
-      var(--font-mono);
-    font-size: 0.55rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    object-fit: contain;
+    object-position: center center;
+    transform: none;
   }
-
   .credential-issuer {
     margin: 0;
     color:
@@ -1925,6 +1896,7 @@ const selectedCourseHours = 147;
     display: grid;
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
+    align-items: start;
     gap:
       clamp(1rem, 2vw, 1.75rem);
   }
@@ -1932,16 +1904,25 @@ const selectedCourseHours = 147;
   .program-card {
     position: relative;
     min-width: 0;
-    min-height: 28rem;
+    min-height: 0;
     padding:
       clamp(1.35rem, 2vw, 1.8rem);
     display: grid;
     grid-template-columns:
-      auto
+      minmax(8.75rem, 9.75rem)
       minmax(0, 1fr);
-    align-items: stretch;
-    gap:
+    grid-template-rows:
+      auto
+      auto
+      auto
+      auto
+      auto
+      auto;
+    align-items: start;
+    align-content: start;
+    column-gap:
       clamp(1.25rem, 2.5vw, 2rem);
+    row-gap: 0;
     overflow: hidden;
     border: 1px solid
       var(--color-border);
@@ -2012,17 +1993,18 @@ const selectedCourseHours = 147;
   .program-mark {
     position: relative;
     z-index: 1;
-    width:
-      clamp(4rem, 6vw, 5.5rem);
-    height: 100%;
-    min-height: 13rem;
+    grid-column: 1;
+    grid-row: 1 / 4;
+    width: 100%;
+    height:
+      clamp(7.25rem, 8vw, 8.5rem);
+    min-height: 0;
     padding:
-      1rem
-      0.5rem;
+      clamp(0.45rem, 0.8vw, 0.7rem);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
     border: 1px solid
       var(--color-border-strong);
     border-radius:
@@ -2030,43 +2012,62 @@ const selectedCourseHours = 147;
         var(--radius-large) -
         0.35rem
       );
-    background:
-      linear-gradient(
-        180deg,
-        rgba(37, 99, 235, 0.16),
-        rgba(7, 10, 16, 0.42)
-      );
+    background: #ffffff;
   }
 
-  .program-mark span {
-    margin-block: auto;
-    color:
-      var(--color-blue-bright);
-    font-family:
-      var(--font-mono);
-    font-size:
-      clamp(1rem, 1.8vw, 1.5rem);
-    font-weight: 650;
-    letter-spacing: -0.04em;
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
+  .program-logo {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+    display: block;
+    object-fit: contain;
+    object-position: center center;
   }
-
-  .program-mark small {
-    color:
-      var(--color-text-muted);
-    font-family:
-      var(--font-mono);
-    font-size: 0.58rem;
-    letter-spacing: 0.08em;
-  }
-
   .program-content {
+    display: contents;
+  }
+
+  .program-meta,
+  .program-content h3,
+  .program-provider,
+  .program-description,
+  .program-topics,
+  .program-footer {
     position: relative;
     z-index: 1;
     min-width: 0;
-    display: flex;
-    flex-direction: column;
+  }
+
+  .program-meta {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .program-content h3 {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .program-provider {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .program-description {
+    grid-column: 1 / -1;
+    grid-row: 4;
+  }
+
+  .program-topics {
+    grid-column: 1 / -1;
+    grid-row: 5;
+  }
+
+  .program-footer {
+    grid-column: 1 / -1;
+    grid-row: 6;
   }
 
   .program-meta {
@@ -2101,20 +2102,24 @@ const selectedCourseHours = 147;
   }
 
   .program-description {
-    margin: 1.25rem 0 0;
+    margin:
+      clamp(1.4rem, 2.5vw, 1.9rem)
+      0
+      0;
     color:
       var(--color-text-secondary);
     font-size:
-      clamp(0.84rem, 0.9vw, 0.94rem);
-    line-height: 1.65;
+      clamp(0.82rem, 0.86vw, 0.92rem);
+    line-height: 1.6;
   }
 
   .program-topics {
-    margin: 1.5rem 0 0;
-    padding: 1.5rem 0 0;
+    margin: 1.15rem 0 0;
+    padding: 1.15rem 0 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.48rem;
+    align-content: flex-start;
+    gap: 0.4rem;
     border-top: 1px solid
       var(--color-border);
     list-style: none;
@@ -2122,8 +2127,8 @@ const selectedCourseHours = 147;
 
   .program-topics li {
     padding:
-      0.46rem
-      0.62rem;
+      0.4rem
+      0.55rem;
     border: 1px solid
       var(--color-border);
     border-radius: 999px;
@@ -2131,13 +2136,15 @@ const selectedCourseHours = 147;
       var(--color-text-secondary);
     background:
       rgba(7, 9, 13, 0.36);
-    font-size: 0.7rem;
+    font-size: 0.67rem;
     line-height: 1.15;
+    white-space: nowrap;
   }
 
   .program-footer {
-    margin-top: auto;
-    padding-top: 1.75rem;
+    margin-top: 0;
+    padding-top:
+      clamp(1.35rem, 2vw, 1.75rem);
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
@@ -2307,27 +2314,23 @@ const selectedCourseHours = 147;
     width:
       clamp(3.25rem, 4.5vw, 4.25rem);
     aspect-ratio: 1;
+    padding: 0;
     display: grid;
     place-items: center;
+    overflow: hidden;
     border: 1px solid
       var(--color-border-strong);
     border-radius: 50%;
-    color:
-      var(--color-blue-bright);
-    background:
-      linear-gradient(
-        145deg,
-        rgba(22, 33, 49, 0.94),
-        rgba(7, 9, 13, 0.88)
-      );
-    font-family:
-      var(--font-mono);
-    font-size:
-      clamp(0.67rem, 0.85vw, 0.82rem);
-    font-weight: 650;
-    letter-spacing: -0.03em;
+    background: #ffffff;
   }
 
+  .course-logo {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center center;
+  }
   .course-content {
     position: relative;
     z-index: 1;
@@ -2932,23 +2935,39 @@ const selectedCourseHours = 147;
 
     .program-card {
       grid-template-columns: 1fr;
+      grid-template-rows: auto;
+      row-gap: 0;
     }
 
     .program-mark {
+      grid-column: 1;
+      grid-row: auto;
       width: 100%;
-      height: 4.5rem;
+      height:
+        clamp(6rem, 24vw, 7.5rem);
       min-height: 0;
       padding:
-        0.75rem
-        1rem;
+        0.55rem
+        0.75rem;
       align-items: center;
-      flex-direction: row;
+      justify-content: center;
     }
 
-    .program-mark span {
-      margin: 0;
-      writing-mode: initial;
-      transform: none;
+    .program-logo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center center;
+    }
+
+    .program-meta,
+    .program-content h3,
+    .program-provider,
+    .program-description,
+    .program-topics,
+    .program-footer {
+      grid-column: 1;
+      grid-row: auto;
     }
 
     .program-meta {
