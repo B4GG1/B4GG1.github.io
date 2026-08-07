@@ -644,6 +644,16 @@ const selectedCourseHours = 147;
       '[data-certifications-hero]'
     );
 
+  const certificationSectionHeadings =
+    Array.from(
+      document.querySelectorAll(
+        '.section-heading'
+      )
+    ).filter(
+      (heading) =>
+        heading instanceof HTMLElement
+    );
+
   const certificationTargets =
     Array.from(
       document.querySelectorAll(
@@ -718,21 +728,30 @@ const selectedCourseHours = 147;
 
   const updateCertificationsHeroMode =
     () => {
-      if (
-        !(
-          certificationsHero instanceof
-          HTMLElement
-        )
-      ) {
-        return;
-      }
-
-      certificationsHero.classList.toggle(
-        'is-stacked',
+      const shouldUseStackedLayout =
+        window.innerWidth <= 760 ||
         window.innerWidth <=
           getResponsiveThreshold(
             compactHeroRatio
-          )
+          );
+
+      if (
+        certificationsHero instanceof
+        HTMLElement
+      ) {
+        certificationsHero.classList.toggle(
+          'is-stacked',
+          shouldUseStackedLayout
+        );
+      }
+
+      certificationSectionHeadings.forEach(
+        (heading) => {
+          heading.classList.toggle(
+            'is-stacked',
+            shouldUseStackedLayout
+          );
+        }
       );
     };
 
@@ -1852,7 +1871,21 @@ const selectedCourseHours = 147;
   }
 
   .section-heading h2 {
+    width: fit-content;
     margin: 0;
+    color: transparent;
+    background:
+      linear-gradient(
+        105deg,
+        #ffffff 0%,
+        #dbeafe 38%,
+        var(--color-blue-light) 74%,
+        var(--color-blue-bright) 100%
+      );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color:
+      transparent;
     font-size:
       clamp(2rem, 4vw, 3.7rem);
     line-height: 1;
@@ -1866,6 +1899,24 @@ const selectedCourseHours = 147;
     font-size:
       clamp(0.9rem, 1.05vw, 1rem);
     line-height: 1.7;
+  }
+
+  .section-heading.is-stacked {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-items: center;
+    gap:
+      clamp(1.25rem, 3vw, 1.75rem);
+    text-align: center;
+  }
+
+  .section-heading.is-stacked h2,
+  .section-heading.is-stacked > p {
+    margin-inline: auto;
+  }
+
+  .section-heading.is-stacked > p {
+    max-width: 720px;
   }
 
   .program-grid {
@@ -2755,11 +2806,6 @@ const selectedCourseHours = 147;
   }
 
   @media (max-width: 820px) {
-    .section-heading {
-      grid-template-columns: 1fr;
-      align-items: start;
-      gap: 1.25rem;
-    }
 
     .section-heading > p {
       max-width: 680px;
