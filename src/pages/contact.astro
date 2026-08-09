@@ -39,6 +39,8 @@ const mapEmbedUrl =
 
       <form
         class="contact-form"
+        action="https://formspree.io/f/xoeaevzv"
+        method="POST"
         data-contact-form
       >
         <div class="form-stack">
@@ -263,11 +265,7 @@ const mapEmbedUrl =
             class="cv-downloads"
             aria-label="Download CV"
           >
-            <span
-              class="resource-button is-disabled"
-              aria-disabled="true"
-            >
-              <svg
+            <a class="resource-button" href="/assets/cv/Bartosz_Girzecki_CV_PL.pdf" download><svg
                 viewBox="0 0 24 24"
                 aria-hidden="true"
               >
@@ -280,15 +278,10 @@ const mapEmbedUrl =
 
               <span>
                 <strong>CV — Polish</strong>
-                <small>Coming soon</small>
-              </span>
-            </span>
+                <small>Download PDF</small>
+              </span></a>
 
-            <span
-              class="resource-button is-disabled"
-              aria-disabled="true"
-            >
-              <svg
+            <a class="resource-button" href="/assets/cv/Bartosz_Girzecki_CV_EN.pdf" download><svg
                 viewBox="0 0 24 24"
                 aria-hidden="true"
               >
@@ -301,9 +294,8 @@ const mapEmbedUrl =
 
               <span>
                 <strong>CV — English</strong>
-                <small>Coming soon</small>
-              </span>
-            </span>
+                <small>Download PDF</small>
+              </span></a>
           </div>
 
           <div
@@ -511,8 +503,7 @@ const mapEmbedUrl =
           formStatus instanceof
             HTMLElement
         ) {
-          formStatus.textContent =
-            'Draft mode: message delivery has not been connected yet. No information was transmitted or stored.';
+          contactForm.submit();
         }
       }
     );
@@ -1125,9 +1116,9 @@ const mapEmbedUrl =
     height: 100%;
     border: 0;
     filter:
-      brightness(0.62)
-      saturate(0.72)
-      contrast(1.14);
+      brightness(0.88)
+      saturate(0.9)
+      contrast(1.05);
   }
 
   .map-radar {
