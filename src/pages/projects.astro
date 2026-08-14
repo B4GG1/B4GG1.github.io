@@ -1,178 +1,29 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  getProjectsTranslations,
+} from '../i18n/projects';
+import {
+  getLocaleFromPath,
+} from '../i18n/helpers';
 
-const projects = [
-  {
-    id: 'qa-automation-framework',
-    status: 'Active development',
-    statusType: 'active',
-    title: 'Playwright Python QA Automation Framework',
-    description:
-      'A production-style test automation framework demonstrating maintainable architecture, realistic e-commerce coverage and CI-backed development workflows.',
-    logo:
-      '/assets/images/projects/Playwright Python QA Automation Framework Logo.png',
-    logoAlt:
-      'Playwright Python QA Automation Framework logo',
-    logoScale: 1.14,
-    logoOffsetX: '0%',
-    logoOffsetY: '1.5%',
-    technologies: [
-      'Python 3.12',
-      'pytest',
-      'Playwright',
-      'Page Object Model',
-      'Ruff / Black / isort',
-      'Git & GitHub',
-      'GitHub Actions',
-      'Html Reports',
-      'WSL2 / Ubuntu',
-    ],
-    href:
-      'https://github.com/B4GG1/playwright-python-qa-automation-framework',
-  },
-  {
-    id: 'flask-test-management-api',
-    status: 'Planned',
-    statusType: 'planned',
-    title: 'Flask QA Test Management API',
-    description:
-      'A backend application built around practical test management workflows, REST API development and automated validation.',
-    logo:
-      '/assets/images/projects/Flask QA Test Management API Logo.png',
-    logoAlt:
-      'Flask QA Test Management API logo',
-    logoScale: 1,
-    logoOffsetX: '0%',
-    logoOffsetY: '0%',
-    technologies: [
-      'Python',
-      'Flask',
-      'REST API',
-      'SQL Database',
-      'pytest',
-      'Backend Testing',
-    ],
-    href: null,
-  },
-  {
-    id: 'django-rpg-event-platform',
-    status: 'Planned',
-    statusType: 'planned',
-    title: 'Django RPG Event Platform',
-    description:
-      'An event and community platform for discovering, creating and joining tabletop role-playing game events.',
-    logo:
-      '/assets/images/projects/Django RPG Event Platform Logo.png',
-    logoAlt:
-      'Django RPG Event Platform logo',
-    logoScale: 1.03,
-    logoOffsetX: '0%',
-    logoOffsetY: '0.8%',
-    technologies: [
-      'Python',
-      'Django',
-      'PostgreSQL',
-      'Backend Testing',
-      'User Accounts',
-      'Event Management',
-    ],
-    href: null,
-  },
-];
+const locale =
+  getLocaleFromPath(Astro.url.pathname);
 
-const testedGames = [
-  {
-    title:
-      'Marvel’s Guardians of the Galaxy',
-    cover:
-      '/assets/images/games/Guardians_of_the_galaxy.webp',
-    href:
-      'https://store.steampowered.com/app/1088850/Marvels_Guardians_of_the_Galaxy/',
-  },
-  {
-    title: 'Outriders',
-    cover:
-      '/assets/images/games/Outriders.webp',
-    href:
-      'https://store.steampowered.com/app/680420/OUTRIDERS/',
-  },
-  {
-    title: 'Marvel’s Avengers',
-    cover:
-      '/assets/images/games/Avengers.webp',
-    href:
-      'https://store.steampowered.com/app/997070/Marvels_Avengers__Edycja_Ostateczna/',
-  },
-  {
-    title: 'Hunt Together',
-    cover:
-      '/assets/images/games/Hunt_Together.webp',
-    href:
-      'https://store.steampowered.com/app/1778030/Hunt_Together/?l=polish',
-  },
-  {
-    title: 'The Wizards: Dark Times',
-    cover:
-      '/assets/images/games/The Wizards.jpg',
-    href:
-      'https://store.steampowered.com/app/1103860/The_Wizards__Dark_Times_Brotherhood/',
-  },
-  {
-    title:
-      'Warhammer Age of Sigmar: Tempestfall',
-    cover:
-      '/assets/images/games/Tempestfall.webp',
-    href:
-      'https://store.steampowered.com/app/1337100/Warhammer_Age_of_Sigmar_Tempestfall/',
-  },
-  {
-    title: 'Crimen: Mercenary Tales',
-    cover:
-      '/assets/images/games/Crimen.webp',
-    href:
-      'https://store.steampowered.com/app/2436680/Crimen__Mercenary_Tales/',
-  },
-  {
-    title: 'Mindset',
-    cover:
-      '/assets/images/games/Mindset.jpg',
-    href:
-      'https://www.meta.com/pl-pl/experiences/mindset/5981642121902237/?srsltid=AfmBOoqKW83ez_UhEDm0KKQD8iZOdP4A_O_jMkjChBruOqBS3Soawsqq',
-  },
-  {
-    title: 'Moldwasher',
-    cover:
-      '/assets/images/games/Moldwasher.webp',
-    href:
-      'https://store.steampowered.com/app/3688130/Moldwasher/',
-  },
-  {
-    title: 'Whispers of the Eyeless',
-    cover:
-      '/assets/images/games/Whisper_of_the_eyeless.jpg',
-    href:
-      'https://store.steampowered.com/app/2523890/Whispers_of_the_Eyeless/',
-  },
-  {
-    title: 'Painkiller',
-    cover:
-      '/assets/images/games/Painkiller_2025.jpg',
-    href:
-      'https://store.steampowered.com/app/2300120/Painkiller/',
-  },
-  {
-    title: 'SAW: Genesis',
-    cover:
-      '/assets/images/games/Saw_Genesis.jpg',
-    href:
-      'https://store.steampowered.com/app/2865960/SAW_Genesis/',
-  },
-];
+const t =
+  getProjectsTranslations(locale);
+
+const projects =
+  t.projects;
+
+const testedGames =
+  t.games;
 ---
 
 <BaseLayout
-  title="Projects"
-  description="A selection of projects created and presented by Bartosz Girzecki."
+  title={t.metadata.title}
+  description={t.metadata.description}
+  lang={locale}
 >
   <section
     class="projects-hero"
@@ -180,17 +31,17 @@ const testedGames = [
     data-projects-hero
   >
     <h1 id="projects-title">
-      Projects
+      {t.hero.title}
     </h1>
 
     <p class="projects-lead">
-      Here you will find a selection of technical projects I have created, alongside games I have tested throughout my QA career.
+      {t.hero.lead}
     </p>
   </section>
 
   <section
     class="projects-list"
-    aria-label="Selected projects"
+    aria-label={t.projectsAria}
   >
     {
       projects.map((project, index) => (
@@ -248,14 +99,14 @@ const testedGames = [
                       target="_blank"
                       rel="noreferrer"
                     >
-                      <span>View repository</span>
+                      <span>{t.repository.view}</span>
                       <span aria-hidden="true">↗</span>
                     </a>
                   ) : (
                     <span
                       class="project-link project-link-disabled"
                     >
-                      Repository planned
+                      {t.repository.planned}
                     </span>
                   )
                 }
@@ -263,10 +114,13 @@ const testedGames = [
 
               <aside
                 class="project-tools"
-                aria-label={`Technology stack for ${project.title}`}
+                aria-label={t.technology.aria.replace(
+                  '{project}',
+                  project.title
+                )}
               >
                 <p class="tools-label">
-                  Technology stack
+                  {t.technology.label}
                 </p>
 
                 <ul class="technology-list">
@@ -296,11 +150,11 @@ const testedGames = [
       data-tested-games-heading
     >
       <h2 id="tested-games-title">
-        Games I Have Tested
+        {t.testedGames.title}
       </h2>
 
       <p class="tested-games-description">
-        A growing selection of game projects I have tested during my professional quality assurance career.
+        {t.testedGames.description}
       </p>
     </div>
 
@@ -311,7 +165,7 @@ const testedGames = [
       <button
         class="tested-games-control tested-games-control-previous"
         type="button"
-        aria-label="Show previous game"
+        aria-label={t.testedGames.previous}
         data-tested-games-previous
       >
         <span aria-hidden="true">←</span>
@@ -319,7 +173,7 @@ const testedGames = [
 
       <div
         class="tested-games-viewport"
-        aria-label="Games tested during my QA career"
+        aria-label={t.testedGames.viewportAria}
         data-tested-games-viewport
       >
         <div
@@ -355,12 +209,18 @@ const testedGames = [
                           href={game.href}
                           target="_blank"
                           rel="noreferrer"
-                          aria-label={`Open ${game.title} page`}
+                          aria-label={t.testedGames.openAria.replace(
+                            '{game}',
+                            game.title
+                          )}
                           data-tested-game-link
                         >
                           <img
                             src={game.cover}
-                            alt={`${game.title} cover`}
+                            alt={t.testedGames.coverAlt.replace(
+                              '{game}',
+                              game.title
+                            )}
                             width="600"
                             height="900"
                             loading="lazy"
@@ -393,7 +253,7 @@ const testedGames = [
       <button
         class="tested-games-control tested-games-control-next"
         type="button"
-        aria-label="Show next game"
+        aria-label={t.testedGames.next}
         data-tested-games-next
       >
         <span aria-hidden="true">→</span>
@@ -402,14 +262,14 @@ const testedGames = [
   </section>
   <nav
     class="project-navigation is-hidden"
-    aria-label="Navigate between projects"
+    aria-label={t.navigation.aria}
     aria-hidden="true"
     data-project-navigation
   >
     <button
       class="project-navigation-button project-navigation-up is-unavailable"
       type="button"
-      aria-label="Go to previous project"
+      aria-label={t.navigation.previous}
       aria-hidden="true"
       disabled
       data-project-up
@@ -418,13 +278,13 @@ const testedGames = [
     </button>
 
     <span class="project-navigation-label">
-      More projects
+      {t.navigation.label}
     </span>
 
     <button
       class="project-navigation-button project-navigation-down"
       type="button"
-      aria-label="Go to next project"
+      aria-label={t.navigation.next}
       data-project-down
     >
       <span aria-hidden="true">↓</span>
