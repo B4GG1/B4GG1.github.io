@@ -260,8 +260,16 @@ a {
 h1,
 h2,
 h3,
-p {
-  overflow-wrap: break-word;
+h4,
+p,
+li,
+span,
+strong,
+small,
+a {
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
 }
 
 h1 {

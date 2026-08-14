@@ -4,49 +4,87 @@ import '@fontsource-variable/geist-mono/wght.css';
 
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import {
+  getCommonTranslations,
+  type Locale,
+} from '../i18n/common';
+import {
+  getLocaleFromPath,
+} from '../i18n/helpers';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   description: string;
-  lang?: string;
+  lang?: Locale;
 }
 
 const {
   title,
   description,
-  lang = 'en',
+  lang,
 } = Astro.props;
 
+const locale =
+  lang ??
+  getLocaleFromPath(Astro.url.pathname);
+
+const t =
+  getCommonTranslations(locale);
+
+const isHome =
+  Astro.url.pathname === '/' ||
+  Astro.url.pathname === '/pl' ||
+  Astro.url.pathname === '/pl/';
+
 const pageTitle =
-  title === 'Home'
-    ? 'Bartosz Girzecki | Technical Portfolio'
+  isHome
+    ? locale === 'pl'
+      ? 'Bartosz Girzecki | Portfolio techniczne'
+      : 'Bartosz Girzecki | Technical Portfolio'
     : `${title} | Bartosz Girzecki`;
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={locale}>
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1"
     />
-    <meta name="description" content={description} />
-    <meta name="theme-color" content="#07090d" />
+    <meta
+      name="description"
+      content={description}
+    />
+    <meta
+      name="theme-color"
+      content="#07090d"
+    />
 
     <title>{pageTitle}</title>
   </head>
 
   <body>
-    <a class="skip-link" href="#main-content">Skip to content</a>
+    <a
+      class="skip-link"
+      href="#main-content"
+    >
+      {t.skipToContent}
+    </a>
 
-    <SiteHeader currentPath={Astro.url.pathname} />
+    <SiteHeader
+      currentPath={Astro.url.pathname}
+      locale={locale}
+    />
 
-    <main id="main-content" class="shell page-content">
+    <main
+      id="main-content"
+      class="shell page-content"
+    >
       <slot />
     </main>
 
-    <SiteFooter />
+    <SiteFooter locale={locale} />
   </body>
 </html>

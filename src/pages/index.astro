@@ -1,43 +1,27 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  getHomeTranslations,
+} from '../i18n/home';
+import {
+  getLocaleFromPath,
+  getLocalizedPath,
+} from '../i18n/helpers';
 
-const sections = [
-  {
-    href: '/experience',
-    title: 'Experience',
-    description:
-      'Professional background, responsibilities and practical experience.',
-  },
-  {
-    href: '/skills',
-    title: 'Skills',
-    description:
-      'Technical capabilities, tools and areas of continued development.',
-  },
-  {
-    href: '/projects',
-    title: 'Projects',
-    description:
-      'Public projects demonstrating automation and software engineering skills.',
-  },
-  {
-    href: '/certifications',
-    title: 'Certifications',
-    description:
-      'Professional credentials, completed programs and selected training.',
-  },
-  {
-    href: '/contact',
-    title: 'Contact',
-    description:
-      'Contact details, professional profiles and downloadable CV files.',
-  },
-];
+const locale =
+  getLocaleFromPath(Astro.url.pathname);
+
+const t =
+  getHomeTranslations(locale);
+
+const sections =
+  t.portfolio.sections;
 ---
 
 <BaseLayout
-  title="Home"
-  description="Technical portfolio of Bartosz Girzecki, presenting professional experience, technical projects and areas of continued development."
+  title={t.metadata.title}
+  description={t.metadata.description}
+  lang={locale}
 >
   <section
     class="home-intro-viewport"
@@ -51,7 +35,7 @@ const sections = [
         >
           <img
             src="/assets/images/home/profile/IMG20220924152057-removebg-preview.png"
-            alt="Portrait of Bartosz Girzecki"
+            alt={t.profile.alt}
             width="550"
             height="550"
             loading="eager"
@@ -60,32 +44,20 @@ const sections = [
           />
 
           <span data-profile-placeholder>
-            Professional photo
+            {t.profile.placeholder}
           </span>
         </div>
       </div>
 
       <div class="intro-heading">
         <h1 id="home-title">
-          Welcome, my name is
+          {t.hero.heading}
           <span>Bartosz Girzecki</span>
         </h1>
       </div>
 
       <div class="intro-description">
-        <p>
-          <strong>And this is my personal portfolio website.</strong>{' '}
-          I’m a technical specialist with several years of professional
-          experience in quality assurance, gained in the game development
-          industry.{' '}
-          Through that experience, supported by my personal strengths, I’ve
-          developed a thoughtful, high-standard approach to product
-          development, communication, collaboration, problem-solving, and
-          quality.{' '}
-          I’m currently expanding my skills in Python test automation,
-          software engineering, and backend development, while continuing to
-          develop my long-term interest in game design and game development.
-        </p>
+        <p set:html={t.hero.intro}></p>
       </div>
     </div>
   </section>
@@ -95,10 +67,12 @@ const sections = [
     href="#about-me"
     data-scroll-cue
     data-target="#about-me"
-    aria-label="Read more about me"
+    aria-label={t.scrollCue.about}
+    data-about-label={t.scrollCue.about}
+    data-portfolio-label={t.scrollCue.portfolio}
   >
     <span data-scroll-cue-label>
-      Read more about me
+      {t.scrollCue.about}
     </span>
 
     <span
@@ -118,283 +92,43 @@ const sections = [
     <div class="about-inner">
       <div class="about-heading">
         <h2 id="about-title">
-          About me
+          {t.about.title}
         </h2>
 
         <p>
-          A more personal look at how I got here, what drives me today, and where I want to go next — beyond the roles, tools and technologies presented elsewhere in this portfolio.
+          {t.about.lead}
         </p>
       </div>
 
       <div class="about-content">
         <div class="about-copy">
-          <article class="about-chapter">
-            <div class="about-chapter-heading">
-              <h3>
-                How did I get here?
-              </h3>
-            </div>
+          {
+            t.about.chapters.map((chapter) => (
+              <article class="about-chapter">
+                <div class="about-chapter-heading">
+                  <h3>
+                    {chapter.title}
+                  </h3>
+                </div>
 
-            <div class="about-chapter-body">
-              <p>
-                For a long time, I have been looking for a place where I could
-                combine two seemingly different sides of my personality — the
-                need to create with a logical and analytical way of thinking.
-              </p>
-
-              <p>
-                Even when choosing secondary school, I naturally leaned towards
-                science-oriented subjects. I graduated from Śląskie Techniczne
-                Zakłady Naukowe as a Chemical Analysis Technician. I chose the
-                school because of its strong reputation, recommendations from
-                both teachers and my family, and because an analytical field
-                seemed like a natural match for the way I think. After
-                graduation, I initially decided to study Civil Engineering at
-                the Silesian University of Technology. It did not take long,
-                however, for me to realise that despite its technical nature,
-                it was not a field in which I wanted to build my future.
-              </p>
-
-              <p>
-                That was when I started seriously considering programming. It
-                seemed to combine logic with the ability to create things, and
-                somewhere in the back of my mind there was also the thought
-                that perhaps one day it could help me fulfil one of my biggest
-                ambitions — creating a game of my own.
-              </p>
-
-              <p>
-                I started with Python and a six-month Python Backend Developer
-                course at Coders Lab. The beginning was not easy, but once the
-                pieces started falling into place, programming completely drew
-                me in. Over time, I also realised that it was giving me
-                something beyond technical skills. Concepts such as
-                abstraction, relationships between different elements, and
-                breaking complex problems into smaller parts gradually started
-                influencing the way I looked at problems outside of code as
-                well. Programming taught me not only to search for a solution,
-                but also to ask why something works the way it does.
-              </p>
-
-              <p>
-                After finishing the course, my original plan was to start
-                working as a Python Backend Developer. Life had a slightly
-                different idea. Through a friend, I heard about an opportunity
-                to work in game testing and decided to give it a try. That is
-                how I joined Keywords Studios and, somewhat unexpectedly, began
-                my professional journey in QA and the game development
-                industry.
-              </p>
-
-              <p>
-                The following years at Keywords Studios, Carbon Studio and
-                Anshar Studios gave me the opportunity to experience game
-                development from very different perspectives — from large
-                console projects and virtual reality to AA+ and indie
-                productions. Working directly with programmers, designers and
-                other development teams gradually made me look beyond simply
-                asking <strong>whether something worked</strong>. I became
-                increasingly interested in <strong>how it had been built and
-                how I could create something similar myself</strong>.
-              </p>
-
-              <p>
-                That was when I returned to programming more seriously, this
-                time learning C++ and Unreal Engine while exploring game
-                development and design in greater depth.
-              </p>
-
-              <p>
-                Along the way, I also discovered that sharing knowledge gives
-                me a great deal of satisfaction. Working as a programming and
-                game development tutor allowed me to look at my own skills from
-                a completely different perspective — understanding something
-                yourself is one thing, but being able to explain it to another
-                person in a way suited to their age, experience and way of
-                thinking is another challenge entirely.
-              </p>
-
-              <p>
-                Eventually, combining the two areas I had been developing in
-                parallel became a natural next step — programming and several
-                years of professional quality assurance experience. That is why
-                I am currently developing towards test automation and the more
-                technical side of QA.
-              </p>
-            </div>
-          </article>
-
-          <article class="about-chapter">
-            <div class="about-chapter-heading">
-              <h3>
-                Who am I?
-              </h3>
-            </div>
-
-            <div class="about-chapter-body">
-              <p>
-                I am naturally curious, and I find it difficult to ignore the
-                question: <strong>“What happens if I do this?”</strong>
-              </p>
-
-              <p>
-                In QA, that curiosity often leads me towards unusual scenarios
-                and behaviours that nobody may have anticipated. Finding
-                something unexpected gives me far more satisfaction than simply
-                executing another obvious test case.
-              </p>
-
-              <p>
-                I approach creation in much the same way. What fascinates me
-                most is the moment when I can immerse myself in a world or
-                system that still exists only in my imagination — thinking
-                about how its different elements could interact, which ideas
-                complement each other, which ones need to change, and how
-                everything can eventually become something that no longer
-                exists only in my head, but actually works.
-              </p>
-
-              <p>
-                That is why the areas of game design that interest me most are
-                systems and mechanics, quest and narrative design, and level
-                design. At the same time, I try not to limit myself to only one
-                discipline. I like to understand at least the fundamentals of
-                all the different elements that make up a larger whole. Being
-                versatile is more important to me than locking myself into a
-                very narrow specialisation.
-              </p>
-
-              <p>
-                I look at my own personality in a similar way. Many traits can
-                be both strengths and weaknesses depending on the situation and
-                their intensity. Perfectionism is a good example. I can spend a
-                long time refining details, and I find it difficult to accept a
-                solution that I am not satisfied with. It makes me care deeply
-                about the quality of what I create, but I also know that
-                sometimes I need to consciously tell myself, “this is good
-                enough for now”, move forward, and return to the problem later.
-              </p>
-
-              <p>
-                The same applies to persistence. When I cannot solve something,
-                frustration usually comes first, followed by a very strong need
-                to find the answer. I sometimes spend considerably more time on
-                a problem than I originally intended, but the moment when
-                everything finally starts working is one of the most satisfying
-                parts of technical work for me.
-              </p>
-
-              <p>
-                I also have a more reflective side. I often find myself
-                analysing not only technical problems, but also my own
-                behaviour, other people, or broader existential questions. I
-                enjoy asking questions, breaking ideas apart and trying to
-                reach my own conclusions — sometimes through logic, sometimes
-                through experience, and sometimes simply by thinking about what
-                I feel and why.
-              </p>
-
-              <p>
-                Outside of work, fantasy in its many forms is probably the
-                closest thing to home for me. I love games, particularly Action
-                RPGs set in dark fantasy worlds — <em>The Witcher 3</em> has
-                remained my favourite game for years. I also enjoy fantasy
-                literature, especially worlds such as <em>The Lord of the
-                Rings</em> and <em>The Witcher</em>, while manga and anime take
-                up another significant part of my free time — with
-                <em>One Piece</em> being the undisputed number one for me.
-              </p>
-
-              <p>
-                I am also fascinated by new technologies and science,
-                particularly anything connected with space. I appreciate good
-                science communication, which is why Kurzgesagt is one of my
-                favourite channels — both because of the subjects they explore
-                and because of the creative and accessible way in which they
-                explain complex ideas.
-              </p>
-
-              <p>
-                Beyond that, I am a big fan of tattoos — my left arm is already
-                covered by a sleeve and it is probably not going to end there —
-                and I enjoy physical activity, even if my consistency in that
-                department can sometimes be... variable.
-              </p>
-            </div>
-          </article>
-
-          <article class="about-chapter">
-            <div class="about-chapter-heading">
-              <h3>
-                Where am I heading?
-              </h3>
-            </div>
-
-            <div class="about-chapter-body">
-              <p>
-                I am not interested in simply finding “a good job”. I want to
-                build a professional life in which getting up in the morning
-                does not feel like an obligation, but something that I genuinely
-                want to return to.
-              </p>
-
-              <p>
-                At this point, the most realistic step in that direction is
-                continuing to develop towards technical QA and test automation.
-                It allows me to use the experience I have gained through several
-                years in quality assurance while returning more strongly to
-                programming and continuously developing my technical skills.
-              </p>
-
-              <p>
-                That does not mean giving up on my long-term ambition.
-              </p>
-
-              <p>
-                I want to continue developing my skills in game design and game
-                development, build my own projects and gradually gain experience
-                beyond QA. I do not expect this to happen overnight. The game
-                industry can be difficult, and I am fully aware that entering it
-                as an inexperienced designer or developer is an entirely
-                different challenge from already having several years of
-                professional testing experience.
-              </p>
-
-              <p>
-                Rather than putting everything on a single bet, I want to
-                develop both paths in parallel — building a stable technical
-                career while consistently working on my own skills and projects
-                outside of work.
-              </p>
-
-              <p>
-                In the long term, I would like to build a small team of around
-                7–12 people that could eventually grow into an independent game
-                development studio. A studio creating its own games while also
-                being open to external projects and collaboration with other
-                companies.
-              </p>
-
-              <p>
-                I do not know exactly what the road towards that point will look
-                like, and it will probably change many times along the way.
-              </p>
-
-              <p>
-                What I do know is what I want to achieve in the end: the freedom
-                to create things according to my own vision, to work alongside
-                people who also want to build something meaningful, and enough
-                independence to consciously decide both where my career goes and
-                how I want to live my life.
-              </p>
-            </div>
-          </article>
+                <div class="about-chapter-body">
+                  {
+                    chapter.paragraphs.map(
+                      (paragraph) => (
+                        <p set:html={paragraph}></p>
+                      )
+                    )
+                  }
+                </div>
+              </article>
+            ))
+          }
         </div>
       </div>
     </div>
   </section>
 
-  <section
+<section
     id="portfolio-navigation"
     class="portfolio-navigation"
     aria-labelledby="navigation-title"
@@ -405,25 +139,24 @@ const sections = [
         data-navigation-heading
       >
         <h2 id="navigation-title">
-          More to discover in my portfolio
+          {t.portfolio.title}
         </h2>
 
         <p>
-          Use the sections below to explore my professional background,
-          technical capabilities and current work.
+          {t.portfolio.lead}
         </p>
       </div>
 
       <nav
         class="section-list"
-        aria-label="Portfolio sections"
+        aria-label={t.portfolio.ariaLabel}
       >
         {
           sections.map(
             ({ href, title, description }) => (
               <a
                 class="section-link"
-                href={href}
+                href={getLocalizedPath(href, locale)}
               >
                 <span class="section-content">
                   <strong>{title}</strong>
@@ -664,9 +397,17 @@ const sections = [
     const exploresPortfolio =
       target === '#portfolio-navigation';
 
+    const aboutLabel =
+      scrollCue.dataset.aboutLabel ??
+      'Read more about me';
+
+    const portfolioLabel =
+      scrollCue.dataset.portfolioLabel ??
+      'Explore my portfolio';
+
     const label = exploresPortfolio
-      ? 'Explore my portfolio'
-      : 'Read more about me';
+      ? portfolioLabel
+      : aboutLabel;
 
     scrollCue.dataset.target = target;
     scrollCue.setAttribute('href', target);

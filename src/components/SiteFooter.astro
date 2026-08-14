@@ -1,18 +1,47 @@
 ---
-const currentYear = new Date().getFullYear();
+import {
+  getCommonTranslations,
+  type Locale,
+} from '../i18n/common';
+import {
+  getLocalizedPath,
+} from '../i18n/helpers';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const t =
+  getCommonTranslations(locale);
+
+const currentYear =
+  new Date().getFullYear();
+
+const contactHref =
+  getLocalizedPath(
+    '/contact',
+    locale
+  );
 ---
 
 <footer class="site-footer">
   <div class="shell footer-content">
     <div>
-      <p class="footer-name">Bartosz Girzecki</p>
+      <p class="footer-name">
+        Bartosz Girzecki
+      </p>
+
       <p class="footer-note">
-        Technical portfolio built around quality, engineering and design.
+        {t.footerNote}
       </p>
     </div>
 
     <div class="footer-meta">
-      <span>© {currentYear}</span>
+      <span>
+        © {currentYear}
+      </span>
 
       <a
         href="https://github.com/B4GG1"
@@ -22,7 +51,9 @@ const currentYear = new Date().getFullYear();
         GitHub ↗
       </a>
 
-      <a href="/contact">Contact</a>
+      <a href={contactHref}>
+        {t.footerContact}
+      </a>
     </div>
   </div>
 </footer>

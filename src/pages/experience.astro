@@ -1,166 +1,26 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  getExperienceTranslations,
+} from '../i18n/experience';
+import {
+  getLocaleFromPath,
+} from '../i18n/helpers';
 
-const experience = [
-  {
-    period: '07.2026 — Present',
-    role: 'Programming & Game Development Tutor',
-    company: 'Giganci Programowania',
-    companyUrl:
-      'https://giganciprogramowania.edu.pl/',
-    logo: '/assets/images/companies/Giganci_Programowania_Logo.png',
-    summary:
-      'Programming and game development education for children and teenagers aged 6–18, delivered through online and in-person classes.',
-    responsibilities: [
-      'Delivered online and in-person programming and game development classes for children and teenagers aged 6–18.',
-      'Taught programming, game creation and computer graphics using Minecraft Education, Scratch, ScratchJr, Python, Lua, Roblox Studio, Blender and a variety of other engaging educational tools.',
-      'Adapted lesson delivery, exercises and pacing to students’ age, experience and individual learning needs.',
-      'Communicated students’ educational progress and learning outcomes to parents and relevant supervisors.',
-    ],
-    tags: [
-      'Minecraft Education',
-      'Scratch',
-      'ScratchJr',
-      'Python',
-      'Lua',
-      'Roblox Studio',
-      'Blender',
-      'Google Meet',
-      'Discord',
-    ],
-  },
-  {
-    period: '03.2024 — 04.2026',
-    role: 'QA Specialist',
-    company: 'Anshar Studios',
-    companyUrl:
-      'https://ansharstudios.com/',
-    logo: '/assets/images/companies/Anshar_Logo.png',
-    summary:
-      'Software quality assurance for single-player and multiplayer AA+ titles developed for PC and ninth-generation consoles, including PlayStation 5 and Xbox Series X/S.',
-    responsibilities: [
-      'Tested single-player and multiplayer AA+ and indie titles on PC, PlayStation 5 and Xbox Series X/S.',
-      'Reported and documented defects, proposed potential solutions and prepared detailed QA reports using Jira and Confluence.',
-      'Created project documentation, test scenarios, supporting testing materials, and contributed to the development of internal QA standards, working practices and team processes.',
-      'Collaborated closely with development, game design and production teams through daily and weekly sync meetings.',
-    ],
-    tags: [
-      'PC',
-      'AA+ games',
-      'Indie games',
-      'PlayStation 5',
-      'Xbox Series X/S',
-      'Jira',
-      'Confluence',
-      'TestRail',
-      'Miro',
-      'Perforce P4',
-      'Jenkins',
-      'GDK',
-      'Neighborhood',
-      'Steam',
-      'OBS Studio',
-      'OpenShot Video Editor',
-      'Microsoft 365',
-      'Discord',
-      'Slack',
-      'Agile / Scrum',
-    ],
-  },
-  {
-    period: '09.2023 — 03.2024',
-    role: 'Programming & Game Development Tutor',
-    company: 'Kodland',
-    companyUrl:
-      'https://www.kodland.org/pl',
-    logo: '/assets/images/companies/Kodland_Logo.png',
-    summary:
-      'Remote programming and game development education for children and teenagers, delivered through online classes focused on practical digital creation.',
-    responsibilities: [
-      'Delivered remote programming and game development classes using Scratch, Python and Roblox Studio.',
-      'Adapted lesson pacing, exercises and explanations to students’ age, experience and individual learning needs.',
-      'Monitored students’ progress and communicated learning outcomes directly to students, parents and relevant supervisors.',
-      'Reviewed educational materials and contributed suggestions for improving lesson delivery and teaching methods.',
-    ],
-    tags: [
-      'Scratch',
-      'Python',
-      'Lua',
-      'Roblox Studio',
-      'Zoom',
-      'WhatsApp',
-      'Telegram',
-    ],
-  },
-  {
-    period: '11.2021 — 02.2024',
-    role: 'QA Engineer',
-    company: 'Carbon Studio / Iron VR',
-    companyUrl:
-      'https://carbonstudio.pl/',
-    logo: '/assets/images/companies/Carbon_Iron_VR_Logo.png',
-    summary:
-      'Quality assurance for virtual reality titles across standalone, PC-connected and console-based VR systems, including Meta Quest, HTC Vive, Valve Index and PlayStation VR2.',
-    responsibilities: [
-      'Tested VR titles across several different VR devices, including Meta Quest, HTC Vive, Valve Index and PlayStation VR2.',
-      'Reported and documented defects, proposed potential solutions and prepared detailed QA reports using Redmine as well as Jira and Confluence.',
-      'Created project documentation, test scenarios, supporting testing materials, and contributed to the development of internal QA standards, working practices and team processes.',
-      'Collaborated closely with development, game design and production teams through direct communication and QA sync meetings.',
-    ],
-    tags: [
-      'VR',
-      'AA games',
-      'Indie games',
-      'Meta Quest',
-      'HTC Vive',
-      'Valve Index',
-      'PlayStation VR2',
-      'Redmine',
-      'Jira',
-      'Confluence',
-      'SVN / TortoiseSVN',
-      'Jenkins',
-      'Microsoft 365',
-      'Discord',
-      'OBS Studio',
-      'OpenShot Video Editor',
-      'Agile / Scrum',
-    ],
-  },
-  {
-    period: '09.2020 — 10.2021',
-    role: 'Functional QA Tester',
-    company: 'Keywords Studios',
-    companyUrl:
-      'https://www.keywordsstudios.com/',
-    logo: '/assets/images/companies/KWS_Logo.png',
-    summary:
-      'Outsourced functional quality assurance for AAA titles on PC and eighth- and ninth-generation consoles, performed for external clients across multiple projects.',
-    responsibilities: [
-      'Performed smoke, load, performance, regression, destructive and other forms of testing based on documentation and requirements supplied by external clients.',
-      'Reported and documented defects and prepared detailed QA reports using Jira and Confluence.',
-      'Executed structured test plans and test cases supplied by external clients through TestRail, ensuring consistent coverage across supported platforms and project requirements.',
-    ],
-    tags: [
-      'AAA games',
-      'PC',
-      'PlayStation 4 / 5',
-      'Xbox One / Series (X/S)',
-      'Jira',
-      'Confluence',
-      'TestRail',
-      'Microsoft 365',
-      'Microsoft Teams',
-      'OBS Studio',
-      'OpenShot Video Editor',
-    ],
-  },
-];
+const locale =
+  getLocaleFromPath(Astro.url.pathname);
+
+const t =
+  getExperienceTranslations(locale);
+
+const experience =
+  t.items;
 ---
 
 <BaseLayout
-  title="Experience"
-  description="Professional experience of Bartosz Girzecki across software quality assurance, game development and technical education."
+  title={t.metadata.title}
+  description={t.metadata.description}
+  lang={locale}
 >
   <section
     class="experience-hero"
@@ -168,14 +28,11 @@ const experience = [
     data-experience-hero
   >
     <h1 id="experience-title">
-      Experience
+      {t.hero.title}
     </h1>
 
     <p class="experience-lead">
-      Several years of professional experience across software quality
-      assurance, multi-platform game development, virtual reality and
-      technical education — with many more challenges, technologies and
-      opportunities still ahead.
+      {t.hero.lead}
     </p>
   </section>
 
@@ -183,10 +40,10 @@ const experience = [
     class="timeline-cue"
     href="#timeline-end"
     data-timeline-cue
-    aria-label="Move to the end of my professional timeline"
+    aria-label={t.timelineCue.aria}
   >
     <span class="timeline-cue-label">
-      Start from the beginning
+      {t.timelineCue.label}
     </span>
 
     <span
@@ -200,7 +57,7 @@ const experience = [
   <section
     class="timeline"
     data-timeline
-    aria-label="Professional experience timeline"
+    aria-label={t.timelineAria}
   >
     <div
       class="timeline-line"
@@ -255,7 +112,10 @@ const experience = [
                   href={item.companyUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`${item.company} website — opens in a new tab`}
+                  aria-label={t.companyWebsiteAria.replace(
+                    '{company}',
+                    item.company
+                  )}
                 >
                   {item.company}
                 </a>
@@ -267,7 +127,7 @@ const experience = [
             </p>
 
             <p class="responsibility-heading">
-              Responsibilities:
+              {t.responsibilitiesHeading}
             </p>
 
             <ul class="responsibility-list">
@@ -282,7 +142,10 @@ const experience = [
 
             <ul
               class="tag-list"
-              aria-label={`Technologies and areas used at ${item.company}`}
+              aria-label={t.tagsAria.replace(
+                '{company}',
+                item.company
+              )}
             >
               {
                 item.tags.map((tag) => (
@@ -892,15 +755,15 @@ const experience = [
   .experience-hero {
     position: relative;
     left: 50%;
-    width: 60vw;
+    width: 70vw;
     margin: 0;
     display: grid;
     grid-template-columns:
-      minmax(0, 2fr)
-      minmax(0, 4fr);
+      max-content
+      minmax(0, 1fr);
     align-items: center;
     gap:
-      clamp(3rem, 6vw, 6rem);
+      clamp(4rem, 6vw, 7rem);
     transform: translateX(-50%);
   }
 

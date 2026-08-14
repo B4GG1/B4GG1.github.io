@@ -1,7 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  getCertificationsTranslations,
+} from '../i18n/certifications';
+import {
+  getLocaleFromPath,
+} from '../i18n/helpers';
 
-const primaryCredential = {
+const locale =
+  getLocaleFromPath(Astro.url.pathname);
+
+const t =
+  getCertificationsTranslations(locale);
+
+const primaryCredentialData = {
   type: 'Quality Assurance certification',
   title: 'ISTQB Certified Tester',
   subtitle: 'Foundation Level',
@@ -25,7 +37,7 @@ const primaryCredential = {
   ],
 };
 
-const professionalPrograms = [
+const professionalProgramsData = [
   {
     number: '01',
     type: 'Professional program',
@@ -109,7 +121,7 @@ const professionalPrograms = [
   },
 ];
 
-const courseGroups = [
+const courseGroupsData = [
   {
     number: '01',
     title: 'QA Automation',
@@ -253,11 +265,87 @@ const courseGroups = [
 ];
 
 const selectedCourseHours = 147;
+
+const primaryCredential = {
+  ...primaryCredentialData,
+  ...t.primaryCredential,
+  documents:
+    primaryCredentialData.documents.map(
+      (document, index) => ({
+        ...document,
+        alt:
+          t.primaryCredential.documentAlts[index] ??
+          document.alt,
+      })
+    ),
+};
+
+const professionalPrograms =
+  professionalProgramsData.map(
+    (program, index) => {
+      const localized =
+        t.professionalPrograms[index];
+
+      return {
+        ...program,
+        ...localized,
+        documents:
+          program.documents.map(
+            (document, documentIndex) => ({
+              ...document,
+              alt:
+                localized.documentAlts[
+                  documentIndex
+                ] ?? document.alt,
+            })
+          ),
+      };
+    }
+  );
+
+const courseGroups =
+  courseGroupsData.map(
+    (group, groupIndex) => {
+      const localizedGroup =
+        t.courseGroups[groupIndex];
+
+      return {
+        ...group,
+        title: localizedGroup.title,
+        description:
+          localizedGroup.description,
+        courses:
+          group.courses.map(
+            (course, courseIndex) => {
+              const localizedCourse =
+                localizedGroup.courses[
+                  courseIndex
+                ];
+
+              return {
+                ...course,
+                ...localizedCourse,
+                documents:
+                  course.documents.map(
+                    (document) => ({
+                      ...document,
+                      alt:
+                        localizedCourse.documentAlt ??
+                        document.alt,
+                    })
+                  ),
+              };
+            }
+          ),
+      };
+    }
+  );
 ---
 
 <BaseLayout
-  title="Certifications"
-  description="Professional certifications, completed technical programs and selected training completed by Bartosz Girzecki."
+  title={t.metadata.title}
+  description={t.metadata.description}
+  lang={locale}
 >
   <section
     class="certifications-hero"
@@ -265,13 +353,11 @@ const selectedCourseHours = 147;
     data-certifications-hero
   >
     <h1 id="certifications-title">
-      Certifications
+      {t.hero.title}
     </h1>
 
     <p class="certifications-lead">
-      Formal certification, completed professional programs and selected
-      technical training supporting my work across software quality,
-      automation and development.
+      {t.hero.lead}
     </p>
   </section>
 
@@ -282,25 +368,25 @@ const selectedCourseHours = 147;
   >
     <aside
       class="archive-index"
-      aria-label="Credential archive summary"
+      aria-label={t.archive.aria}
     >
       <p class="archive-label">
-        Credential archive
+        {t.archive.label}
       </p>
 
       <dl class="archive-stats">
         <div>
-          <dt>QA certification</dt>
+          <dt>{t.archive.qa}</dt>
           <dd>01</dd>
         </div>
 
         <div>
-          <dt>Professional programs</dt>
+          <dt>{t.archive.programs}</dt>
           <dd>02</dd>
         </div>
 
         <div>
-          <dt>Selected course hours</dt>
+          <dt>{t.archive.hours}</dt>
           <dd>{selectedCourseHours}h</dd>
         </div>
       </dl>
@@ -317,7 +403,7 @@ const selectedCourseHours = 147;
         </div>
 
         <div class="credential-reference">
-          Credential no.
+          {t.labels.credentialNumber}
           <strong>
             {primaryCredential.credentialId}
           </strong>
@@ -359,19 +445,19 @@ const selectedCourseHours = 147;
 
       <footer class="credential-footer">
         <div>
-          <span>Issued to</span>
+          <span>{t.labels.issuedTo}</span>
           <strong>Bartosz Girzecki</strong>
         </div>
 
         <div>
-          <span>Date awarded</span>
+          <span>{t.labels.dateAwarded}</span>
           <strong>{primaryCredential.date}</strong>
         </div>
 
         <div>
-          <span>Status</span>
+          <span>{t.labels.status}</span>
           <strong class="credential-status">
-            Completed
+            {t.labels.completed}
           </strong>
         </div>
 
@@ -402,13 +488,12 @@ const selectedCourseHours = 147;
     <header class="section-heading">
       <div>
         <h2 id="programs-title">
-          Programs & Training
+          {t.programsSection.title}
         </h2>
       </div>
 
       <p>
-        Longer-form programs and instructor preparation completed outside
-        the formal certification framework.
+        {t.programsSection.lead}
       </p>
     </header>
 
@@ -463,7 +548,7 @@ const selectedCourseHours = 147;
                   {
                     program.credentialId && (
                       <>
-                        , diploma {program.credentialId}
+                        , {t.labels.diploma} {program.credentialId}
                       </>
                     )
                   }
@@ -500,13 +585,12 @@ const selectedCourseHours = 147;
     <header class="section-heading course-heading">
       <div>
         <h2 id="course-archive-title">
-          Technical Course Archive
+          {t.courseArchive.title}
         </h2>
       </div>
 
       <p>
-        Selected completed courses grouped by their practical relevance
-        to quality engineering, software development and game creation.
+        {t.courseArchive.lead}
       </p>
     </header>
 
@@ -588,7 +672,7 @@ const selectedCourseHours = 147;
                         course.documents
                       )}
                     >
-                      <span>View credential</span>
+                      <span>{t.courseArchive.viewCredential}</span>
                       <span aria-hidden="true">↗</span>
                     </button>
                   </article>
@@ -603,13 +687,13 @@ const selectedCourseHours = 147;
 
   <dialog
     class="document-dialog"
-    aria-label="Document preview"
+    aria-label={t.document.preview}
     data-document-dialog
   >
     <button
       class="document-dialog-close"
       type="button"
-      aria-label="Close document preview"
+      aria-label={t.document.close}
       data-document-close
     >
       <span aria-hidden="true">×</span>
@@ -626,14 +710,14 @@ const selectedCourseHours = 147;
 
   <nav
     class="certification-navigation is-hidden"
-    aria-label="Navigate between certification sections"
+    aria-label={t.navigation.aria}
     aria-hidden="true"
     data-certification-navigation
   >
     <button
       class="certification-navigation-button is-unavailable"
       type="button"
-      aria-label="Go to previous certification section"
+      aria-label={t.navigation.previous}
       aria-hidden="true"
       disabled
       data-certification-up
@@ -642,13 +726,13 @@ const selectedCourseHours = 147;
     </button>
 
     <span class="certification-navigation-label">
-      See more
+      {t.navigation.label}
     </span>
 
     <button
       class="certification-navigation-button"
       type="button"
-      aria-label="Go to next certification section"
+      aria-label={t.navigation.next}
       data-certification-down
     >
       <span aria-hidden="true">↓</span>
@@ -2057,15 +2141,15 @@ const selectedCourseHours = 147;
   .certifications-hero {
     position: relative;
     left: 50%;
-    width: 60vw;
+    width: 70vw;
     margin: 0;
     display: grid;
     grid-template-columns:
-      minmax(0, 2fr)
-      minmax(0, 4fr);
+      max-content
+      minmax(0, 1fr);
     align-items: center;
     gap:
-      clamp(3rem, 6vw, 6rem);
+      clamp(4rem, 6vw, 7rem);
     transform: translateX(-50%);
   }
 

@@ -1,181 +1,26 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  getSkillsTranslations,
+} from '../i18n/skills';
+import {
+  getLocaleFromPath,
+} from '../i18n/helpers';
 
-const skillColumns = [
-  {
-    number: '01',
-    title: 'Quality Engineering',
-    description:
-      'Covers the testing methods, QA deliverables, platforms and operating systems used in professional software quality work.',
-    groups: [
-      {
-        title: 'Testing & delivery',
-        skills: [
-          'Functional',
-          'Regression',
-          'Exploratory',
-          'Smoke & Sanity',
-          'Certification-focused',
-          'Performance',
-          'Load',
-          'Destructive',
-          'Test Case/Scenario Design',
-          'Defect Reporting & Verification',
-          'Test Documentation',
-        ],
-      },
-      {
-        title: 'Platforms & systems',
-        skills: [
-          'PC',
-          'Windows',
-          'Linux',
-          'PlayStation Consoles',
-          'Xbox Consoles',
-          'VR Headsets',
-        ],
-      },
-    ],
-  },
-  {
-    number: '02',
-    title: 'Test Automation & API',
-    description:
-      'Brings together automation languages, frameworks, design patterns, API testing practices, test reporting and continuous integration tools.',
-    groups: [
-      {
-        title: 'Test automation & design',
-        skills: [
-          'Python',
-          'pytest',
-          'Playwright',
-          'Selenium',
-          'Page Object Model',
-          'Test Architecture',
-          'Behavior-Driven Development (BDD)',
-          'Test Reports & Artifacts',
-        ],
-      },
-      {
-        title: 'API & CI',
-        skills: [
-          'API Testing',
-          'Postman',
-          'REST API Validation',
-          'JSON Validation',
-          'GitHub Actions',
-          'Jenkins',
-        ],
-      },
-    ],
-  },
-  {
-    number: '03',
-    title: 'Programming, Backend & Data',
-    description:
-      'Presents programming languages, development practices, backend frameworks, databases, data formats and core web technologies.',
-    groups: [
-      {
-        title: 'Programming & backend',
-        skills: [
-          'C++',
-          'Python',
-          'JavaScript',
-          'Lua',
-          'Object-Oriented Programming',
-          'Test-Driven Development (TDD)',
-          'REST API',
-          'Flask',
-          'Django',
-        ],
-      },
-      {
-        title: 'Data & web',
-        skills: [
-          'SQL',
-          'PostgreSQL',
-          'MySQL',
-          'JSON',
-          'XML',
-          'CSV',
-          'HTTP',
-          'Client–Server Architecture',
-          'HTML',
-          'CSS',
-          'jQuery',
-        ],
-      },
-    ],
-  },
-  {
-    number: '04',
-    title: 'Tools, Delivery & Collaboration',
-    description:
-      'Highlights the tools, documentation practices and collaboration workflows used across commercial QA, technical education and independent software projects.',
-    groups: [
-      {
-        title: 'Development & version control',
-        skills: [
-          'Git & GitHub',
-          'SVN / TortoiseSVN',
-          'Perforce P4',
-          'Visual Studio',
-          'PyCharm',
-        ],
-      },
-      {
-        title: 'QA, project & collaboration',
-        skills: [
-          'Jira',
-          'Confluence',
-          'TestRail',
-          'Redmine',
-          'Miro',
-          'Microsoft 365',
-          'Microsoft Teams',
-          'Slack',
-          'Discord',
-          'Agile / Scrum',
-          'Cross-functional Collaboration',
-        ],
-      },
-    ],
-  },
-  {
-    number: '05',
-    title: 'Game Design & Development',
-    description:
-      'Explores game design, gameplay systems, prototyping and the development tools used to create interactive experiences and educational game projects.',
-    groups: [
-      {
-        title: 'Design & prototyping',
-        skills: [
-          'Game Design',
-          'Gameplay Systems',
-          'Quest & Content Design',
-          'Player Experience Analysis',
-          'Prototyping',
-        ],
-      },
-      {
-        title: 'Engines & creative tools',
-        skills: [
-          'Unreal Engine',
-          'Roblox Studio',
-          'Blender',
-          'Minecraft Education',
-          'Scratch',
-          'ScratchJr',
-        ],
-      },
-    ],
-  },
-];
+const locale =
+  getLocaleFromPath(Astro.url.pathname);
+
+const t =
+  getSkillsTranslations(locale);
+
+const skillColumns =
+  t.columns;
 ---
 
 <BaseLayout
-  title="Skills"
-  description="Technical capabilities of Bartosz Girzecki across software quality, test automation, programming, backend development, delivery and game development."
+  title={t.metadata.title}
+  description={t.metadata.description}
+  lang={locale}
 >
   <section
     class="skills-hero"
@@ -183,19 +28,17 @@ const skillColumns = [
     data-skills-hero
   >
     <h1 id="skills-title">
-      Skills
+      {t.hero.title}
     </h1>
 
     <p class="skills-lead">
-      Professional software quality experience combined with active
-      development in test automation, programming, backend development
-      and a long-term creative direction in game development.
+      {t.hero.lead}
     </p>
   </section>
 
   <section
     class="skills-grid"
-    aria-label="Technical skill categories"
+    aria-label={t.gridAria}
   >
     {
       skillColumns.map((column, index) => (
@@ -237,14 +80,14 @@ const skillColumns = [
 
   <nav
     class="skill-navigation is-hidden"
-    aria-label="Navigate between skill categories"
+    aria-label={t.navigation.aria}
     aria-hidden="true"
     data-skill-navigation
   >
     <button
       class="skill-navigation-button is-unavailable"
       type="button"
-      aria-label="Go to previous skill category"
+      aria-label={t.navigation.previous}
       aria-hidden="true"
       disabled
       data-skill-up
@@ -253,13 +96,13 @@ const skillColumns = [
     </button>
 
     <span class="skill-navigation-label">
-      More skills
+      {t.navigation.label}
     </span>
 
     <button
       class="skill-navigation-button"
       type="button"
-      aria-label="Go to next skill category"
+      aria-label={t.navigation.next}
       data-skill-down
     >
       <span aria-hidden="true">↓</span>
@@ -625,15 +468,15 @@ const skillColumns = [
   .skills-hero {
     position: relative;
     left: 50%;
-    width: 60vw;
+    width: 70vw;
     margin: 0;
     display: grid;
     grid-template-columns:
-      minmax(0, 2fr)
-      minmax(0, 4fr);
+      max-content
+      minmax(0, 1fr);
     align-items: center;
     gap:
-      clamp(3rem, 6vw, 6rem);
+      clamp(4rem, 6vw, 7rem);
     text-align: left;
     transform: translateX(-50%);
   }
