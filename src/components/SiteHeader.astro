@@ -1,20 +1,67 @@
 ---
+import {
+  getCommonTranslations,
+  type Locale,
+} from '../i18n/common';
+import {
+  getLocalizedPath,
+} from '../i18n/helpers';
+
 interface Props {
   currentPath: string;
+  locale: Locale;
 }
 
-const { currentPath } = Astro.props;
+const {
+  currentPath,
+  locale,
+} = Astro.props;
+
+const t =
+  getCommonTranslations(locale);
 
 const navigation = [
-  { href: '/experience', label: 'Experience' },
-  { href: '/skills', label: 'Skills' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/certifications', label: 'Certifications' },
-  { href: '/contact', label: 'Contact' },
+  {
+    href: '/experience',
+    label: t.navigation.experience,
+  },
+  {
+    href: '/skills',
+    label: t.navigation.skills,
+  },
+  {
+    href: '/projects',
+    label: t.navigation.projects,
+  },
+  {
+    href: '/certifications',
+    label: t.navigation.certifications,
+  },
+  {
+    href: '/contact',
+    label: t.navigation.contact,
+  },
 ];
 
 const normalizedPath =
-  currentPath !== '/' ? currentPath.replace(/\/$/, '') : '/';
+  currentPath !== '/'
+    ? currentPath.replace(/\/$/, '')
+    : '/';
+
+const homeHref =
+  getLocalizedPath('/', locale);
+
+const englishHref =
+  getLocalizedPath(
+    currentPath,
+    'en'
+  );
+
+const polishHref =
+  getLocalizedPath(
+    currentPath,
+    'pl'
+  );
 ---
 
 <header
@@ -24,42 +71,49 @@ const normalizedPath =
   <div class="shell portfolio-header-content">
     <a
       class="portfolio-site-name"
-      href="/"
-      aria-label="Go to homepage"
+      href={homeHref}
+      aria-label={t.siteNameAriaLabel}
     >
       Bartosz Girzecki
     </a>
 
-    <button
-      class="portfolio-menu-toggle"
-      type="button"
-      aria-label="Open navigation menu"
-      aria-controls="portfolio-navigation"
-      aria-expanded="false"
-      data-menu-toggle
-    >
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </button>
-
     <nav
       id="portfolio-navigation"
       class="portfolio-navigation"
-      aria-label="Primary navigation"
+      aria-label={t.primaryNavigation}
       data-site-navigation
     >
       <ul class="portfolio-navigation-list">
         {
           navigation.map(({ href, label }) => {
-            const isActive = normalizedPath === href;
+            const localizedHref =
+              getLocalizedPath(
+                href,
+                locale
+              );
+
+            const normalizedHref =
+              localizedHref !== '/'
+                ? localizedHref.replace(
+                    /\/$/,
+                    ''
+                  )
+                : '/';
+
+            const isActive =
+              normalizedPath ===
+              normalizedHref;
 
             return (
               <li>
                 <a
                   class="portfolio-navigation-link"
-                  href={href}
-                  aria-current={isActive ? 'page' : undefined}
+                  href={localizedHref}
+                  aria-current={
+                    isActive
+                      ? 'page'
+                      : undefined
+                  }
                 >
                   {label}
                 </a>
@@ -69,6 +123,62 @@ const normalizedPath =
         }
       </ul>
     </nav>
+
+    <div
+      class="portfolio-language-switcher"
+      aria-label={t.languageSwitcher}
+    >
+      <a
+        href={englishHref}
+        class:list={[
+          'portfolio-language-link',
+          locale === 'en' &&
+            'is-active',
+        ]}
+        aria-current={
+          locale === 'en'
+            ? 'true'
+            : undefined
+        }
+      >
+        {t.english}
+      </a>
+
+      <span aria-hidden="true">
+        /
+      </span>
+
+      <a
+        href={polishHref}
+        class:list={[
+          'portfolio-language-link',
+          locale === 'pl' &&
+            'is-active',
+        ]}
+        aria-current={
+          locale === 'pl'
+            ? 'true'
+            : undefined
+        }
+      >
+        {t.polish}
+      </a>
+    </div>
+
+    <button
+      class="portfolio-menu-toggle"
+      type="button"
+      aria-label={t.openNavigation}
+      aria-controls="portfolio-navigation"
+      aria-expanded="false"
+      data-menu-toggle
+      data-open-label={t.openNavigation}
+      data-close-label={t.closeNavigation}
+    >
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
   </div>
 </header>
 
@@ -105,8 +215,10 @@ const normalizedPath =
     menuToggle.setAttribute(
       'aria-label',
       isOpen
-        ? 'Close navigation menu'
-        : 'Open navigation menu'
+        ? menuToggle.dataset.closeLabel ??
+          'Close navigation menu'
+        : menuToggle.dataset.openLabel ??
+          'Open navigation menu'
     );
 
     siteNavigation.classList.toggle(
@@ -272,6 +384,37 @@ const normalizedPath =
     transform-origin: left;
   }
 
+  .portfolio-language-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.42rem;
+    color:
+      var(--color-text-muted);
+    font-family:
+      var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+  }
+
+  .portfolio-language-link {
+    padding-block: 0.5rem;
+    color:
+      var(--color-text-muted);
+    text-decoration: none;
+    transition:
+      color var(--transition-fast);
+  }
+
+  .portfolio-language-link:hover,
+  .portfolio-language-link:focus-visible,
+  .portfolio-language-link.is-active {
+    color:
+      var(--color-text);
+  }
+
+  .portfolio-language-link.is-active {
+    font-weight: 650;
+  }
   .portfolio-menu-toggle {
     width: 2.85rem;
     height: 2.85rem;
@@ -341,8 +484,43 @@ const normalizedPath =
       gap: 1rem;
     }
 
-    .portfolio-menu-toggle {
+    .portfolio-language-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.42rem;
+    color:
+      var(--color-text-muted);
+    font-family:
+      var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+  }
+
+  .portfolio-language-link {
+    padding-block: 0.5rem;
+    color:
+      var(--color-text-muted);
+    text-decoration: none;
+    transition:
+      color var(--transition-fast);
+  }
+
+  .portfolio-language-link:hover,
+  .portfolio-language-link:focus-visible,
+  .portfolio-language-link.is-active {
+    color:
+      var(--color-text);
+  }
+
+  .portfolio-language-link.is-active {
+    font-weight: 650;
+  }
+  .portfolio-language-switcher {
       margin-left: auto;
+    }
+
+    .portfolio-menu-toggle {
+      margin-left: 0;
       display: flex;
     }
 
