@@ -282,6 +282,10 @@ const experience =
     '(max-width: 1000px)'
   );
 
+  const mobileTimelineCue = window.matchMedia(
+    '(max-width: 760px)'
+  );
+
   let timelineGapFrame = 0;
 
   const equalizeTimelineColumnGaps = () => {
@@ -551,6 +555,25 @@ const experience =
     timelineCue.style.left =
       `${lineCenter}px`;
 
+    if (mobileTimelineCue.matches) {
+      const mobileStickyPosition =
+        window.innerHeight / 2;
+
+      const mobileStartPosition =
+        linePosition.top;
+
+      const mobileCuePosition =
+        Math.max(
+          mobileStartPosition,
+          mobileStickyPosition
+        );
+
+      timelineCue.style.top =
+        `${mobileCuePosition}px`;
+
+      return;
+    }
+
     if (compactTimeline.matches) {
       timelineCue.style.top = '50%';
       return;
@@ -588,12 +611,49 @@ const experience =
       return;
     }
 
-    const lastHeadingPosition =
-      lastCardHeading.getBoundingClientRect();
+    let shouldHide = false;
 
-    const shouldHide =
-      lastHeadingPosition.bottom <=
-      window.innerHeight - 24;
+    if (
+      mobileTimelineCue.matches &&
+      lastTimelineItem instanceof HTMLElement
+    ) {
+      const lastItemPosition =
+        lastTimelineItem.getBoundingClientRect();
+
+      const visibleHeight = Math.max(
+        0,
+        Math.min(
+          lastItemPosition.bottom,
+          window.innerHeight
+        ) -
+          Math.max(
+            lastItemPosition.top,
+            0
+          )
+      );
+
+      const referenceHeight = Math.min(
+        lastItemPosition.height,
+        window.innerHeight
+      );
+
+      const visibleRatio =
+        referenceHeight > 0
+          ? visibleHeight /
+            referenceHeight
+          : 0;
+
+      shouldHide =
+        visibleRatio >= 0.6 ||
+        lastItemPosition.top <= 0;
+    } else {
+      const lastHeadingPosition =
+        lastCardHeading.getBoundingClientRect();
+
+      shouldHide =
+        lastHeadingPosition.bottom <=
+        window.innerHeight - 24;
+    }
 
     timelineCue.classList.toggle(
       'is-hidden',
@@ -618,9 +678,17 @@ const experience =
     equalizeTimelineColumnGaps
   );
 
+  const updateTimelineCueOnScroll = () => {
+    if (mobileTimelineCue.matches) {
+      positionTimelineCue();
+    }
+
+    updateTimelineCueVisibility();
+  };
+
   window.addEventListener(
     'scroll',
-    updateTimelineCueVisibility,
+    updateTimelineCueOnScroll,
     {
       passive: true,
     }
