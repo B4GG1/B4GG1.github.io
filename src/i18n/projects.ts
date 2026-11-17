@@ -3,7 +3,7 @@ import type { Locale } from './common';
 const sharedProjects = [
   {
     id: 'qa-automation-framework',
-    statusType: 'active',
+    statusType: 'completed',
     title:
       'Playwright Python QA Automation Framework',
     logo:
@@ -16,11 +16,14 @@ const sharedProjects = [
       'pytest',
       'Playwright',
       'Page Object Model',
-      'Ruff / Black / isort',
+      'Selenium WebDriver',
+      'pytest-xdist',
+      'Docker',
+      'Visual Regression',
       'Git & GitHub',
       'GitHub Actions',
-      'Html Reports',
-      'WSL2 / Ubuntu',
+      'Allure / pytest-html',
+      'Ruff / Black / isort',
     ],
     href:
       'https://github.com/B4GG1/playwright-python-qa-automation-framework',
@@ -221,9 +224,9 @@ const localizedProjects = {
     items: [
       {
         status:
-          'Active development',
+          'Completed',
         description:
-          'A production-style test automation framework demonstrating maintainable architecture, realistic e-commerce coverage and CI-backed development workflows.',
+          'A completed UI test automation framework for Sauce Demo built with Python, pytest and Playwright, combining maintainable Page Object architecture, cross-browser Smoke coverage, Selenium E2E tests, Docker-based visual regression, reporting and CI-backed quality checks.',
         logoAlt:
           'Playwright Python QA Automation Framework logo',
       },
@@ -307,9 +310,9 @@ const localizedProjects = {
     items: [
       {
         status:
-          'Aktywnie rozwijany',
+          'Ukończony',
         description:
-          'Framework automatyzacji testów o strukturze zbliżonej do projektu produkcyjnego, prezentujący utrzymywalną architekturę, realistyczne testy e-commerce oraz workflow wspierany przez CI.',
+          'Ukończony framework automatyzacji testów UI dla Sauce Demo, zbudowany w Pythonie, pytest i Playwright. Łączy utrzymywalną architekturę Page Object, cross-browser Smoke, testy E2E w Selenium, regresję wizualną w Dockerze, raportowanie oraz kontrolę jakości wspieraną przez CI.',
         logoAlt:
           'Logo Playwright Python QA Automation Framework',
       },
