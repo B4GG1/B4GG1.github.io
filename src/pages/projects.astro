@@ -1643,8 +1643,8 @@ const testedGames =
     height: 100%;
     display: grid;
     grid-template-columns:
-      minmax(0, 2fr)
-      minmax(9.5rem, 0.55fr);
+      minmax(0, 1.65fr)
+      minmax(15rem, 0.7fr);
     align-items: stretch;
     gap:
       var(--project-content-gap);
@@ -1654,13 +1654,24 @@ const testedGames =
     position: relative;
     min-width: 0;
     height: 100%;
-    padding-bottom: 4.75rem;
-    display: flex;
-    align-items: center;
+    padding-bottom: 0;
+    display: grid;
+    grid-template-rows:
+      minmax(0, 1fr)
+      auto;
+    align-items: stretch;
+    gap:
+      clamp(
+        1.15rem,
+        1.5vw,
+        1.5rem
+      );
   }
 
   .project-copy {
     width: 100%;
+    min-width: 0;
+    align-self: center;
   }
 
   .project-status {
@@ -1754,10 +1765,13 @@ const testedGames =
   }
 
   .project-link {
-    position: absolute;
-    right: 0;
-    bottom: 0;
+    position: static;
+    right: auto;
+    bottom: auto;
+    left: auto;
     width: fit-content;
+    justify-self: end;
+    align-self: end;
     min-height: 2.75rem;
     padding: 0.75rem 1rem;
     display: inline-flex;
@@ -2353,29 +2367,33 @@ const testedGames =
 
     .project-card {
       width: 100%;
-      height: auto;
-      min-height: 0;
+      height: 34rem;
+      min-height: 34rem;
       padding: 0;
     }
 
     .project-content {
-      height: auto;
+      height: 100%;
       min-height: 0;
       grid-template-columns: 1fr;
       grid-template-rows:
-        auto
+        minmax(0, 1fr)
         auto;
       gap: 0;
     }
 
     .project-primary {
-      height: auto;
+      height: 100%;
       min-height: 0;
       padding:
         1.35rem
         0
-        5rem;
-      display: block;
+        1.25rem;
+      display: grid;
+      grid-template-rows:
+        minmax(0, 1fr)
+        auto;
+      gap: 1rem;
     }
 
     .project-copy {
@@ -2424,9 +2442,14 @@ const testedGames =
     }
 
     .project-link {
-      right:
+      position: static;
+      right: auto;
+      bottom: auto;
+      left: auto;
+      margin-right:
         var(--compact-card-padding);
-      bottom: 1.25rem;
+      justify-self: end;
+      align-self: end;
     }
 
     .project-tools {
@@ -2756,8 +2779,8 @@ const testedGames =
 
     .project-card {
       width: 100%;
-      height: auto;
-      min-height: 0;
+      height: 43rem;
+      min-height: 43rem;
       padding: 0;
       overflow: hidden;
       border-radius:
@@ -2770,18 +2793,18 @@ const testedGames =
 
     .project-content {
       width: 100%;
-      height: auto;
+      height: 100%;
       min-height: 0;
       grid-template-columns: 1fr;
       grid-template-rows:
-        auto
+        minmax(0, 1fr)
         auto;
       gap: 0;
     }
 
     .project-primary {
       position: relative;
-      height: auto;
+      height: 100%;
       min-height: 0;
       padding:
         calc(
@@ -2790,8 +2813,12 @@ const testedGames =
           2.1rem
         )
         var(--compact-card-padding)
-        4.85rem;
-      display: block;
+        1.1rem;
+      display: grid;
+      grid-template-rows:
+        minmax(0, 1fr)
+        auto;
+      gap: 1rem;
     }
 
     .project-copy {
@@ -2887,13 +2914,14 @@ const testedGames =
     }
 
     .project-link {
-      right:
-        var(--compact-card-padding);
-      bottom: 1rem;
-      left:
-        var(--compact-card-padding);
-      width: auto;
+      position: static;
+      right: auto;
+      bottom: auto;
+      left: auto;
+      width: 100%;
       min-height: 2.65rem;
+      justify-self: stretch;
+      align-self: end;
       padding:
         0.7rem
         0.8rem;
@@ -3047,6 +3075,11 @@ const testedGames =
         );
       --compact-card-padding:
         0.85rem;
+    }
+
+    .project-card {
+      height: 45rem;
+      min-height: 45rem;
     }
 
     .project-primary {
@@ -5353,227 +5386,4 @@ const testedGames =
     }
   }
 
-  .projects-list {
-    --project-card-layout-revision: 1;
-  }
-
-  .project-card {
-    height: auto;
-    min-height: 25.5rem;
-  }
-
-  .project-content {
-    height: auto;
-    grid-template-columns:
-      minmax(0, 1.6fr)
-      minmax(18rem, 0.8fr);
-    align-items: stretch;
-  }
-
-  .project-primary {
-    height: auto;
-    min-height: 100%;
-    padding-bottom: 0;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    flex-direction: column;
-  }
-
-  .project-copy {
-    flex: 0 0 auto;
-  }
-
-  .project-link {
-    position: static;
-    right: auto;
-    bottom: auto;
-    left: auto;
-    margin-top:
-      clamp(
-        1.5rem,
-        2.2vw,
-        2rem
-      );
-    align-self: flex-start;
-  }
-
-  .project-tools {
-    padding-block:
-      clamp(
-        0.5rem,
-        1vw,
-        0.9rem
-      );
-    justify-content: center;
-  }
-
-  .technology-list {
-    width: 100%;
-    margin-top: 1rem;
-    display: grid;
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
-    align-content: start;
-    gap: 0.55rem;
-  }
-
-  .technology-list li {
-    min-width: 0;
-    min-height: 2.45rem;
-    padding:
-      0.55rem
-      0.7rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    border-radius: 0.65rem;
-    font-family:
-      var(--font-mono);
-    font-size: 0.66rem;
-    line-height: 1.3;
-    overflow-wrap: anywhere;
-  }
-
-  .technology-list li::before {
-    width: 0.34rem;
-    height: 0.34rem;
-    flex: 0 0 auto;
-    content: "";
-    border-radius: 50%;
-    background:
-      var(--color-blue-light);
-    box-shadow:
-      0 0 0.7rem
-        rgba(
-          96,
-          165,
-          250,
-          0.48
-        );
-  }
-
-  @media (max-width: 1320px) {
-    .project-card {
-      min-height: 0;
-    }
-
-    .project-content {
-      grid-template-columns: 1fr;
-      grid-template-rows:
-        auto
-        auto;
-    }
-
-    .project-primary {
-      min-height: 0;
-      padding-bottom:
-        clamp(
-          1.75rem,
-          3vw,
-          2.25rem
-        );
-      align-items: center;
-    }
-
-    .project-link {
-      margin-top:
-        clamp(
-          1.5rem,
-          3vw,
-          2rem
-        );
-      align-self: center;
-    }
-
-    .project-tools {
-      align-items: stretch;
-    }
-
-    .technology-list {
-      grid-template-columns:
-        repeat(
-          auto-fit,
-          minmax(
-            9rem,
-            1fr
-          )
-        );
-    }
-  }
-
-  @media (max-width: 640px) {
-    .project-primary {
-      padding-bottom:
-        clamp(
-          1.25rem,
-          5vw,
-          1.6rem
-        );
-      align-items: stretch;
-    }
-
-    .project-link {
-      width: 100%;
-      margin-top:
-        clamp(
-          1.35rem,
-          6vw,
-          1.75rem
-        );
-      align-self: stretch;
-    }
-
-    .project-tools {
-      align-items: stretch;
-      text-align: center;
-    }
-
-    .tools-label {
-      text-align: center;
-    }
-
-    .technology-list {
-      grid-template-columns:
-        repeat(
-          auto-fit,
-          minmax(
-            8rem,
-            1fr
-          )
-        );
-      gap: 0.42rem;
-    }
-
-    .technology-list li {
-      min-height: 2.35rem;
-      padding:
-        0.48rem
-        0.55rem;
-      font-size:
-        clamp(
-          0.57rem,
-          2.6vw,
-          0.64rem
-        );
-    }
-  }
-
-  @media (max-width: 420px) {
-    .technology-list {
-      grid-template-columns:
-        repeat(
-          auto-fit,
-          minmax(
-            min(
-              100%,
-              8rem
-            ),
-            1fr
-          )
-        );
-    }
-  }</style>
+</style>
