@@ -79,8 +79,10 @@ export const skillsTranslations = {
               'Selenium',
               'Page Object Model',
               'Test Architecture',
+              'Visual Regression Testing',
+              'pytest-xdist',
+              'Allure / pytest-html',
               'Behavior-Driven Development (BDD)',
-              'Test Reports & Artifacts',
             ],
           },
           {
@@ -148,6 +150,8 @@ export const skillsTranslations = {
               'Development & version control',
             skills: [
               'Git & GitHub',
+              'Docker',
+              'Ruff / Black / isort',
               'SVN / TortoiseSVN',
               'Perforce P4',
               'Visual Studio',
@@ -289,8 +293,10 @@ export const skillsTranslations = {
               'Selenium',
               'Page Object Model',
               'Architektura testów',
+              'Testy regresji wizualnej',
+              'pytest-xdist',
+              'Allure / pytest-html',
               'Behavior-Driven Development (BDD)',
-              'Raporty i artefakty testowe',
             ],
           },
           {
@@ -358,6 +364,8 @@ export const skillsTranslations = {
               'Development i kontrola wersji',
             skills: [
               'Git & GitHub',
+              'Docker',
+              'Ruff / Black / isort',
               'SVN / TortoiseSVN',
               'Perforce P4',
               'Visual Studio',

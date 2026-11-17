@@ -12,7 +12,7 @@ const sharedProjects = [
     logoOffsetX: '0%',
     logoOffsetY: '1.5%',
     technologies: [
-      'Python 3.12',
+      'Python',
       'pytest',
       'Playwright',
       'Page Object Model',
@@ -226,7 +226,7 @@ const localizedProjects = {
         status:
           'Completed',
         description:
-          'A completed UI test automation framework for Sauce Demo built with Python, pytest and Playwright, combining maintainable Page Object architecture, cross-browser Smoke coverage, Selenium E2E tests, Docker-based visual regression, reporting and CI-backed quality checks.',
+          'A UI test automation framework for Sauce Demo designed around maintainable automation architecture and realistic e-commerce test scenarios. The project demonstrates a structured approach to building reliable and reusable automated test coverage.',
         logoAlt:
           'Playwright Python QA Automation Framework logo',
       },
@@ -312,7 +312,7 @@ const localizedProjects = {
         status:
           'Ukończony',
         description:
-          'Ukończony framework automatyzacji testów UI dla Sauce Demo, zbudowany w Pythonie, pytest i Playwright. Łączy utrzymywalną architekturę Page Object, cross-browser Smoke, testy E2E w Selenium, regresję wizualną w Dockerze, raportowanie oraz kontrolę jakości wspieraną przez CI.',
+          'Framework automatyzacji testów UI dla Sauce Demo zaprojektowany z naciskiem na utrzymywalną architekturę oraz realistyczne scenariusze testowe e-commerce. Projekt pokazuje uporządkowane podejście do tworzenia niezawodnych i wielokrotnego użytku testów automatycznych.',
         logoAlt:
           'Logo Playwright Python QA Automation Framework',
       },
